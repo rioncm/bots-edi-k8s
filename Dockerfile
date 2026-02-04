@@ -31,15 +31,15 @@ WORKDIR /build
 COPY bots/requirements/*.txt /build/requirements/
 COPY bots_config/prod-requirements.txt /build/
 
-# Build wheels for all dependencies
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /wheels \
+# Build wheels for all dependencies (includes transitive dependencies)
+RUN pip wheel --no-cache-dir --wheel-dir /wheels \
     -r requirements/base.txt \
     -r requirements/linux.txt \
     -r prod-requirements.txt
 
 # Install extras (optional components like SFTP, Excel, PDF)
 COPY bots/requirements/extras.txt /build/requirements/
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /wheels \
+RUN pip wheel --no-cache-dir --wheel-dir /wheels \
     -r requirements/extras.txt || true
 
 # =============================================================================
