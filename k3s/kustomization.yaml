@@ -28,9 +28,11 @@ resources:
   - jobs/db-init-job.yaml
   - jobs/engine-cronjob.yaml
   
-  # Ingress and Argo Events
-  - ingress.yaml
-  - sensor.yaml
+  # Ingress (optional - comment out if not using Traefik)
+  - base/ingress.yaml
+  
+  # Argo Events sensor (optional - comment out if not using)
+  # - sensor.yaml
 
 # Common labels applied to all resources
 commonLabels:

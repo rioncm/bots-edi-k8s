@@ -9,8 +9,8 @@ resources:
   - ../../base
   - ../../deployments
   - ../../jobs
-  - ../../ingress.yaml
-  - ../../sensor.yaml
+  - ingress.yaml  # Production-specific ingress
+  # - ../../sensor.yaml  # Uncomment if using Argo Events
 
 # Common labels for all resources
 commonLabels:
