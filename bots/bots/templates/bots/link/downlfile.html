@@ -1,0 +1,2 @@
+{% if perms.bots.view_ta %}{% load i18n botsfilters %}
+<a href="{% url 'bots:filer' %}/?action=downl&amp;idta={{ idta }}" class="botslink ico-save" title="{% trans 'Download' %} {{ filename|shortpath|default:idta }}"></a>{% endif %}

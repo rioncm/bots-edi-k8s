@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}Bots {% if logname == 'engine' %}{{ logname }} {% endif %}log {{ log }}{% endblock %}
+
+{% block extrahead %}{{ block.super }}
+<meta Http-Equiv="Pragma" Content="no-cache" />
+<link rel="stylesheet" type="text/css" href="{% static "css/bots-logfiler.css" %}">
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} bots logfiler{% endblock %}
+
+{% block content_title %}
+<h1 class="ico-translate">Bots{% if logname %}-{{ logname }}{% endif %} <a href="{% url 'bots:logfiler' %}" class="ico-log">logfiles</a></h1>
+{% endblock %}
+
+{% block content_subtitle %}
+{% if log %}<h2><a href="#" title="{% trans 'Top' %}" class="ico-{{ logname }}{% if logname != 'engine' %} ico-log{% endif %}">{{ log }}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+{% if log == logname|add:".log" %}<button onclick="window.location.reload()" class="button ico-reload va-bottom pad4" title="{% trans 'Refresh' %}"></button>{% endif %}
+<a class="button ico-save va-bottom" href="{% url 'bots:logfiler' %}?{{ logname }}={{ log }}&amp;action=download" title="{% trans 'Download' %} Bots-{{ logname }} {{ log }}">{% trans 'Download' %}</a>
+&nbsp;{% if logname == 'engine' %}
+<a class="button ico-reports" href="{% url 'bots:reports' %}?idta={{ log }}&popup=1" onclick="this.target=this.href">{% trans 'Report' %}</a>
+<a class="button ico-incoming" href="{% url 'bots:incoming' %}?reportidta={{ log }}&popup=1" onclick="this.target=this.href">{% trans 'Incoming' %}</a>
+<a class="button ico-outgoing" href="{% url 'bots:outgoing' %}?reportidta={{ log }}&popup=1" onclick="this.target=this.href">{% trans 'Outgoing' %}</a>
+{% endif %}
+{% include 'bots/button_back_close.html' with cssclass="va-bottom pad4" %}
+</h2>{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if error_content %}{{ error_content }}{% else %}
+<table id="botslog" border="1" cellpadding=5>
+  <tr>
+    <td valign="top" class="nowrap">{% for file in logfiles %}
+      {% if logname %}<a href="{% url 'bots:logfiler' %}?{{ logname }}={{ file }}" class="ico-{{ logname }}{% if logname != 'engine' %} ico-log{% endif %}">{{ file }}</a>
+      {% else %}<a href="{% url 'bots:logfiler' %}?{{ file }}" class="ico-{{ file }}{% if file != 'engine' %} ico-log{% endif %}">{{ file }}</a>{% endif %}
+    {% endfor %}</td>
+    <td valign="top" colspan="2">
+      <pre>{{ logdata }}</pre>
+    </td>
+  </tr>
+</table>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,1 @@
+{% load i18n %}<button name="deleteselection" class="{{ cssclass }} button middle ico-trash" {% if form.selection.value %}title="{% trans 'Delete selection' %}: {{ form.selection.value }}" value="{{ form.selection.value }}" onclick="return deleteSelection(this)"{% else %}disabled{% endif %}></button>

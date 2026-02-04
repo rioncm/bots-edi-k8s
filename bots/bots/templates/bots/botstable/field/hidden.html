@@ -1,0 +1,2 @@
+{% if not field.is_hidden %}{{ field.as_hidden }}{% endif %}
+{% if field.value %}<div class="filteredfield">{% include 'bots/botstable/field/clear.html' %}<b>{{ field.label }}:</b> {{ field.value }}{{ field.errors }}</div>{% endif %}

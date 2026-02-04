@@ -1,0 +1,8 @@
+{% with field=form.outfilename filename=row.outfilename idta=row.outidta %}
+<td data-field="{{ field.name }}" data-idta="{{ idta }}">{% if filename %}
+<div class="dropdown">{% if filename == '(several values)' %}
+{% if perms.bots.view_ta %}<a href="{% url 'bots:detail' %}/?inidta={{ row.idta }}&popup=1" onclick="this.target=this.href" class="botslink" title="Bots details: {{ row.idta }}">{{ filename }}</a>{% else %}{{ filename }}{% endif %}
+<ul>{% else %}{% include 'bots/link/filer.html' %}
+<ul>{# include "bots/botstable/dropdown/downlfile.html" #}{% endif %}</ul>
+</div>{% endif %}
+</td>{% endwith %}

@@ -1,0 +1,13 @@
+{% if perms.bots.view_filereport %}{% load i18n %}
+<li><a{% if not bots_touchscreen %} href="{% url 'bots:outgoing' %}"{% endif %} class="ico-outgoing after-title" title="{% trans 'Outgoing' %}"></a>
+<ul>
+  <li><a href="{% url 'bots:outgoing' %}/?all" class="ico-outgoing">{% trans 'Outgoing' %}{% if not bots_touchscreen %} *{% endif %}</a></li>
+  <li><a href="{% url 'bots:outgoing' %}/?lastrun=1" class="ico-outgoing">{% trans 'Last outgoing' %}</a></li>
+  <li><a href="{% url 'bots:outgoing' %}/?statust=1" class="icon-err">{% trans 'Outgoing errors' %}</a></li>
+  <li><a href="{% url 'bots:outgoing' %}/?select" class="ico-search">{% trans 'Select outgoing' %}</a></li>
+{% if perms.bots.view_ta %}  <li><hr/></li>
+  <li><a href="{% url 'bots:document' %}/?status=330" class="ico-docsout">{% trans 'Document-out' %}</a></li>
+  <li><a href="{% url 'bots:document' %}/?lastrun=1&status=330" class="ico-docsout">{% trans 'Last document-out' %}</a></li>
+  <li><a href="{% url 'bots:document' %}/?select&status=330" class="ico-search">{% trans 'Select document' %}</a></li>{% endif %}
+</ul>
+</li>{% endif %}

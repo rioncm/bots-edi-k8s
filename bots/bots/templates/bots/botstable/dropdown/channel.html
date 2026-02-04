@@ -1,0 +1,2 @@
+{% if perms.bots.view_channel %}{% load i18n %}
+<li><a class="ico-{{ field.name }}" onclick="return view_channel(this)" data-after="{% trans 'View Channel' %}"></a></li>{% endif %}

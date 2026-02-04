@@ -1,0 +1,10 @@
+{% extends "admin/bots/change_form.html" %}
+
+{% block footer %}{{ block.super }}
+<script>
+const ruletypes = {{ RULETYPES|safe }};
+{% if adminform.form.ruletype %}const ruletype = document.getElementById('id_ruletype');
+{% else %}const rule_type = '{{ original.ruletype }}';{% endif %}
+onchange_confirmruletype();
+</script>
+{% endblock %}

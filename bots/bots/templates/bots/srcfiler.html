@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+{% load i18n static %}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{{ src }} - Bots Source</title>
+<META Http-Equiv="Pragma" Content="no-cache" />
+<link rel="icon" type="image/png" href="{% static "img/bots.ico" %}">
+<link rel="stylesheet" href="{% static "admin/css/base.css" %}">
+{% if django_version|default:'4' >= '4.1' %}<link rel="stylesheet" href="{% static "admin/css/dark_mode.css" %}">{% endif %}
+<link rel="stylesheet" href="{% static "css/bots.css" %}">
+<link rel="stylesheet" href="{% static "css/bots-icons.css" %}">
+<link rel="stylesheet" href="{% static "css/bots-srcfiler.css" %}">
+{% if django_version|default:'4' >= '4.2' %}<script src="{% static "admin/js/theme.js" %}" defer></script>{% endif %}
+</head>
+<body class="bots srcfiler popup">
+{% if error_content %}{{ error_content }}{% else %}
+<div id="content">
+<h1 class="icon-py">{{ src }} {% include "bots/button_close_right.html" with is_popup=True %}</h1>
+<pre>{{ html_source|safe }}</pre>
+<hr/>
+</div>
+{% endif %}
+</body>
+</html>

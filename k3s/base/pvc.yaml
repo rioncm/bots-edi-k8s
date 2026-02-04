@@ -1,0 +1,53 @@
+---
+# Data PVC - Shared EDI files and processing data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bots-edi-data-pvc
+  namespace: edi
+  labels:
+    app: bots-edi
+    component: storage
+spec:
+  accessModes:
+    - ReadWriteMany  # RWX for multiple pods (engine, webserver, jobqueue)
+  storageClassName: t1-shiva-nfs  # NFS storage for RWX support
+  resources:
+    requests:
+      storage: 20Gi
+
+---
+# Logs PVC - Application logs
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bots-edi-logs-pvc
+  namespace: edi
+  labels:
+    app: bots-edi
+    component: storage
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: t1-shiva-nfs
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+# Config PVC - Runtime configuration backup (optional)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bots-edi-config-pvc
+  namespace: edi
+  labels:
+    app: bots-edi
+    component: storage
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: t1-shiva-nfs
+  resources:
+    requests:
+      storage: 1Gi

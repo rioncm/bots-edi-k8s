@@ -1,0 +1,24 @@
+<script>{% load i18n %}
+const trans = {
+    'Date from': '{% trans 'Date from' %}',
+    'Date until': '{% trans 'Date until' %}',
+    'View': '{% trans 'View' %}',
+    'View Route': '{% trans 'View Route' %}',
+    'View Channel': '{% trans 'View Channel' %}',
+    'View Partner': '{% trans 'View Partner' %}',
+    'Add Partner': '{% trans 'Add Partner' %}',
+    'View grammar': '{% trans 'View grammar' %}',
+    'Download': '{% trans 'Download' %}',
+    'Filter': '{% trans 'Filter' %}',
+    'Exclude': '{% trans 'Exclude' %}',
+    'Clear filter': '{% trans 'Clear filter' %}', 
+    'Override existing selection': '{% trans 'Override existing selection' %}',
+    'not found': '{% trans 'not found' %}',
+    'No translate rule for ': '{% trans 'No translate rule for ' %}',
+}
+
+
+function gettext(txt) {
+    return trans[txt] || txt;
+}
+</script>

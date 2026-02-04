@@ -1,0 +1,24 @@
+{% if perms.bots.view_filereport or perms.change_filereport %}{% load i18n %}
+<li>{% if perms.bots.view_report %}<a {% if not bots_touchscreen %}href="{% url 'bots:reports' %}"{% endif %} class="ico-reports after-title" title="{% trans 'All runs' %}"></a>
+<ul>
+  <li><a href="{% url 'bots:reports' %}/?all" class="ico-reports">{% trans 'Report (per run)' %}{% if not bots_touchscreen %} *{% endif %}</a></li>
+  <li><a href="{% url 'bots:reports' %}/?status=1" class="icon-err">{% trans 'Report errors' %}</a></li>
+  <li><a href="{% url 'bots:reports' %}/?select" class="ico-search">{% trans 'Select report' %}</a></li>
+{% else %}<a>{% trans 'All runs' %}</a>
+<ul>{% endif %}
+  <li><hr/></li>
+  <li><a href="{% url 'bots:confirm' %}" class="ico-confirmrule">{% trans 'Confirmations' %}</a>
+  <ul>
+    <li><a href="{% url 'bots:confirm' %}?confirmed=1" class="ico-confirmed">{% trans 'Confirmed' %}</a></li>
+    <li><a href="{% url 'bots:confirm' %}?confirmed=0" class="ico-unconfirmed">{% trans 'Unconfirmed' %}</a></li>
+    <li><a href="{% url 'bots:confirm' %}?confirmidta=-1" class="ico-confirmed">{% trans 'Manual confirm' %}</a></li>
+  </li></ul>
+  <li><a href="{% url 'bots:confirm' %}?confirmidta=0" class="ico-pending">{% trans 'Pending ...' %}</a></li>
+  <li><a href="{% url 'bots:confirm' %}/?select" class="ico-search">{% trans 'Select confirmations' %}</a></li>
+{% include 'bots/nav/documents.html' %}
+  <li><hr/></li>
+  <li><a href="{% url 'bots:process' %}/?all" class="icon-err">{% trans 'Process Errors' %}</a></li>
+  <li><a href="{% url 'bots:process' %}/?lastrun=1" class="icon-err">{% trans 'Last process errors' %}</a></li>
+  <li><a href="{% url 'bots:process' %}/?select" class="ico-search">{% trans 'Select process errors' %}</a></li>
+</ul>
+</li>{% endif %}

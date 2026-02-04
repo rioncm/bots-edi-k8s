@@ -1,0 +1,6 @@
+{% if perms.bots.change_translate and tscript and messagetype %}{% load i18n botsfilters %}
+{% with translate=messagetype|get_translate:tscript %}{% if translate and translate.pk %}
+{% if tscript_link %}{{ translate.tscript_link|safe }}{% if admin_link %}{{ BR|default:"<br />" }}{% endif %}{% endif %}
+{% if admin_link %}<a href="{% url 'admin:bots_translate_change' translate.pk %}" onclick="return popup(this, '60%', '80%', '?_popup=1')" title="Bots {% trans 'Admin translate' %} {{ translate.pk }}" class="button pad2 ico-translate" data-after="{% trans 'Admin' %}"></a>{% endif %}
+{% else %}<span class="icon-no"> {{ tscript }}</span>{% endif %}
+{% endwith %}{% else %}{{ tscript }}{% endif %}

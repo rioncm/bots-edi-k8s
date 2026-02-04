@@ -1,0 +1,112 @@
+# Development environment overlay
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: edi-dev
+
+# Reference the base configuration
+resources:
+  - namespace.yaml
+  - ../../base
+  - ../../deployments
+  - ../../jobs
+  - ingress.yaml
+
+# Namespacesuffix for dev resources
+nameSuffix: -dev
+
+# Common labels for all resources
+commonLabels:
+  environment: dev
+
+# ConfigMap generator for environment-specific settings
+configMapGenerator:
+  - name: bots-env-config
+    literals:
+      - BOTSENV=development
+      - LOG_LEVEL=DEBUG
+      - TZ=America/Los_Angeles
+      - DB_HOST=localhost
+      - DB_PORT=3306
+
+# Patches for development environment
+patches:
+  # Reduce resource limits for dev
+  - target:
+      kind: Deployment
+      name: bots-webserver
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/memory
+        value: "128Mi"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/cpu
+        value: "50m"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: "512Mi"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: "500m"
+
+  - target:
+      kind: Deployment
+      name: bots-jobqueue
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/memory
+        value: "128Mi"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/cpu
+        value: "50m"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: "256Mi"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: "250m"
+
+  # Use smaller PVCs for dev
+  - target:
+      kind: PersistentVolumeClaim
+      name: bots-edi-data-pvc
+    patch: |-
+      - op: replace
+        path: /spec/resources/requests/storage
+        value: "5Gi"
+
+  - target:
+      kind: PersistentVolumeClaim
+      name: bots-edi-logs-pvc
+    patch: |-
+      - op: replace
+        path: /spec/resources/requests/storage
+        value: "1Gi"
+
+  - target:
+      kind: PersistentVolumeClaim
+      name: bots-edi-config-pvc
+    patch: |-
+      - op: replace
+        path: /spec/resources/requests/storage
+        value: "500Mi"
+
+  # Run engine cron more frequently in dev (every minute)
+  - target:
+      kind: CronJob
+      name: bots-engine
+    patch: |-
+      - op: replace
+        path: /spec/schedule
+        value: "* * * * *"
+
+# Image tag override for dev (use :dev tag)
+images:
+  - name: harbor.pminc.me/priv/bots-edi
+    newTag: dev

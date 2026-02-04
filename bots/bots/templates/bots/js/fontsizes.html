@@ -1,0 +1,30 @@
+<script>{# Create font sizes styles #}
+var numbered = false;
+var cbx_numbered = document.querySelector('#cbx_numbered');
+if (cbx_numbered) {
+    numbered = cbx_numbered.checked;
+}
+if (numbered) {
+    var min_width = 1;
+    document.querySelectorAll('div.content pre[id^=ta_co]').forEach(function(pre) {
+        var width = String(pre.childElementCount).length;
+        if (width > min_width) {
+            min_width = width;
+        }
+    })
+}
+
+var font_styles = '';
+Array.prototype.slice.call(document.querySelector('#id_fontsize').options).map(o => o.value).forEach(function(val) {
+    font_styles += ' .fs' + val + ' { font-size: ' + val + '% !important;}';
+    if (numbered) {
+        calc_width = min_width * (Number(val) * 0.0055);
+        font_styles += ' .fs' + val + '.numbered span { line-height: ' + Number(val) / 100 + 'rem;}';
+        font_styles += ' .fs' + val + '.numbered span:before { min-width: ' + calc_width + 'rem;}';
+    }
+});
+CreateStyle('fontstyles', font_styles);
+document.querySelectorAll('#id_fontsize').forEach(function(sel) {
+    SetFontSize(sel);
+});
+</script>

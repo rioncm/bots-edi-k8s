@@ -1,0 +1,6 @@
+{% with field=form.filename filename=row.filename idta=row.idta %}
+<td data-field="{{ field.name }}" data-idta="{{ idta }}">{% if filename %}
+<div class="dropdown">{% include 'bots/link/filer.html' %}
+{% if field %}<ul>{# include "bots/botstable/dropdown/downlfile.html" #}</ul>{% endif %}
+</div>{% endif %}
+</td>{% endwith %}

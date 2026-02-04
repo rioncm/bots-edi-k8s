@@ -1,0 +1,3 @@
+{% spaceless %}{% load i18n %}{% with cssclass='pad4' %}{% if form.selection and not form.selection.is_hidden %}{{ form.selection }}<button class="button {{ cssclass }}" name="2select">{% trans 'Change selection' %}</button>{% include "bots/selection/save.html" %}{% include "bots/selection/delete.html" %}{% include "bots/selection/clear.html" %}{% endif %}
+{% include "bots/refresh.html" %}{% endwith %}{% endspaceless %}
+{{ form.selection.errors }}

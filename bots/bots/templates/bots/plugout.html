@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<br/>
+<h1 class="ico-plugout">{% trans 'Make a plugin' %}</h1>
+<br/>
+<p>&nbsp;{% trans 'The plugin that is made will be offered to you as a download.' %}</p>
+<p>&nbsp;{% trans 'Select what you need in the plugin' %}:</p>
+<form action="{{ form.action }}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+<table>
+{{ form }}
+</table>
+<br/>&nbsp;
+<button name="submit" class="button ico-save">{% trans 'Make plugin' %}</button>
+</form>
+<br/>
+<br/>
+{% endblock %}

@@ -1,0 +1,2 @@
+{% load i18n static %}
+<a href="{% url 'bots:logfiler' %}/?{{ logname }}={{ value }}" title="{% blocktrans %}View {{ logname }} log{% endblocktrans %} {{ value }}" target="_blank"{% if popup %} onclick="return popup(this)"{% endif %} class="button ico-log ico-150 nobg"></a>

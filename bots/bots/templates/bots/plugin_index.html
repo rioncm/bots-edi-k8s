@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<br/>
+<h1 class="ico-plugin">{% trans 'Confirm reading index file' %}</h1>
+<br/>
+<p>{% trans 'Please confirm reading the default index file bots/usersys/index.py. This might change your configuration !' %}</p>
+<form action="{% url 'bots:plugin' %}/index" method="POST" enctype="multipart/form-data">{% csrf_token %}
+    <br/>&nbsp;
+    <button name="cancel" class="button ico-no">{% trans 'Cancel' %}</button>
+    <button name="submit" class="button ico-read" onclick="return confirm('{% trans 'Read configuration index ?' %}');">{% trans 'Confirm read' %}</button>
+</form>
+{% endblock %}

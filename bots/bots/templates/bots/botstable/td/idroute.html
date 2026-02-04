@@ -1,0 +1,6 @@
+{% with field=form.idroute idroute=row.idroute %}<td data-field="{{ field.name }}">{% if idroute %}{% load botsfilters %}
+<div class="dropdown">{% if idroute|inchoices:field.field.choices %}{% include 'bots/link/change_route.html' %}
+{% else %}<span class="ico-routes after-err">{{ idroute }}</span>{% endif %}
+<ul>{# include "bots/botstable/dropdown/route.html" #}</ul>
+</div>{% endif %}
+</td>{% endwith %}

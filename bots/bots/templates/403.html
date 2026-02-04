@@ -1,0 +1,9 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}403 {% trans 'Forbidden' %}{% endblock %}
+
+{% block content %}
+<h2>{% trans 'Forbidden' %}</h2>
+<p>{% trans "We're sorry, but you are not authorized to access to this page." %}</p>
+{% endblock %}

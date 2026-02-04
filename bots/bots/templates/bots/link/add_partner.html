@@ -1,0 +1,3 @@
+{% if perms.bots.add_partner %}{% load i18n %}
+<a title="{% trans 'Add' %} Bots {% trans 'partner'|capfirst %}" onclick="return add_partner(this)" class="{% if as_link %}botslink{% else %}button ico-add-partner botsstatus1 {{ cssclass }}{% endif %}">{{ idpartner }}</a>
+{% else %}<span class="ico-{{ fromto }}partner">{{ idpartner }}</span>{% endif %}

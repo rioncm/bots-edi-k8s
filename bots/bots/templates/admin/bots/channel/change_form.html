@@ -1,0 +1,24 @@
+{% extends "admin/bots/change_form.html" %}
+
+{% block obj_title %}{{ block.super }}{% if original %} {{ original.get_type_display }}{% endif %}{% endblock %}
+
+{% block content_subtitle %}{% if subtitle %}<h2{% if original %} class="ico-{{ original.inorout }}{{ opts.model_name }}"{% endif %}>{{ subtitle }}</h2>{% endif %}{% endblock %}
+
+{% block footer %}{{ block.super }}
+<script>
+const formrow_remove = document.querySelector("div.form-row.field-remove");
+{% if adminform.form.inorout %}const inorout = document.getElementById('id_inorout');
+const chantype = document.getElementById('id_type');
+
+function onchange_inorout() {
+    if (inorout.value == 'in' || chantype.value == 'communicationscript') {
+        formrow_remove.style.display = '';
+    } else {
+        formrow_remove.style.display = 'none';
+    }
+}
+
+onchange_inorout();
+{% elif original.inorout != 'in' %}formrow_remove.style.display = 'none';{% endif %}
+</script>
+{% endblock %}

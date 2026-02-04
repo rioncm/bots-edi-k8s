@@ -1,0 +1,3 @@
+{% if perms.bots.view_ta and idta %}{% load i18n %}
+<a href="{% url 'bots:document' %}/?idta={{ idta }}" onclick="return popup(this, '95%', '60%', '&popup=1')" title="Bots {% trans 'document' %}: {{ idta }}" class="{% if as_link %}botslink{% else %}button ico-doc{{ inorout }}{% endif %} {{ cssclass|default:"pad2" }}">{{ text|default:idta }}</a>
+{% else %}{{ text|default:idta }}{% endif %}

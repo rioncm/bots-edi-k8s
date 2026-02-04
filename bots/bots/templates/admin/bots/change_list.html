@@ -1,0 +1,10 @@
+{% extends "admin/change_list.html" %}
+{# "admin/bots/change_list.html" #}
+{% load i18n %}
+
+{% block content_title %}<h1 class="ico-{{ opts.model_name }}">{{ title }}</h1>{% endblock %}
+
+{% block object-tools-items %}{% if user.is_superuser %}
+  <li><a href="{% url 'bots:plugin' %}" class="ico-plugin">{% trans 'Read plugin' %}</a></li>
+{% endif %}{{ block.super }}
+{% endblock %}

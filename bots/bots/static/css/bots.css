@@ -1,0 +1,1018 @@
+/* Bots EDI Translator main CSS */
+html[data-theme="light"],
+:root {
+    --primary: #103f56;
+    --secondary: #417690;
+    --header-bg: var(--primary);
+    --header-branding-color: #333;
+    --header-hover-bg: rgba(0,0,0, 0.6);
+    --header-color: var(--header-fg);
+    --breadcrumbs-hover-fg: var(--link-hover-color);
+    --body-quiet-color: #333;
+    --button-bg: #103f56;
+    --button-hover-bg: #376c87;
+    --filteredfield-bg: rgba(60,60,60,0.32);
+    --filteredfield-fg: #000;
+    --filteredfield-hover-bg: rgba(60,60,60,0.9);
+    --filteredfield-hover-fg: #fff;
+    --filteredth-bg: rgb(224 224 224 / 44%);
+    --filteredth-fg: var(--selected-fg);
+    --filteredtd-bg: #0000001f;
+    --filteredtd-fg: var(--selected-fg);
+    --shadow: rgba(0, 0, 0, 0.51);
+    --clock-fg: var(--body-fg);
+    --clock-bg: #ebebeb;
+    --clock-shadow: var(--body-fg);
+    --tr-hover-bg: #5e5e5e5e;
+    --errortext-bg: #d1d1d1;
+    --errortext1-bg: #cdbcbc;
+    --botslink-hover-fg: var(--body-fg);
+    --botslink-hover-bg: var(--selected-bg);
+    --link-hover-color: #467aaf;
+;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #103f56;
+    --header-branding-color: #f5dd5d;
+    --header-hover-bg: rgba(225,255,255, 0.9);
+    --body-quiet-color: inherit;
+    --breadcrumbs-bg: var(--darkened-bg);
+    --breadcrumbs-hover-fg: var(--botslink-hover-fg);
+    --filteredfield-bg: rgba(180,180,180,0.6);
+    --filteredfield-fg: #000;
+    --filteredfield-hover-bg: rgba(255,255,255,0.8);
+    --filteredfield-hover-fg: #000;
+    --filteredtd-bg: #ffffff1f;
+    --shadow: rgba(255, 255, 255, 0.2);
+    --clock-bg: unset;
+    --tr-hover-bg: #afafafaf;
+    --errortext-bg: #5c5c5c;
+    --errortext1-bg: #3f1f1f;
+    --botslink-hover-fg: #fff;
+    --botslink-hover-bg: rgb(255 255 255 / 30%);
+  }
+  .botsstatus4,
+  .botstrstatus4 {
+    color: #000;
+  }
+  div#logo {
+      filter: invert(100%) sepia(0%) saturate(100%) hue-rotate(106deg) brightness(100%) contrast(100%);
+  }
+}
+html[data-theme="dark"] {
+    --primary: #103f56;
+    --header-branding-color: #f5dd5d;
+    --header-hover-bg: rgba(225,255,255, 0.9);
+    --body-quiet-color: inherit;
+    --breadcrumbs-bg: var(--darkened-bg);
+    --breadcrumbs-hover-fg: var(--botslink-hover-fg);
+    --filteredfield-bg: rgba(180,180,180,0.6);
+    --filteredfield-fg: #000;
+    --filteredfield-hover-bg: rgba(255,255,255,0.8);
+    --filteredfield-hover-fg: #000;
+    --filteredtd-bg: #ffffff1f;
+    --shadow: rgba(255, 255, 255, 0.2);
+    --clock-bg: var(--darkened-bg);
+    --tr-hover-bg: #afafafaf;
+    --errortext-bg: #5c5c5c;
+    --errortext1-bg: #3f1f1f;
+    --botslink-hover-fg: #fff;
+    --botslink-hover-bg: rgb(255 255 255 / 30%);
+}
+html[data-theme="dark"] div#logo {
+    filter: invert(100%) sepia(0%) saturate(100%) hue-rotate(106deg) brightness(100%) contrast(100%);
+}
+html[data-theme="light"] div#logo {
+    filter: none;
+}
+
+div#container {
+    height: auto;
+}
+div#logo {
+    position: absolute;
+    left: 0;
+    top: 0em;
+    height: 3.6em;
+    z-index: 100;
+}
+div#logo img {
+    height: 100%;
+}
+div#environment {
+    position: absolute;
+    left: 45em;
+    top: 0;
+}
+div#environment > div {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--primary);
+    padding-top: .5em;
+}
+#header {
+    height: 30px !important;
+    line-height: 25px !important;
+    padding: 10px 10px;
+    background: var(--body-bg);
+    color: var(--body-fg);
+}
+#environment,
+#header a:link,
+#logout-form button,
+#user-tools,
+#user-tools a:link,
+#user-tools a:visited {
+    color: var(--body-fg);
+}
+#user-tools a {
+    border-bottom: 1px solid rgb(0 0 0 / 25%);
+}
+.theme-toggle svg,
+.theme-toggle svg.theme-icon-when-auto,
+.theme-toggle svg.theme-icon-when-dark,
+.theme-toggle svg.theme-icon-when-light {
+    fill: var(--header-fg);
+    color: transparent;
+    border-radius: 50%;
+}
+.theme-toggle:hover svg {
+    fill: var(--header-bg);
+    border-color: var(--body-loud-color);
+    background: var(--body-loud-color);
+}
+
+
+#changelist #toolbar {
+    margin-bottom: 0;
+}
+div#content {
+    margin: 0;
+    padding: 10px;
+}
+table#about {
+    position: relative;
+    left: 10%;
+}
+div.breadcrumbs {
+    padding-top: 0.4em;
+    padding-bottom: 0.2em;
+    padding-left: 10px;
+}
+div.breadcrumbs,
+nav[aria-label] {
+    position: sticky;
+    top: 1.8em;
+    z-index: 90;
+}
+#nav-sidebar.sticky {
+    top: 3.5em;
+}
+
+.bots div#content > form > input + h1,
+div#content > h1 {
+    font-weight: 200;
+    font-size: 22px;
+    color: var(--body-quiet-color);
+}
+
+/************* ACTION ******************/
+#selcount {
+    margin-left: 0.5em;
+}
+.fielddown {
+    width: 100%;
+}
+
+/************* dropdown ******************/
+.tainfo,
+.fielddown,
+.dropdown {
+    position: relative;
+    float: left;
+    border-radius: 4px;
+}
+.dropdown {
+    padding: 4px 4px 4px 0;
+}
+#botstable.detail tbody td:nth-child(0n+3) span {
+    display: block;
+}
+#botstable.detail tbody td:nth-child(0n+3) span,
+[data-field^="status"] .dropdown {
+    width: 100%;
+    text-align: center;
+}
+
+.dropdown ul a,
+.dropdown ul span,
+.dropdown button {
+    display: block;
+    padding: 5px;
+    padding-left: 0.5em;
+    width: 100%;
+    text-align: left;
+    border-style: none;
+    margin: 0em;
+    cursor: pointer;
+    white-space: nowrap;
+    color: var(--body-fg);
+    background: none;
+    transition: none;
+    line-height: normal;
+    text-decoration: none;
+    padding-left: 2.4em;
+}
+.dropdown ul span {
+    cursor: default;
+}
+.dropdown ul span:before,
+.dropdown ul a:before,
+.dropdown ul button:before {
+    position: absolute;
+    line-height: inherit;
+    margin-left: -1.8em;
+}
+.dropdown ul {
+    list-style-type: none;
+    position: absolute;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    left: 100%;
+    visibility: hidden;
+    background: var(--darkened-bg);
+    border: 1px solid var(--body-fg);
+    border-radius: 0 10px 10px 0;
+}
+.dropdown ul ul {
+    display: none;
+    top: -1px;
+}
+.dropdown ul li:hover > ul {
+    display: inherit;
+}
+.fielddown:hover ul,
+.dropdown:hover ul {
+    visibility: visible;
+    z-index: 5;
+}
+.fielddown ul li,
+.dropdown ul li {
+    position: relative;
+    list-style: none;
+    padding: 0;
+}
+td.phase:hover,
+.dropdown:hover,
+.dropdown:hover > a,
+.dropdown:hover > span,
+.dropdown ul li:hover {
+    background-color: var(--button-hover-bg) !important;
+}
+.dropdown:hover,
+.dropdown:hover > a,
+.dropdown:hover > span,
+.dropdown ul li:hover > a,
+.dropdown ul li:hover > button,
+.dropdown ul li:hover {
+    color: var(--button-fg) !important;
+}
+.fielddown ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    visibility: hidden;
+    background: var(--darkened-bg);
+    top: 100%;
+    left: 0;
+}
+
+/************* INFO ******************/
+.tainfo table {
+    position: absolute;
+    visibility: hidden;
+    background: var(--darkened-bg);
+    white-space: nowrap;
+}
+td.phase:hover table,
+.tainfo:hover table {
+    visibility: visible;
+    z-index: 599;
+}
+div.dropright {
+    position: relative;
+    float: right;
+}
+div.dropright table {
+    left: 99%;
+    top: 1px;
+}
+.tainfo table,
+div.dropright table {
+    color: var(--body-fg);
+    border: 1px solid var(--body-fg);
+}
+#bots-nav ul li > ul,
+.dropdown ul,
+.tainfo table,
+div.dropright table,
+.shadow {
+    box-shadow: 4px 4px 4px 1px var(--shadow);
+}
+.paginatop {
+     margin-top: -.5em;
+     margin-bottom: 0.1em;
+}
+#id_actions,
+#id_refresh {
+    margin-left: 1em;
+    margin-right: .2em;
+}
+.bots.selectform h1 {
+    padding-top: 0.3em;
+    padding-bottom: 0.2em;
+}
+
+/************* Sticky elements ******************/
+.bots div#content > form > input + h1,
+div#content > h1,
+.sticky-title,
+.sticky1 {
+    position: sticky;
+    top: 2.3em;
+    background: var(--body-bg);
+    padding-top: .2em;
+    z-index: 10;
+}
+.bots div#content > form > input + h1,
+.bots div#content > h1 {
+    top: 1.1em;
+}
+.popup.bots div#content > form > input + h1,
+.popup div#content > h1,
+.popup .sticky-title,
+.popup .sticky1 {
+    top: 0px;
+}
+.paginatop,
+.sticky2 {
+    position: sticky;
+    top: 4.3em;
+    background: var(--body-bg);
+    z-index: 10;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+}
+.bots.selectform .paginatop {
+    top: 4.0em;
+    padding-top: 0.6em;
+}
+.popup.bots.selectform .paginatop,
+.popup .paginatop {
+    top: 2.4em;
+}
+.object-tools,
+.action-top {
+    position: sticky;
+    top: 3.8em;
+    text-align: right;
+    z-index: 10;
+}
+.bots .action-top {
+    top: 4.5em;
+}
+.bots label.action-top {
+    top: 5em;
+}
+.popup .object-tools,
+.popup .action-top {
+    top: .5em;
+}
+.popup label.action-top {
+    top: .8em;
+}
+.inline-block.action-top {
+    float: right;
+}
+
+/************* Sticky: Admin change_list ******************/
+body.change-list #changelist #toolbar {
+    position: sticky;
+    top: 6em;
+    padding-top: .2em;
+    padding-bottom: .2em;
+    z-index: 8;
+}
+body.change-list #changelist nav.toplinks {
+    top: 8.5em;
+    padding: 0;
+    height: 1.5em;
+    z-index: 6;
+}
+body.change-list #changelist .paginator {
+    top: 9em;
+    padding: 0;
+    height: 2em;
+    z-index: 5;
+}
+body.change-list #changelist form .actions,
+body.change-list #changelist nav.toplinks,
+body.change-list #changelist .paginator {
+    position: sticky;
+    border: none;
+    background: var(--body-bg);
+}
+
+body.change-list #changelist .changelist-footer .paginator {
+    background: none;
+    z-index: unset;
+}
+body.change-list #changelist form .actions {
+    top: 10.2em;
+    padding: .2em;
+    height: 2em;
+    z-index: 4;
+}
+body.change-list #changelist nav.toplinks + form > .paginator {
+    top: 10.6em;
+}
+body.change-list #changelist nav.toplinks + form .actions {
+    top: 11.6em;
+}
+
+/************* Sticky: Admin change_form submit line ******************/
+div#content > h1 + h2,
+.change-form div#content > h1 + h2 {
+    position: sticky;
+    top: 5em;
+    background: var(--body-bg);
+    z-index: 9;
+    padding-top: 0.2em;
+}
+.popup div#content > h1 + h2,
+.popup.change-form div#content > h1 + h2 {
+    top: 1.8em;
+}
+.change-form .submit-row {
+    position: sticky;
+    top: 7.4em;
+    padding: 8px 14px 8px;
+    z-index: 2;
+}
+.change-form h1 + #content-main .submit-row {
+    top: 5.2em;
+}
+.popup.change-form .submit-row {
+    top: 3.6em;
+}
+.popup.change-form h1 + #content-main .submit-row {
+    top: 2em;
+}
+fieldset.module.aligned > h2,
+:not(.inline-related) .collapse summary {
+    position: sticky;
+    top: 12.2em;
+    z-index: 1;
+}
+.popup fieldset.module.aligned > h2,
+.popup :not(.inline-related) .collapse summary {
+    top: 8.6em;
+}
+/* Admin add form */
+.change-form h1 + #content-main fieldset.module.aligned > h2,
+.change-form h1 + #content-main .collapse summary {
+    top: 10.2em;
+}
+.popup.change-form h1 + #content-main fieldset.module.aligned > h2,
+.popup.change-form h1 + #content-main .collapse summary {
+    top: 6.8em;
+}
+
+/************* Sticky: Botstable ******************/
+table#botstable thead tr:first-child th {
+    position: sticky;
+    top: 8.8em;
+    z-index: 7;
+}
+table#botstable thead th#selall {
+    padding: 2px;
+}
+
+.popup table#botstable thead tr:first-child th {
+    top: 6.4em;
+}
+table#botstable thead tr:nth-child(2) th {
+    position: sticky;
+    top: 11.8em;
+    z-index: 6;
+    background: transparent;
+}
+.popup table#botstable thead tr:nth-child(2) th {
+    top: 9.3em;
+}
+table#botstable.detail thead th {
+    top: 2.5em !important;
+}
+
+/*
+#action-bar {
+    position: sticky;
+    top: 3.8em;
+    background: var(--body-bg);
+    z-index: 10;
+}
+#action-bar button,
+#action-bar input {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+*/
+/*** End sticky elems part ***/
+
+/************* other ******************/
+.botsheader {
+    border-style: none;
+    margin: 0em;
+    padding: 0em;
+    cursor: pointer;
+    white-space: nowrap;
+    color: var(--body-fg);
+    background: transparent;
+    border-radius: 4px;
+    font-weight: bold;
+}
+p.botsheader2 {
+    border-style: none;
+    margin: 0em;
+    padding: 0em;
+    white-space: nowrap;
+    color: var(--body-fg);
+    font-weight: normal;
+    background: var(--body-bg);
+}
+a.botslink {
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+}
+nav.toplinks a:hover,
+.breadcrumbs a:hover,
+tbody tr[class^="model-"] th > a:hover,
+#result_list tbody th[class^="field-"] > a:hover,
+a.botslink:hover,
+.botsheader:hover {
+    color: var(--botslink-hover-fg);
+    background-color: var(--botslink-hover-bg);
+    border-radius: 4px;
+}
+div.breadcrumbs a:hover {
+    color: var(--breadcrumbs-hover-fg);
+}
+table#botstable {
+    border-collapse: collapse;
+    border-width: 0;
+}
+table#botstable thead th {
+    text-transform: initial;
+    padding: 5px 5px;
+    white-space: nowrap;
+}
+table#botstable thead th div {
+    height: 2em;
+}
+table#botstable td {
+    padding: 2px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/**** tainfo *****/
+.tainfo th {
+    padding: 4px;
+}
+.tainfo td {
+    padding: 3px;
+}
+.tainfo th.ico-ts + td {
+    font-size: 110%;
+}
+[data-field="ts"] {
+    padding-left: 1em !important;
+}
+img.action {
+    width: 1em;
+}
+.row1 {
+    background: var(--body-bg);
+}
+.row2 {
+    background: var(--darkened-bg);
+}
+
+
+/*** nicer layout for sort boxes in admin for django1.4 ***/
+table thead th .text span {
+    padding: 15px 5px 2px 5px;
+    display: block;
+}
+table thead th .text a {
+    display: block;
+    cursor: pointer;
+    padding: 15px 5px 2px 5px;
+}
+
+/************* input, button, a, ... ******************/
+input[type="checkbox"] {
+    height: 16px;
+    width: 16px
+}
+table .button {
+    display: inline;
+}
+table#botstable.detail .button,
+.tainfo .button,
+.button {
+    display: inline-block;
+}
+h1 a:focus,
+a.button {
+    text-decoration: none;
+}
+h1 button {
+    vertical-align: top;
+}
+
+.button,
+input[type="submit"],
+input[type="button"],
+.submit-row input,
+a.button {
+    margin: 1px !important;
+}
+
+.button,
+button.button,
+input[type="submit"],
+input[type="button"],
+.submit-row input {
+    padding: 6px 12px;
+}
+
+input[type="checkbox"]:hover,
+input[type="number"]:hover,
+input[type="text"]:hover,
+textarea:hover,
+select:hover {
+    box-shadow: inset 0 0 4px var(--body-loud-color);
+}
+button[disabled]:hover,
+input[disabled]:hover,
+[disabled]:hover {
+    box-shadow: unset;
+}
+input[type=submit][disabled]:active,
+input[type=button][disabled]:active,
+button[disabled]:active,
+.button[disabled]:active,
+input[type=submit][disabled]:hover,
+input[type=button][disabled]:hover,
+button[disabled]:hover,
+.button[disabled]:hover {
+    background: var(--button-bg);
+}
+textarea[disabled],
+button[disabled],
+input[disabled] {
+    cursor: default;
+}
+
+table button.button,
+a.button {
+    padding: 4px 5px;
+}
+#botstable .reports a.button {
+    padding: 2px 3px;
+}
+#botstable .documents .dropdown {
+    padding: 3px 0 3px 0;
+}
+#botstable .reports .dropdown {
+    padding: 2px 0 2px 0;
+}
+#botstable .process td {
+    vertical-align: top;
+}
+#botstable .process td.botsstatus1 {
+    padding-top: 6px;
+}
+
+.reporterrs {
+    padding: 0;
+    margin: 0;
+}
+.reporterrs li {
+    list-style: none;
+    line-height: inherit;
+}
+.reporterrs a.button {
+    padding: 0px 3px !important;
+}
+
+/************* Filtered fields ******************/
+div.fielddown:hover,
+.sortedby {
+    background: var(--selected-bg);
+}
+span.filteredfield,
+td.filteredfield,
+th.filteredfield {
+    background: var(--filteredth-bg) !important;
+    color: var(--filteredth-fg);
+}
+button.filteredfield,
+input.filteredfield {
+    font-size: 12px;
+    padding: 6px;
+}
+div.filteredfield button:hover {
+    background-color: var(--header-hover-bg);
+}
+div.filteredfield,
+tr.filteredfield,
+button.filteredfield,
+input.filteredfield {
+    background-color: var(--filteredfield-bg) !important;
+    color: var(--filteredfield-fg) !important;
+}
+button.filteredfield:hover,
+input.filteredfield:hover {
+    background-color: var(--filteredfield-hover-bg) !important;
+    color: var(--filteredfield-hover-fg) !important;
+}
+
+#botstable tbody td.filteredfield {
+    background-color: var(--filteredtd-bg) !important;
+}
+
+#botstable tbody tr:hover {
+    box-shadow: inset 0px 0px 20px var(--tr-hover-bg);
+}
+
+
+[data-after]:after {
+    content: attr(data-after);
+    padding-left: 0.1em;
+}
+.noafter:after {
+    content: '';
+}
+
+.after-title:after {
+    content: attr(title);
+    padding-left: 0.1em;
+}
+
+
+#selectform #id_allstatus,
+#selectform #id_lastrun,
+#selectform #id_popup,
+#selectform #id_admlink {
+    display: inherit;
+}
+
+/* Checkbox */
+input[id^="cbx_"],
+#id_allstatus,
+#id_lastrun,
+#id_popup,
+#id_admlink {
+    display: none;
+}
+label[for^="cbx_"],
+#id_allstatus + label,
+#id_lastrun + label,
+#id_popup + label,
+#id_admlink + label {
+    border-radius: 6px;
+    border: 1px solid var(--body-fg);
+    background-color: var(--button-bg);
+}
+label[for^="cbx_"]:hover,
+#id_allstatus + label:hover,
+#id_lastrun + label:hover,
+#id_popup + label:hover,
+#id_admlink + label:hover {
+    box-shadow: -1px 2px 30px rgba(240, 240, 240, 0.6) inset;
+}
+input[id^="cbx_"]:checked + label,
+#id_allstatus:checked + label,
+#id_lastrun:checked + label,
+#id_popup:checked + label,
+#id_admlink:checked + label {
+    background-color: var(--secondary);
+}
+
+.reports input[name="sel"] {
+    display: none;
+}
+.reports input[name="sel"] + label {
+    cursor: pointer;
+}
+.reports input[name="sel"]:checked + label {
+    filter: invert(100%) sepia(0%) saturate(100%) hue-rotate(0deg) brightness(0%) contrast(100%);
+}
+
+.pad0 {padding: 0px !important;}
+.pad1 {padding: 1px !important;}
+.pad2 {padding: 2px !important;}
+.pad3 {padding: 3px !important;}
+.pad4 {padding: 5px !important;}
+.pad5 {padding: 5px !important;}
+.pad6 {padding: 6px !important;}
+.pad7 {padding: 7px !important;}
+.pad8 {padding: 8px !important;}
+.pad9 {padding: 9px !important;}
+.pad10 {padding: 10px !important;}
+
+
+/************* .bots.detail ******************/
+.bots.detail h1 + table td,
+.bots.detail h1 + table th {
+    padding: 8px 20px;
+    font-size: 104%;
+    white-space: nowrap;
+}
+.bots.detail h1 + table th:nth-child(1) {
+    padding: 8px 0;
+}
+.bots.detail h1 + table th:nth-child(2) {
+    padding-left: 1px;
+}
+/************* Fonts ******************/
+.fs-100 {font-size: 100%;}
+.fs-110 {font-size: 110%;}
+.fs-115 {font-size: 115%;}
+.fs-120 {font-size: 120%;}
+
+/************* Icons ******************/
+.icon,
+.delete_icon {
+    width: 20px;
+    vertical-align: middle;
+}
+.va-top {
+    vertical-align: top !important;
+}
+.middle,
+.va-middle {
+    vertical-align: middle;
+}
+.va-bottom {
+    vertical-align: bottom;
+}
+.center {
+    text-align: center;
+}
+.block {
+    display: block;
+}
+.inline-block {
+    display: inline-block;
+}
+.nowrap    {
+    white-space: nowrap;
+}
+.nobg {
+    color: var(--body-fg) !important;
+    background-color: #fff6 !important;
+}
+.now {
+    font-size: 16px;
+    padding: 5px;
+    color: var(--clock-fg);
+    background: var(--clock-bg);
+/*
+    border-radius: 7px;
+    border: 1px solid var(--body-fg);
+    box-shadow: 0 2px 0 var(--clock-shadow);
+*/
+}
+.float-right {
+    float: right;
+}
+
+/************* Status *****************/
+/*** File report Status 0:Open, 1:Error, 2:Stuck, 3:Done, 4:Resend ***/
+.botsstatus1,
+.botsstatus2,
+.botsstatus3 {
+    color: #fff;
+}
+.botsstatus0,
+.botstrstatus0 {
+    background: #b7b7b7 !important;
+    color: #333;
+}
+/* 1: Error */
+.botsstatus1,
+.botstrstatus1 {
+    background: #8e2727 !important;
+    color: #c6c6c6;
+}
+.botsstatus2,
+.botstrstatus2 {
+    background: #8e8a85 !important;
+}
+table#botstable tbody td.filteredfield.botsstatus3,
+.botsstatus3 {
+    background: #379e37 !important;
+}
+table#botstable tbody td.filteredfield.botsstatus3 {
+    box-shadow: inset 0px 0px 12px #f7f7f5ad;
+}
+.botsstatus4,
+.botstrstatus4 {
+    background: #e5a688 !important;
+}
+.botsstatus5,
+.botstrstatus5 {
+    background: #8e8e8e !important;
+}
+
+tr.errortext {
+    color: var(--body-fg);
+    background: var(--errortext-bg) !important;
+}
+tr.errortext.botstrstatus1 {
+    background: var(--errortext1-bg) !important;
+}
+.errortext {
+    white-space: normal;
+}
+
+tr.filteredfield,
+#botstable tbody tr.botstrstatus5,
+#botstable tbody tr.botstrstatus4,
+#botstable tbody tr.botstrstatus2,
+#botstable tbody tr.botstrstatus1,
+#botstable tbody tr.botstrstatus0 {
+    --tr-hover-bg: #ffffff;
+}
+
+/* selectform */
+.bots.selectform #content {
+    padding: 10px 20px 10px 20px;
+}
+.bots.selectform th,
+.bots.selectform td {
+  padding: 4px;
+}
+
+/************* Django admin **************/
+/** FILTER ******************************/
+.change-list .filtered .results, .change-list .filtered .paginator,
+.filtered #toolbar, .filtered div.xfull {
+    margin-right: 0;
+    width: auto;
+}
+div#changelist-filter h3,
+div#changelist-filter ul {
+    display: none;
+}
+div#changelist-filter:hover h3,
+div#changelist-filter:hover ul {
+    display: block;
+}
+.object-tools {
+    margin-top: -38px;
+    margin-left: 20%;
+}
+.selector-chosen h2,
+fieldset .fieldset-heading, fieldset .inline-heading,
+:not(.inline-related) .collapse summary {
+    background: var(--primary);
+}
+
+.change-form span[id^="span_"] {
+    line-height: 1.875rem;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+.change-form .button {
+    display: unset;
+}
+
+
+a:not(
+    [role="button"],
+    #header a,
+    #nav-sidebar a,
+    #content-main.app-list a,
+    .object-tools a
+) {
+    text-decoration: none;
+}

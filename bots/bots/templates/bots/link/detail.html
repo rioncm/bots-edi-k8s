@@ -1,0 +1,2 @@
+{% if perms.bots.view_ta and ta %}{% load i18n %}
+<a class="button pad8" title="Bots {% trans 'Details' %} {{ ta.idta }}" href="{% url 'bots:detail' %}/?{% if ta.has_previous %}out{% else %}in{% endif %}idta={{ ta.idta }}&popup=1" onclick="return popup(this, '95%', '75%')">{% trans 'details' %}</a>{% endif %}

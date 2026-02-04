@@ -1,0 +1,78 @@
+variables:
+  PYTHON_VERSION: "3.10"
+  PACKAGE_NAME: ${CI_PROJECT_NAME}
+  MAX_LINE_LENGTH: 120
+  # Pip cache directory for faster builds
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.pip-cache"
+
+.python-job:
+  image: python:${PYTHON_VERSION}
+  before_script:
+    - pip install --upgrade pip
+    - pip install build wheel
+  cache:
+    paths:
+      - ${PIP_CACHE_DIR}
+
+.python-matrix:
+  extends: .python-job
+  parallel:
+    matrix:
+      - PYTHON_VERSION: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
+stages:
+  - lint
+  - build
+  - test
+  - publish
+
+
+lint:
+  extends: .python-matrix
+  stage: lint
+  script:
+    - pip install -r requirements/base.txt
+    - pip install -r requirements/lint.txt
+    - pip freeze
+    # pylint
+    - pylint --version
+    - pylint --load-plugins pylint_django --extension-pkg-allow-list lxml --ignore="migrations,usersys,install,config" --max-line-length ${MAX_LINE_LENGTH} --fail-under 9.99 -s yes bots
+    # flake8
+    - flake8 --version
+    - flake8 --statistics --max-line-length ${MAX_LINE_LENGTH} --exclude "bots/migrations/*,bots/usersys/*" --extend-ignore=E203,E133 --benchmark bots
+
+build:
+  extends: .python-job
+  stage: build
+  script:
+    - echo "Building ${CI_PROJECT_NAME} ..."
+    - python --version
+    - python -m build --wheel
+  artifacts:
+    paths:
+      - dist/
+
+test:
+  extends: .python-matrix
+  stage: test
+  script:
+    - pip install -r requirements/test.txt
+    - pip install dist/*.whl
+    - bots-engine
+    - pytest
+
+publish:
+  stage: publish
+  image: python:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  variables:
+    TWINE_USERNAME: gitlab-ci-token
+    TWINE_PASSWORD: $CI_JOB_TOKEN
+  before_script:
+    - python --version
+    - pip install --upgrade pip
+    - pip install twine
+  script:
+    - python -m twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
+

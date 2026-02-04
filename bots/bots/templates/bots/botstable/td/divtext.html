@@ -1,0 +1,10 @@
+{% with field=form.divtext messagetype=row.inmessagetype tscript=row.divtext %}
+<td data-field="{{ field.name }}">{% if tscript %}
+<div class="dropdown">{% if admlink and tscript.0 != '(' %}{% include 'bots/link/translate.html' with tscript_link=True %}
+<ul>
+<li>{% include 'bots/link/translate.html' with admin_link=True %}</li>
+{% else %}{{ tscript }}<ul>{% endif %}
+{# include "bots/botstable/dropdown/translate.html" #}
+</ul>
+</div>{% endif %}
+</td>{% endwith %}

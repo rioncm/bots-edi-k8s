@@ -1,0 +1,1 @@
+<span class="inline-block {{ cssclass|default:'action-top' }}{% if field.value %} filteredfield{% endif %}">{{ field }}<input type="submit" class="filteredfield pad6" value="▸">{% if field.value %}{% include 'bots/botstable/field/clear.html' %}{% endif %}</span>

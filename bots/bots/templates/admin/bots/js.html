@@ -1,0 +1,13 @@
+{% load static %}
+<script>
+const message_types = {{ message_types|safe|default:'{}' }};
+const tscripts = {{ tscripts|safe|default:'{}' }};
+
+const fromeditype = document.getElementById('id_fromeditype');
+const frommessagetype = document.getElementById('id_frommessagetype');
+const toeditype = document.getElementById('id_toeditype');
+const tomessagetype = document.getElementById('id_tomessagetype');
+const tscript = document.getElementById('id_tscript');
+const translateind = document.getElementById('id_translateind');
+const alt = document.getElementById('id_alt');
+</script>

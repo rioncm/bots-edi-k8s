@@ -1,0 +1,10 @@
+{% extends "admin/submit_line.html" %}
+
+{% block submit-row %}
+{# put buttons in reverse order that you want them to appear #}
+{% if show_close and is_popup %}{% include 'bots/button_cancel_close.html' %}
+{% elif not show_close or is_popup %}{% include 'bots/button_cancel_close.html' %}
+{{ block.super }}
+{% else %}{{ block.super }}
+{% endif %}
+{% endblock %}

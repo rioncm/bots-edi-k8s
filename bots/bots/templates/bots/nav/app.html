@@ -1,0 +1,7 @@
+{% if perms.bots %}
+<li><a href="{% url 'bots:home' %}" class="icon-bots">Bots EDI</a>
+  <ul>
+    {% include 'bots/nav/index.html' %}
+  </ul>
+</li>
+{% endif %}

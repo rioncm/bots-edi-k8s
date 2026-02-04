@@ -1,0 +1,9 @@
+{% include 'bots/nav/incoming.html' %}
+{% include 'bots/nav/outgoing.html' %}
+{% include 'bots/nav/allruns.html' %}
+{% include 'bots/nav/config.html' %}
+{% include 'bots/nav/systasks.html' %}
+{% include 'bots/nav/run.html' %}
+{% include 'bots/nav/shortcuts.html' %}
+{% include 'bots/nav/custom.html' %}
+{% if django_version|default:'2' >= '4.2' %}<li style="float: right">{% include "admin/color_theme_toggle.html" %}&nbsp;</li>{% endif %}

@@ -1,0 +1,6 @@
+{% with field=form.rsrv1 %}
+<td data-field="{{ field.name }}">{% if row.rsrv1 %}
+<div class="dropdown">{{ row.rsrv1 }}
+<ul></ul>
+</div>{% endif %}
+</td>{% endwith %}

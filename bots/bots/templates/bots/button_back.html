@@ -1,0 +1,12 @@
+{% load i18n %}<button type="button" class="button {{ cssclass }} ico-back" onclick="history.back()" title="{% trans 'Go Back' %}">{% trans 'Back' %}</button>
+<script>
+if (window.opener || (history.length < 2 && document.referrer)) {
+    // Window is popup or _blank without history
+    var button = document.querySelector('.button.ico-back');
+    button.classList.remove('ico-back');
+    button.classList.add('ico-close');
+    button.innerText = "{% trans 'Close' %}";
+    button.onclick = function() { window.close(); };
+    button.title = "{% trans 'Close this window' %}";
+}
+</script>

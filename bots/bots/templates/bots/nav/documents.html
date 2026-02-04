@@ -1,0 +1,14 @@
+{% if perms.bots.view_ta %}{% load i18n %}<li><hr/></li>
+<li><a href="{% url 'bots:document' %}/?allstatus=True" class="ico-docs">{% trans 'All phases' %}</a>
+  <ul>
+    <li><a href="{% url 'bots:document' %}/?allstatus=True&status=3" class="ico-docs">{% trans 'Discarded' %}</a>
+    <li><a href="{% url 'bots:document' %}/?allstatus=True&status=200" class="ico-docs">{% trans 'Received' %}</a>
+    <li><a href="{% url 'bots:document' %}/?allstatus=True&status=220" class="ico-docs">{% trans 'Infile' %}</a>
+    <li><a href="{% url 'bots:document' %}/?allstatus=True&status=310" class="ico-docs">{% trans 'Parsed' %}</a>
+    <li><a href="{% url 'bots:document' %}/?allstatus=True&status=320" class="ico-docs">{% trans 'Document-in' %}</a>
+    <li><a href="{% url 'bots:document' %}/?allstatus=True&status=330" class="ico-docs">{% trans 'Document-out' %}</a>
+    <li><a href="{% url 'bots:document' %}/?allstatus=True&status=400" class="ico-docs">{% trans 'Merged' %}</a>
+    <li><a href="{% url 'bots:document' %}/?allstatus=True&status=500" class="ico-docs">{% trans 'Outfile' %}</a>
+    <li><a href="{% url 'bots:document' %}/?allstatus=True&status=520" class="ico-docs">{% trans 'Send' %}</a>
+  </ul>
+</li>{% endif %}

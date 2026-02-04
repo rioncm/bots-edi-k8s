@@ -1,0 +1,4 @@
+
+syntax = {
+    "charset": "UNOA",
+}

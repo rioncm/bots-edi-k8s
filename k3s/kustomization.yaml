@@ -1,0 +1,55 @@
+# Kustomization file for Bots-EDI deployment
+# Organizes all Kubernetes manifests for easy deployment
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: edi
+
+# Base resources
+resources:
+  # Namespace and base configuration
+  - base/namespace.yaml
+  - base/pvc.yaml
+  - base/service-webserver.yaml
+  
+  # ConfigMaps (comment out if using existing secret.yaml for DB config)
+  - base/configmap-botsini.yaml
+  - base/configmap-settings.yaml
+  
+  # Existing secret (DB credentials)
+  - secret.yaml
+  
+  # Deployments
+  - deployments/webserver.yaml
+  - deployments/jobqueue.yaml
+  
+  # Jobs
+  - jobs/db-init-job.yaml
+  - jobs/engine-cronjob.yaml
+  
+  # Ingress and Argo Events
+  - ingress.yaml
+  - sensor.yaml
+
+# Common labels applied to all resources
+commonLabels:
+  app: bots-edi
+  managed-by: kustomize
+
+# Image references (can be overridden in overlays)
+images:
+  - name: harbor.pminc.me/priv/bots-edi
+    newTag: latest
+
+# ConfigMap generator (alternative to separate ConfigMap files)
+# configMapGenerator:
+#   - name: bots-config-ini
+#     files:
+#       - config/bots.ini
+#   - name: bots-config-settings
+#     files:
+#       - config/settings.py
+
+# Namespace creation
+# namespace: edi

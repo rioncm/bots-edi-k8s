@@ -1,0 +1,2 @@
+{% load i18n %}{% if ta.confirmidta > 0 %}{% include 'bots/link/filer.html' with idta=ta.confirmidta %}
+{% elif ta.confirmidta < 0 %}{% trans 'Manual confirm' %}{% elif ta.confirmasked %}{% trans 'Pending ...' %} <button type="button" class="button ico-reload pad2" title="{% trans 'Refresh' %}" onclick="location.reload()"></button>{% endif %}

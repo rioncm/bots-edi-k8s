@@ -1,0 +1,56 @@
+/* Bots srcfiler css */
+html[data-theme="light"],
+:root {
+    --color-linenum: gray;
+    --color-defname: darkblue;
+    --color-definition: blue;
+    --color-keyword: blue;
+    --color-string: darkgoldenrod;
+    --color-builtin: olive;
+    --color-operator: brown;
+    --color-comment: forestgreen;
+    --color-docstring: forestgreen;
+}
+.linenum {color: var(--color-linenum);}
+.defname {color: var(--color-defname);}
+.definition {color: var(--color-definition); font-weight: bold;}
+.keyword {color: var(--color-keyword);}
+.string {color: var(--color-string);}
+.builtin {color: var(--color-builtin);}
+.operator {color: var(--color-operator);}
+.comment {color: var(--color-comment);}
+.docstring {color: var(--color-docstring); font-style: italic;}
+
+html[data-theme="light"] pre,
+pre {
+  padding: 4px;
+  color: var(--body-fg);
+  background-color: var(--selected-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-defname: lightblue;
+    --color-definition: #fce94f;
+    --color-keyword: #fce94f;
+    --color-string: #d96bcc;
+    --color-builtin: #a4b9ff;
+    --color-operator: brown;
+    --color-comment: #bcb5e8;
+  }
+  pre {
+    color: #ddd;
+  }
+}
+html[data-theme="dark"] {
+    --color-defname: lightblue;
+    --color-definition: #fce94f;
+    --color-keyword: #fce94f;
+    --color-string: #d96bcc;
+    --color-builtin: #a4b9ff;
+    --color-operator: brown;
+    --color-comment: #bcb5e8;
+}
+html[data-theme="dark"] pre {
+    color: #ddd;
+}

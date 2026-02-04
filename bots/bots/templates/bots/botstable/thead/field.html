@@ -1,0 +1,5 @@
+{% load i18n %}
+<th id="th_{{ field.name }}"{% if show_field != False %} class="pad0"><div class="fielddown pad5">{% else %}>{% endif %}
+<button class="botsheader ico-{{ field.name }}" name="order" value="{{ field.name }}" title="{% trans 'Sort by' %} {{ field.label|default:field.name }}">{{ field.label|default:field.name }}</button>
+{% if show_field != False %}<ul><li>{{ field }}</li></ul></div>{% endif %}
+</th>

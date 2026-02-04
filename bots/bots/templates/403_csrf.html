@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+
+{% block title %}403 {{ title }}{% endblock %}
+
+{% block extrahead %}{{ block.super }}
+<meta name="robots" content="NONE,NOARCHIVE">
+<style type="text/css">
+  body.err403 { background:lightgrey; color:#000; }
+  h1.err403 { font-weight:normal !important; background:inherit !important; color: var(--header-branding-color) !important; }
+  h1.err403 span { font-size:60%; opacity:60%; }
+  #info { background:#f6f6f6; }
+  #info ul { margin: 0.5em 4em; }
+  #info p, #summary p { padding-top:10px; margin:0; }
+  #summary { background:#ffc; color:#333; padding:10px 20px; border-bottom:1px solid #ddd; }
+  #explanation { background:#eee; border-bottom: 0px none; }
+</style>
+{% endblock %}
+
+{% block bodyclass %}err403{% endblock %}
+
+{% block branding %}
+<h1 class="err403">{{ title }} <span>(403)</span></h1>
+{% endblock %}
+
+{% block usertools %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block content %}
+<div id="summary">
+  <p>{{ main }}</p>
+{% if no_referer %}
+  <p>{{ no_referer1 }}</p>
+  <p>{{ no_referer2 }}</p>
+  <p>{{ no_referer3 }}</p>
+{% endif %}
+{% if no_cookie %}
+  <p>{{ no_cookie1 }}</p>
+  <p>{{ no_cookie2 }}</p>
+{% endif %}
+</div>
+{% endblock %}

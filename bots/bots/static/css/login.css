@@ -1,0 +1,10 @@
+/* LOGIN CSS */
+
+.login input,
+.login .form-row #id_username, .login .form-row #id_password {
+    padding: 8px 12px;
+    border-radius: 15px;
+}
+.login input[type="submit"] {
+    padding: 10px 15px;
+}

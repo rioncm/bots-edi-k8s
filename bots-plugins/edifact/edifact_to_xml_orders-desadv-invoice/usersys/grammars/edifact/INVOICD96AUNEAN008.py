@@ -1,0 +1,1 @@
+../../../../../usersys/grammars/edifact/INVOICD96AUNEAN008.py

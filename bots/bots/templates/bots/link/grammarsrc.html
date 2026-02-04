@@ -1,0 +1,2 @@
+{% if editype and editype != 'raw' and editype != 'db' and messagetype %}{% load i18n %}
+<a onmouseenter="view_src(this, '{{ typeofgrammarfile|default:"grammars" }}', '{{ editype }}', '{{ messagetype }}')" onclick="this.onmouseenter(){% if is_popup %}; return popup(this, '80%', '90%'){% endif %}" title="{% trans 'View source' %}" class="icon-py {% if as_link %}botslink{% else %}button{% endif %}">{{ text|default:messagetype }}</a>{% else %}{{ messagetype }}{% endif %}

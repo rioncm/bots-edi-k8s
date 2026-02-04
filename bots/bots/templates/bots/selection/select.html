@@ -1,0 +1,9 @@
+{% load i18n %}<div class="paginatop">
+{{ form.selection }} {{ form.selection_name }}
+<button name="saveselection" class="button ico-save" title="{% trans 'Save selection' %}" onclick="return saveSelection(this)">{% trans 'Save' %}</button>
+{% include "bots/selection/delete.html" %}{% include "bots/selection/clear.html" %}
+<button name="permlink" class="button ico-link" title="{% trans 'Show selection as permanent link' %}"></button>
+<button name="fromselect" class="button ico-view">{% trans 'Show selection' %}</button>
+<br />
+{{ form.selection.errors }}{{ form.selection_name.errors }}
+</div>

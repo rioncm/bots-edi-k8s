@@ -1,0 +1,10 @@
+{% if custom_menus %}
+<li><a>{{ custom_menuname }}</a>
+    <ul>
+    {% for key,value in custom_menus %}
+	{% if value == '---' %}<li><hr/></li>
+	{% else %}<li><a href="{{ value }}" >{{ key }}</a></li>{% endif %}
+    {% endfor %}
+    </ul>
+</li>
+{% endif %}

@@ -1,0 +1,6 @@
+{% if perms.auth.view_group or perms.change_group %}{% load i18n %}
+<li><a href="{% url 'admin:auth_group_changelist' %}" class="ico-group">{% trans 'UserGroups' %}</a>
+{% if perms.auth.add_group %}<ul>
+  <li><a href="{% url 'admin:auth_group_add' %}" class="ico-add">{% trans 'Add' %}</a></li>
+</ul>{% endif %}
+</li>{% endif %}

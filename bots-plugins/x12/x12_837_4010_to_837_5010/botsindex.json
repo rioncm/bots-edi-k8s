@@ -1,0 +1,88 @@
+{
+  "bots_version": "4.0.0",
+  "plugins": {
+    "channel": [
+      {
+        "plugintype": "channel",
+        "apop": false,
+        "archivepath": "",
+        "askmdn": "no",
+        "charset": "us-ascii",
+        "filename": "*.x12",
+        "ftpaccount": "",
+        "ftpactive": false,
+        "ftpbinary": false,
+        "host": "",
+        "idchannel": "x12837_in",
+        "inorout": "in",
+        "lockname": "",
+        "mdnchannel": "",
+        "parameters": "",
+        "path": "botssys/infile/837",
+        "port": 0,
+        "remove": false,
+        "secret": "",
+        "sendmdn": "no",
+        "starttls": false,
+        "syslock": false,
+        "type": "file",
+        "username": ""
+      },
+      {
+        "plugintype": "channel",
+        "apop": false,
+        "archivepath": "",
+        "askmdn": "no",
+        "charset": "us-ascii",
+        "filename": "*.x12",
+        "ftpaccount": "",
+        "ftpactive": false,
+        "ftpbinary": false,
+        "host": "",
+        "idchannel": "x12837_out",
+        "inorout": "out",
+        "lockname": "",
+        "mdnchannel": "",
+        "parameters": "",
+        "path": "botssys/outfile/837",
+        "port": 0,
+        "remove": false,
+        "secret": "",
+        "sendmdn": "no",
+        "starttls": false,
+        "syslock": false,
+        "type": "file",
+        "username": ""
+      }
+    ],
+    "routes": [
+      {
+        "plugintype": "routes",
+        "active": false,
+        "alt": "",
+        "fromchannel": "x12837_in",
+        "fromeditype": "x12",
+        "frommessagetype": "x12",
+        "idroute": "837to837",
+        "notindefaultrun": false,
+        "seq": 1,
+        "tochannel": "x12837_out",
+        "translateind": true
+      }
+    ],
+    "translate": [
+      {
+        "plugintype": "translate",
+        "active": true,
+        "alt": "",
+        "fromeditype": "x12",
+        "frommessagetype": "837004010X098A1",
+        "frompartner": "",
+        "toeditype": "x12",
+        "tomessagetype": "837005010X222",
+        "topartner": "",
+        "tscript": "x12_837_4010_2_x12_837_5010"
+      }
+    ]
+  }
+}

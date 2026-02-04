@@ -1,0 +1,30 @@
+/*
+ * Bots logfiler CSS
+ *
+ * Author: Ludovic Watteaux
+ */
+
+h2 .button {font-size: 13px;}
+
+table#botslog {
+    border-collapse: collapse;
+}
+
+table#botslog a {
+    display: block;
+}
+
+html[data-theme="light"] pre,
+pre {
+  color: var(--body-fg);
+  background-color: var(--selected-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  pre {
+    color: #ddd;
+  }
+}
+html[data-theme="dark"] pre {
+    color: #ddd;
+}

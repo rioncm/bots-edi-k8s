@@ -1,0 +1,6 @@
+{% with field=form.editype %}
+<td data-field="{{ field.name }}">{% if row.editype %}
+<div class="dropdown">{{ row.editype }}
+<ul></ul>
+</div>{% endif %}
+</td>{% endwith %}

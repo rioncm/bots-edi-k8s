@@ -1,0 +1,27 @@
+{% load i18n static %}
+<link rel="stylesheet" href="{% static "css/bots-nav.css" %}">
+<nav id="bots-nav">
+<ul>{% if not user.is_authenticated %}
+  <li><a href="{% url 'login' %}">{% trans 'Log in' %}</a></li>
+{% else %}
+{% block user-nav %}
+<li><a{% if not bots_touchscreen %} href="{% url 'bots:home' %}"{% endif %} class="ico-home after-title" title="{% trans 'Home' %}"></a>
+  <ul>
+    {% if bots_touchscreen %}<li><a href="{% url 'bots:home' %}" class="ico-home">{% trans 'Home' %}</a></li>{% endif %}
+    <li><a href="https://bots.readthedocs.io/en/latest/guide-for-botsmonitor/">{% trans 'Help' %}</a></li>
+    {% if user.has_usable_password and menu_changepassword %}<li><a href="{% url 'password_change' %}" class="ico-key">{% trans 'Change password' %}</a></li>{% endif %}
+    <li>
+      <form id="logout-nav-form" method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="ico-logout">{% trans 'Log out' %}</button>
+      </form>
+    </li>
+  </ul>
+</li>
+{% endblock %}
+{% block bots-nav %}
+{% include 'bots/nav/index.html' %}
+{% endblock %}
+{% endif %}
+</ul>
+</nav>

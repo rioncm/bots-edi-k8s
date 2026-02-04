@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<br/>
+<h1 class="ico-plugin">{% trans 'Read a plugin' %}</h1>
+<br/>
+<p>{% trans 'Select a plugin from your file system' %}:</p>
+<form action="{% url 'bots:plugin' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+{{ form }}
+<br/>
+<br/>
+<br/>
+{% include 'bots/button_cancel_close.html' %}
+<button name="submit" class="button ico-read" onclick="return (document.getElementById('id_file').value && confirm('{% trans 'Read' %}: ' + document.getElementById('id_file').files[0].name + ' ?'));">{% trans 'Read' %}</button>
+</form>
+{% endblock %}

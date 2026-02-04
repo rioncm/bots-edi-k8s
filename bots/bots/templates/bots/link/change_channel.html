@@ -1,0 +1,2 @@
+{% if perms.bots.view_channel %}{% load i18n %}
+<a title="Bots {% trans 'channel'|capfirst %}: {{ idchannel }}" onclick="return view_channel(this)" class="{% if as_link %}botslink{% else %}button ico-{{ fromto }}channel {{ cssclass }}{% endif %}" data-after=" ({{ channel_type }})">{{ idchannel }}</a>{% else %}<span class="ico-{{ fromto }}channel" data-after=" ({{ channel_type }})">{{ idchannel }}</span>{% endif %}

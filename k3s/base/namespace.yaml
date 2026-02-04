@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: edi
+  labels:
+    name: edi
+    app: bots-edi

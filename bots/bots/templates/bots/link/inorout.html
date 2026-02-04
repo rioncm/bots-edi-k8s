@@ -1,0 +1,5 @@
+{% with text=ta.get_status_display idta=ta.idta %}
+{% if ta.status == 200 %}{% include 'bots/link/incoming.html' %}
+{% elif ta.status == 320 or ta.status == 330 %}{% include 'bots/link/document.html' with inorout=ta.status %}
+{% elif ta.status == 520 %}{% include 'bots/link/outgoing.html' %}
+{% else %}{{ text }}{% endif %}{% endwith %}

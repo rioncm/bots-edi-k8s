@@ -1,0 +1,38 @@
+{% if user.is_superuser %}{% load i18n %}
+<li><a href="{% url 'admin:index' %}" class="ico-admin after-title" title="{% trans 'SysTasks' %}"></a>
+<ul>
+  <li><a class="ico-plugin">{% trans 'Plugins' %}</a>
+    <ul>
+      <li><a href="{% url 'bots:plugin' %}" class="ico-plugin">{% trans 'Read plugin' %}</a></li>
+      <li><a href="{% url 'bots:plugout' %}" class="ico-plugout">{% trans 'Make plugin' %}</a></li>
+      <li><a href="{% url 'bots:plugout' %}/backup" class="ico-plugout">{% trans 'Make backup plugin' %}</a></li>
+    </ul>
+  </li>
+  <li><hr/></li>
+  <li><a class="ico-config">{% trans 'Configuration' %}</a>
+    <ul>
+      <li><a href="{% url 'bots:plugin' %}/index" class="ico-read">{% trans 'Read configuration index' %}</a></li>
+      <li><a href="{% url 'bots:plugout' %}/index" class="ico-write">{% trans 'Make configuration index' %}</a></li>
+      <li><hr/></li>
+      <li><a href="{% url 'bots:delete' %}" class="ico-del">{% trans 'Bulk delete' %}</a></li>
+    </ul>
+  </li>
+  <li><hr/></li>
+  {% include 'bots/nav/admin_auth.html' %}
+  <li><hr/></li>
+  <li><a href="{% url 'admin:bots_uniek_changelist' %}" class="ico-uniek">{% trans 'View/edit counters' %}</a></li>
+  <li><a href="{% url 'bots:sendtestmail' %}" class="ico-sendmail">{% trans 'Send test report' %}</a></li>
+  <li><hr/></li>
+  <li><a href="{% url 'bots:logfiler' %}" target="_blank" class="ico-logs">{% trans 'Logs' %}</a>
+    <ul>
+      <li><a href="{% url 'bots:logfiler' %}/?engine" target="_blank" class="ico-translate">{% trans 'Engine logs' %}</a></li>
+      <li><a href="{% url 'bots:logfiler' %}/?dirmonitor" target="_blank" class="ico-dirmonitor">{% trans 'Dirmonitor logs' %}</a></li>
+      <li><a href="{% url 'bots:logfiler' %}/?jobqueue" target="_blank" class="ico-jobqueue">{% trans 'Jobqueue logs' %}</a></li>
+      {% if 'Cheroot' in request.META.SERVER_SOFTWARE %}
+      <li><a href="{% url 'bots:logfiler' %}/?webserver" target="_blank" class="ico-webserver">{% trans 'Webserver logs' %}</a></li>
+      {% endif %}
+    </ul>
+  </li>
+</ul>
+</li>
+{% endif %}

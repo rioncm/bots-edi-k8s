@@ -1,0 +1,7 @@
+{% load i18n %}
+<th class="pad0{% if form.datefrom.value or form.dateuntil.value %} filteredfield{% endif %}">
+<button class="botsheader sorted" onclick="document.getElementById('id_sortedby').value='ts';document.getElementById('id_sortedasc').value='False';" title="{% trans 'Sort recent first' %}"></button>
+{{ form.datefrom }}{% include 'bots/botstable/submit.html' %}{% if form.datefrom.value %}{% include 'bots/botstable/field/clear.html' with field=form.datefrom %}{% endif %}<br />
+<button class="botsheader sortedasc" onclick="document.getElementById('id_sortedby').value='ts';document.getElementById('id_sortedasc').value='True';" title="{% trans 'Sort older first' %}"></button>
+{{ form.dateuntil }}{% include 'bots/botstable/submit.html' %}{% if form.dateuntil.value %}{% include 'bots/botstable/field/clear.html' with field=form.dateuntil %}{% endif %}
+</th>

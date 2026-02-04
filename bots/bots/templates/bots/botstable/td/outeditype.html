@@ -1,0 +1,6 @@
+{% with field=form.outeditype %}
+<td data-field="{{ field.name }}">{% if row.outeditype and row.outeditype.0 != '(' %}
+<div class="dropdown">{{ row.outeditype }}
+<ul>{# include "bots/botstable/dropdown/translate.html" #}</ul>
+</div>{% else %}{{ row.outeditype }}{% endif %}
+</td>{% endwith %}

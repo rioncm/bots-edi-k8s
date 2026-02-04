@@ -1,0 +1,2 @@
+{% load i18n botsfilters %}{% with filename=filename|shortpath|default:idta %}{% if perms.bots.view_ta %}
+<a href="{% url 'bots:filer' %}/?action=this&amp;idta={{ idta }}" target="_blank" {% if popup != False %}onclick="return popup(this)" {% endif %}class="botslink ico-file {{ cssclass }}" title="{% trans 'View' %} {{ filename}}">{{ filename }}</a>{% if downllink %}{% include 'bots/link/downlfile.html' %}{% endif %}{% else %}{{ filename }}{% endif %}{% endwith %}

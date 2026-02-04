@@ -1,0 +1,6 @@
+{% load i18n %}{% with dt=row.ts|date:DATETIME_INPUT_FORMAT %}
+<td data-field="ts" data-value="{{ dt }}" title="{{ dt }}">
+<div class="dropdown">{{ row.ts|date:'SHORT_DATE_FORMAT' }}&nbsp;&nbsp;{{ row.ts|date:'TIME_FORMAT' }}
+<ul>{# include "bots/botstable/dropdown/ts.html" #}</ul>
+</div>
+</td>{% endwith %}

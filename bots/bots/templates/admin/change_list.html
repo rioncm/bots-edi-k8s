@@ -1,0 +1,9 @@
+{% extends "admin/change_list.html" %}
+
+{% block footer %}{{ block.super }}
+<script>{# Add pagination on top #}
+document.addEventListener("DOMContentLoaded", function(event) {
+  document.getElementById("changelist-form").prepend(document.querySelector(".paginator").cloneNode(true));
+});
+</script>
+{% endblock %}

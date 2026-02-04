@@ -1,0 +1,6 @@
+{% with field=form.messagetype editype=row.editype messagetype=row.messagetype %}
+<td data-field="{{ field.name }}">{% if messagetype %}
+<div class="dropdown">{% include 'bots/link/messagetype.html' with as_link=True %}
+<ul>{# include "bots/botstable/dropdown/messagetype.html" #}</ul>
+</div>{% endif %}
+</td>{% endwith %}

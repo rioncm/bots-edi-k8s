@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<br/>
+<h1 class="ico-trash"> {% trans 'Bulk delete from configuration, user scripts etc.' %}</h1>
+<h2>{% trans '!Deletions can NOT be undone!' %}</h2>
+<br/>
+<form action="{{ form.action }}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <br/>&nbsp;
+  <button name="cancel" class="button ico-no">{% trans 'Cancel' %}</button>
+  <button name="submit" class="button ico-trash" onclick="return confirm('{% trans 'Bulk delete' %} ?');" style="background: var(--delete-button-bg);"> {% trans 'Bulk delete' %}</button>
+</form>
+{% endblock %}

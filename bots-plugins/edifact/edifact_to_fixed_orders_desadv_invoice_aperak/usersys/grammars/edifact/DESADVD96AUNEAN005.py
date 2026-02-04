@@ -1,0 +1,1 @@
+../../../../../usersys/grammars/edifact/DESADVD96AUNEAN005.py

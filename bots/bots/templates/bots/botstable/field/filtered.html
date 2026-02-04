@@ -1,0 +1,2 @@
+{% if field.value == 0 or field.value %}{% load i18n botsfilters %}{% with fieldicon="ico-"|add:field.name %}
+<button title="{% trans 'Clear filter' %}: {{ field.label }}" class="button filteredfield {{ icon|default:fieldicon }}{{ cssclass }}" onclick="clearfield('{{ field.id_for_label }}')">{% if get_field_display %}{{ field.value|get_choice_display:field.field.choices }}{% else %}{{ field.value }}{% endif %}</button>{% endwith %}{% endif %}

@@ -1,0 +1,11 @@
+<script>{# bots js const (urls) #}
+{% if perms.bots.view_partner %}const url_bots_partner = '{% url 'admin:bots_partner_changelist' %}';
+const inactive_partners = {{ form.inactive_partners|safe|default:'[]' }};{% endif %}{# const partners = {{ form.partners|safe|default:'[]' }};#}
+{% if perms.bots.add_partner %}const url_bots_partner_add = '{% url 'admin:bots_partner_add' %}';{% endif %}
+{% if perms.bots.view_routes %}const url_bots_routes = '{% url 'admin:bots_routes_changelist' %}';{% endif %}
+{% if perms.bots.view_channel %}const url_bots_channel = '{% url 'admin:bots_channel_changelist' %}';{% endif %}
+{% if perms.bots.view_translate %}const url_bots_translate = '{% url 'admin:bots_translate_changelist' %}';{% endif %}
+{% if perms.bots.add_translate %}const url_bots_translate_add = '{% url 'admin:bots_translate_add' %}';{% endif %}
+{% if perms.bots.change_translate %}const url_bots_srcfiler = '{% url 'bots:srcfiler' %}';{% endif %}
+{% if perms.bots.view_ta %}const url_bots_filer = '{% url 'bots:filer' %}';{% endif %}
+</script>

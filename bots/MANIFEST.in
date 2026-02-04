@@ -1,0 +1,20 @@
+include *.rst
+include botslogo.bmp
+include postinstall-bots-*
+
+recursive-include bots *
+recursive-include scripts *
+recursive-include requirements *
+recursive-include tests *
+
+global-exclude *.py[cod]
+
+prune bots/botssys?*
+prune bots/config?*
+prune bots/usersys?*
+prune bots/botssys/logging
+prune bots/botssys/infile
+prune bots/botssys/outfile
+prune bots/botssys/archive
+prune bots/botssys/data
+prune bots/botssys/static

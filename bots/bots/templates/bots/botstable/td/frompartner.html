@@ -1,0 +1,6 @@
+{% load i18n %}{% with field=form.frompartner idpartner=row.frompartner fromto="from" partners=form.partners inactive_partners=form.inactive_partners %}
+<td data-field="{{ field.name }}"{% if row.frommail %} title="{% trans 'From' %}: {{ row.frommail }}"{% endif %}>{% if row.frompartner and row.frompartner.0 != '(' %}
+<div class="dropdown">{% include 'bots/link/partner.html' %}
+<ul>{# include "bots/botstable/dropdown/partner.html" #}</ul>
+</div>{% else %}{{ row.frompartner }}{% endif %}
+</td>{% endwith %}

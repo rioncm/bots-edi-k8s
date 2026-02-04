@@ -1,0 +1,22 @@
+{% if perms.bots.change_mutex %}{# run bots-engine #}{% load i18n %}
+<li><a class="ico-run after-title" title="{% trans 'Run' %}"></a>
+<ul>
+    <li><a href="{% url 'bots:runengine' %}/?clparameter=--new" class="ico-run">{% trans 'Run (only new)' %}</a>
+    {% if menu_all_routes %}
+        <ul>{% for route in menu_all_routes %}
+            <li><a href="{% url 'bots:runengine' %}/?clparameter={{ route|urlencode:'' }}" class="ico-idroute">{{ route }}</a></li>
+        {% endfor %}</ul>
+    {% endif %}
+    </li>
+    <li><hr/></li>
+    <li><a href="{% url 'bots:runengine' %}/?clparameter=--rereceive" class="ico-rereceive">{% trans 'Run user-indicated rereceives' %}</a></li>
+    <li><a href="{% url 'bots:runengine' %}/?clparameter=--resend" class="ico-resend">{% trans 'Run user-indicated resends' %}</a></li>
+{% if menu_automaticretrycommunication %}
+    <li><hr/></li>
+    <li><a href="{% url 'bots:runengine' %}/?clparameter=--automaticretrycommunication" class="ico-resend">{% trans 'Retry failed out-communications' %}</a></li>{% endif %}
+{% if menu_cleanup %}
+    <li><hr/></li>
+    <li><a href="{% url 'bots:runengine' %}/?clparameter=--cleanup" class="ico-cleanup">{% trans 'Run cleanup' %}</a></li>
+{% endif %}
+</ul>
+</li>{% endif %}

@@ -1,0 +1,55 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}Bots {{ title|default:bots_http_path }} - {{ bots_environment_text }}{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+{% block favicon %}<link rel="icon" type="image/png" href="{% static "img/bots.ico" %}">{% endblock favicon %}
+{% endblock %}
+
+{% block extrahead %}{{ block.super }}
+<link rel="stylesheet" href="{% static "css/bots.css" %}">
+<link rel="stylesheet" href="{% static "css/bots-icons.css" %}">
+{% if user.is_authenticated %}<script src="{% static "js/bots.js" %}"></script>{% endif %}
+{% endblock %}
+
+{% block responsive %}{{ block.super }}
+<link rel="stylesheet" href="{% static "css/bots_responsive.css" %}">
+{% endblock %}
+
+{% block branding %}
+{% include botslogo|default:"bots/botslogo.html" %}
+{% if bots_environment_text %}<div id="environment">
+<div style="{{ bots_environment_text_style }}">{{ bots_environment_text }}</div>
+</div>{% endif %}
+{% endblock %}
+
+{% block header %}{{ block.super }}
+{% block nav-bots %}{% include botsmenu|default:"bots/menu.html" %}{% endblock %}
+{% endblock %}
+
+{% block usertools %}
+{% if not user.is_authenticated %}<a href="{% url 'login' %}"><strong>{% trans 'Log in' %}</strong></a>
+{% else %}<div id="user-tools">
+{% block welcome-msg %}
+    {% trans 'Welcome,' %}
+    <strong>{% firstof user.get_short_name user.get_username %}</strong>.
+{% endblock %}
+{% block userlinks %}
+{% if user.has_usable_password and menu_changepassword %}
+<a href="{% url 'password_change' %}">{% trans 'Change password' %}</a> /
+{% endif %}
+<form id="logout-form" method="post" action="{% url 'logout' %}">
+  {% csrf_token %}
+  <button type="submit">{% trans 'Log out' %}</button>
+</form>
+{% endblock %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+{{ content }}
+{% endblock %}

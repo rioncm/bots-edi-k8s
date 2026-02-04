@@ -1,0 +1,3 @@
+{% if idroute %}{% if admlink and perms.bots.change_routes %}{% load botsfilters %}
+<a href="{% url 'admin:bots_routes_changelist' %}{{ idroute|adminlinker:'routes' }}active__exact=1" title="Bots Route: {{ idroute }}" target="_blank" class="{% if as_link %}botslink{% else %}button ico-routes {{ cssclass }}{% endif %}">{{ idroute }}</a>
+{% else %}<span class="ico-routes">{{ idroute }}</span>{% endif %}{% endif %}

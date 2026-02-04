@@ -1,0 +1,25 @@
+{% extends "admin/bots/change_form.html" %}
+{% load i18n %}
+
+{% block footer %}{{ block.super }}{% if perms.bots.change_translate %}
+{% include "admin/bots/js.html" %}
+<script>
+{# Create (from/to)messagetype span with src link #}
+create_span(frommessagetype);
+create_span(tomessagetype);
+
+{# Create translateind span #}
+var span = document.createElement("span");
+span.id = "span_translateind";
+span.innerHTML = ' <a target="_blank" data-title="{% trans 'View Translate(s)' %}" class="button ico-translate"></a>';
+insertAfter(translateind, span);
+
+{# Create (from/to)messagetype selector #}
+create_select(frommessagetype);
+create_select(tomessagetype);
+
+{# Update selected values (first load) #}
+onchange_editype(fromeditype, onload=true);
+onchange_editype(toeditype, onload=true);
+</script>{% endif %}
+{% endblock %}

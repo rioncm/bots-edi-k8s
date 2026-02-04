@@ -1,0 +1,91 @@
+# Git and version control
+.git
+.gitignore
+.gitattributes
+
+# Python cache and compiled files
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+tests/
+**/tests/
+
+# Documentation
+docs/
+*.md
+*.rst
+*.txt
+LICENSE
+CONTRIBUTING.md
+AUTHORS.rst
+CHANGELOG.rst
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Kubernetes manifests (deployed separately)
+k3s/
+*.yaml
+*.yml
+
+# Build artifacts
+.build/
+*.log
+
+# Local development files
+bots/bots/db.sqlite3
+*.sqlite3
+*.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Project-specific
+fork/
+scripts/test-*.sh
+scripts/test_*.py
+scripts/*test*.py
+
+# Keep only what we need
+!bots/
+!bots-grammars/
+!bots-plugins/
+!bots_config/
+!scripts/init-database.py
+!scripts/healthcheck.py
+!scripts/run-*.sh
+!entrypoint.sh

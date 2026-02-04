@@ -1,0 +1,31 @@
+{% spaceless %}
+{% load i18n %}
+
+{% trans 'page' as page %}
+<div class="paginatop">
+{% if form.limit and not form.limit.is_hidden %} {{ form.limit }}{% endif %}
+{% if queryset.paginator.num_pages > 1 %}{% if queryset.has_previous %}
+    <input type="submit" title="{% trans 'First page' %}" name="first" value="&lt;&lt;">
+    <input type="submit" title="{% trans 'Previous page' %}" name="previous" value="&lt;">
+{% else %}
+    <input disabled type="submit" name="first" value="&lt;&lt;">
+    <input disabled type="submit" name="previous" value="&lt;">
+{% endif %}
+{% if queryset.paginator.num_pages < 999 %}
+    <label for="id_page" style=""> {{ page|capfirst }} </label>
+    <select id="id_page" name="page" onchange="this.form.submit();">{% for i in "x"|rjust:queryset.paginator.num_pages %}
+        <option value="{{ forloop.counter }}"{% if forloop.counter == queryset.number %} selected="selected"{% endif %}>{{ forloop.counter }}</option>    {% endfor %}</select>
+{% else %}<input type="text" id="id_page" name="page" maxlength="4" size="2" value="{{ queryset.number }}" onchange="this.form.submit();">{% endif %}
+ / {{ queryset.paginator.num_pages }}
+{% if queryset.has_next %}
+    <input type="submit" title="{% trans 'Next page' %}" name="next" value="&gt;" />
+    <input type="submit" title="{% trans 'Last page' %}" name="last" value="&gt;&gt;" />
+{% else %}
+    <input disabled type="submit" name="next" value="&gt;">
+    <input disabled type="submit" name="last" value="&gt;&gt;">
+{% endif %}{% endif %}
+{% with total=queryset.paginator.count|default:0 %}{{ total }} {% if total < 2 %}{{ verbose_name|default:title|lower }}{% else %}{{ verbose_name_plural|default:title|lower }}{% endif %}{% endwith %}
+{% if not form.actions.is_hidden %}{{ form.actions }}<button class="button" name="action" onclick="return confirmaction()" disabled>{% trans "Run" %}</button>
+{% with total=queryset.object_list.count|default:0 %}<span id="selcount" class="noafter" data-total="{{ total }}" data-after=" {% blocktrans %}of {{ total }} selected{% endblocktrans %}"></span>{% endwith %}{% endif %}
+</div>
+{% endspaceless %}

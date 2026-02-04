@@ -1,0 +1,79 @@
+{% extends "bots/base.html" %}
+{% load i18n botsfilters %}
+
+{% block bodyclass %}{{ block.super }} document{% endblock %}
+
+{% block bots_title %}
+<h1 class="ico-docs{% if form.status.value %}{{ form.status.value }}{% endif %}"><a href="#" title="{% trans 'Top' %}">{{ title }}</a> {% include "bots/selection/view.html" %}</h1>
+{% endblock %}
+
+{% block bots_submit %}
+{% if form.allstatus %}{% include 'bots/botstable/field/checkbox.html' with field=form.allstatus %}{% endif %}
+{{ block.super }}{% if not perms.bots.change_mutex %}
+{% include 'bots/botstable/field/hidden.html' with field=form.idroute %}
+{% include 'bots/botstable/field/hidden.html' with field=form.fromchannel %}{% endif %}
+{% endblock %}
+
+{% block botstable %}
+<thead>
+<tr>
+    {% include 'bots/botstable/thead/field.html' with field=form.status %}
+    <th id="th_ts"><button class="botsheader ico-ts" name="order" value="ts">{% trans 'Date/time' %}</button></th>
+    <th id="th_reference"><button class="botsheader" name="order" value="reference">{% trans 'Reference' %}</button></th>
+    <th id="th_filename"><button class="botsheader ico-file" name="order" value="filename">{% trans 'File' %}</button></th>
+    {% include 'bots/botstable/thead/field.html' with field=form.contenttype show_field=False %}
+    {% include 'bots/botstable/thead/field.html' with field=form.editype %}
+    {% include 'bots/botstable/thead/field.html' with field=form.messagetype %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/thead/field.html' with field=form.idroute %}
+    {% include 'bots/botstable/thead/field.html' with field=form.fromchannel %}{% endif %}
+    {% include 'bots/botstable/thead/field.html' with field=form.confirmtype %}
+    {% include 'bots/botstable/thead/field.html' with field=form.confirmidta %}
+    {% include 'bots/botstable/thead/field.html' with field=form.frompartner %}
+    {% include 'bots/botstable/thead/field.html' with field=form.topartner %}
+    <th id="th_filesize"><button class="botsheader" name="order" value="filesize">{% trans 'Size' %}</button></th>
+</tr>
+<tr>
+    {% include 'bots/botstable/thead/filtered.html' with field=form.status get_field_display=True icon="ico-doc" cssclass=form.status.value %}
+    {% include 'bots/botstable/thead/datefields.html' %}
+    {% include 'bots/botstable/thead/textfield.html' with field=form.reference %}
+    {% include 'bots/botstable/thead/textfield.html' with field=form.filename %}
+    {% include 'bots/botstable/thead/textfield.html' with field=form.contenttype %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.editype %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.messagetype %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/thead/filtered.html' with field=form.idroute %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.fromchannel %}{% endif %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.confirmtype get_field_display=True %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.confirmidta %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.frompartner %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.topartner %}
+    <th></th>
+</tr>
+</thead>
+<tbody class="documents">{% for row in queryset.object_list %}
+<tr class="{% cycle 'row1' 'row2' %}">
+    <td data-field="status" data-value="{{ row.status }}"><div class="dropdown">
+      {% if perms.bots.view_ta %}<a href="{% url 'bots:detail' %}/?{% if row.status == 200 %}in{% else %}out{% endif %}idta={{ row.idta }}" onclick="return popup(this, '95%', '75%', '&popup=1')" title="{% trans 'View details' %}: {{ row.idta }}" class="button ico-doc{{ row.status }}">{{ row.get_status_display }}</a>
+      {% else %}<button class="button ico-doc{{ row.status }}">{{ row.get_status_display }}</button>{% endif %}
+      <ul>
+        {% if user.is_staff %}<li><a class="ico-log" href="{% url 'bots:logfiler' %}/?engine=&{% if row.status == 200 %}in{% else %}out{% endif %}idta={{ row.idta }}" target="_blank">{% trans 'View log' %}</a></li>{% endif %}
+        {% if row.status == 320 and perms.bots.change_mutex %}{# document-in #}<li><button type="submit" name="rereceive" value="{{ row.idta }}" class="ico-rereceive">{% trans 'Rereceive' %}</button></li>
+        {% elif row.status == 330 %}{# document-out #}{% endif %}
+      {# include "bots/botstable/dropdown/filters.html" with field=form.status get_status=True #}
+      </ul>
+    </div></td>
+    {% include 'bots/botstable/td/ts.html' %}
+    {% include 'bots/botstable/td/reference.html' %}
+    {% include 'bots/botstable/td/filename.html' %}
+    {% include 'bots/botstable/td/contenttype.html' %}
+    {% include 'bots/botstable/td/editype.html' %}
+    {% include 'bots/botstable/td/messagetype.html' %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/td/idroute.html' %}
+    {% include 'bots/botstable/td/fromchannel.html' %}{% endif %}
+    {% include 'bots/botstable/td/confirmtype.html' %}
+    <td>{% include 'bots/link/confirmation.html' with ta=row %}</td>
+    {% include 'bots/botstable/td/frompartner.html' %}
+    {% include 'bots/botstable/td/topartner.html' %}
+    <td>{% if row.filesize %}{{ row.filesize|filesizeformat }}{% endif %}</td>
+</tr>
+{% endfor %}</tbody>
+{% endblock %}

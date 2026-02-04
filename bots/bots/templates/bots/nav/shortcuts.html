@@ -1,0 +1,13 @@
+{% load i18n %}{% if shortcuts_menuname %}<li><a class="ico-shortcut"{% if perms.bots.add_ccode %} href="{% url 'admin:bots_ccode_changelist' %}?ccodeid=shortcut" title="{% trans 'Manage shortcuts' %}"{% endif %}>{{ shortcuts_menuname }}</a>
+  <ul>{% for label, values in shortcuts.items %}{% if label %}<li><a>{{ label }}</a><ul>{% endif %}{% for key, value in values %}
+    {% if value == '---' %}<li><hr/></li>
+    {% else %}<li><a href="{{ value }}" class="ico-shortcut">{{ key }}</a></li>{% endif %}
+    {% endfor %}{% if label %}</li></ul>{% endif %}<li><hr/></li>{% endfor %}
+    {% if perms.bots.add_ccode %}
+      <li><a href="{% url 'admin:bots_ccode_add' %}" class="ico-add" onclick="return add_shortcut(this)" attr8="{{ user.id }}">{% trans 'Add shortcut to this page' %}</a></li>
+      <li><a href="{% url 'admin:bots_ccode_add' %}?ccodeid=shortcut&attr8={{ user.id }}&attr2=custom" class="ico-add">{% trans 'Add custom shortcut' %}</a></li>
+      <li><a href="{% url 'admin:bots_ccode_changelist' %}?ccodeid=shortcut" class="ico-admin">{% trans 'Manage shortcuts' %}</a></li>{% endif %}
+  </ul>
+</li>{% elif user.is_superuser %}
+<li><a href="{% url 'admin:bots_ccodetrigger_add' %}?ccodeid=shortcut" class="ico-shortcut" title="{% trans 'Create shortcuts menu' %}">+</a></li>
+{% endif %}

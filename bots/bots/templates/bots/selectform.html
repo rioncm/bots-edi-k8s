@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block extrahead %}{{ block.super }}
+{% include "bots/js/i18n.html" %}
+{% include "bots/js/datetimepicker.html" %}
+<script src="{% static "js/botstable.js" %}"></script>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} bots selectform{% endblock %}
+
+{% block content_title %}<h1 class="ico-search">{{ form.title }}</h1>{% endblock %}
+
+{% block content %}
+<form action="{{ form.action }}" id="selectform" method="post">{% csrf_token %}
+{% include 'bots/selection/select.html' %}
+<h3>{% trans 'Parameters' %}:</h3>
+<table>{% for field in form %}
+{% if field.is_hidden %}{{ field }}{% if field.errors %}{{ field.name }}: {{ field.errors }}{% endif %}{% elif field.name == 'selection' %}{% elif field.name == 'selection_name' %}{% else %}
+<tr{% if field.value or field.value == 0 and field.field.widget.input_type != 'checkbox' %} class="filteredfield"{% endif %}><th class="middle"><label class="ico-{{ field.name }}" for="{{ field.id_for_label }}">{{ field.label }}</label></th><td class="middle">{% if field.value or field.value == 0 and field.field.widget.input_type != 'checkbox' %}{% include 'bots/botstable/field/clear.html' with submit=False %}{% endif %}</td><td>{{ field }}{{ field.errors }}</td></tr>{% endif %}
+{% endfor %}</table>
+<br />
+<br />
+<button name="permlink" class="button ico-link">{% trans 'Permanent link' %}</button>
+<button name="fromselect" class="button ico-view">{% trans 'Show selection' %}</button>
+<br />
+<br />
+</form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{# 2019.05.03 LWA - https://github.com/xdan/datetimepicker #}
+{% load i18n static %}{% get_current_language as LANGUAGE_CODE %}
+<link rel="stylesheet" href="{% static "css/jquery.datetimepicker.min.css" %}">
+<script src="{% static "admin/js/vendor/jquery/jquery.min.js" %}"></script>
+<script src="{% static "js/jquery.datetimepicker.full.min.js" %}"></script>
+<script>{# datetimepicker vars #}
+jQuery.datetimepicker.setLocale('{{ LANGUAGE_CODE }}');
+{# datetime_input_format|default:"Y-m-d H:i:s" #}
+const datetime_input_format = '{{ DATETIME_INPUT_FORMAT }}';
+const date_input_format = '{{ DATE_INPUT_FORMAT }}';
+const time_input_format = '{{ TIME_INPUT_FORMAT }}';
+const mindate = '{{ bots_mindate|date:DATE_INPUT_FORMAT }}';
+const maxdate = '{{ bots_maxdate|date:DATE_INPUT_FORMAT }}';
+const year_start = '{{ bots_mindate|date:"Y" }}';
+const year_end = '{{ bots_maxdate|date:"Y" }}';
+</script>
+<script src="{% static "js/bots.datetimepicker.js" %}"></script>

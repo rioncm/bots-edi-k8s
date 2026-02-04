@@ -1,0 +1,82 @@
+{% extends "admin/base.html" %}
+{% load i18n static botsfilters %}
+
+{% block extrahead %}{{ block.super }}
+{% include "bots/js/urls.html" %}
+<script src="{% static "js/botstable.js" %}"></script>
+{% if user.is_staff and perms.bots %}<script src="{% static "js/bots.staff.js" %}"></script>{% endif %}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} bots detail{% endblock %}
+
+{% block content_title %}<h1 class="ico-detail"><a href="#" title="{% trans 'Top' %}">{{ title }}</a> &nbsp;&nbsp;{% include 'bots/button_back_close.html' with cssclass="pad3 va-top" %}</h1>{% endblock %}
+
+{% block content %}
+<table>{% with dt=rootta.ts|date:DATETIME_INPUT_FORMAT %}
+<tr title="{{ dt }}"><th><span class="ico-date"></span></th><th>{% trans 'Date' %}</th><td>{{ rootta.ts|date:'DATE_FORMAT' }}</td></tr>
+<tr title="{{ dt }}"><th><span class="ico-time"></span></th><th>{% trans 'Time' %}</th><td>{{ rootta.ts|date:'H:i:s' }}</td></tr>{% endwith %}
+<tr>{% with detaillist|last as lastta %}
+<th></th>
+<th>{% trans 'Status' %}</th>
+{% if lastta.statust == 3 %}<td>{{ lastta.statust_icon }}</td>
+{% else %}<td class="botsstatus{{ lastta.statust }}">{{ lastta.statust_icon }} <b>{{ lastta.get_statust_display }}</b></td>{% endif %}
+</tr>{% endwith %}
+<tr><th><span class="ico-idroute"></span></th><th>{% trans 'Route' %}</th><th>{% include 'bots/link/change_route.html' with idroute=rootta.idroute %}</th></tr>
+</table>
+<table id="botstable" class="detail">
+<thead>
+<tr>
+    <th></th>
+    <th><button class="botsheader">{% trans 'Phase' %}</button></th>
+    <th><button class="botsheader">{% trans 'Status' %}</button></th>
+    <th><button class="botsheader ico-file">{% trans 'File' %}</button></th>
+    <th><button class="botsheader">{% trans '#mes' %}</button></th>
+    <th><button class="botsheader">{% trans 'Editype' %}</button></th>
+    <th><button class="botsheader">{% trans 'Messagetype' %}</button></th>
+    <th><button class="botsheader ico-channel">{% trans 'Channel' %}</button></th>
+    <th><button class="botsheader ico-frompartner">{% trans 'FromPartner' %}</button></th>
+    <th><button class="botsheader ico-topartner">{% trans 'ToPartner' %}</button></th>
+    <th><button class="botsheader">{% trans 'Reference' %}</button></th>
+    <th><button class="botsheader">{% trans 'Size' %}</button></th>
+    <th><button class="botsheader">{% trans 'Charset' %}</button></th>
+    <th><button class="botsheader">{% trans 'Contenttype' %}</button></th>
+    <th><button class="botsheader">{% trans 'Alt' %}</button></th>
+    <th><button class="botsheader ico-tscript">{% trans 'Mapping' %}</button></th>
+    <th><button class="botsheader">{% trans 'Test' %}</button></th>
+</tr>
+</thead>{% with cssclass="pad2" %}
+<tbody>{% for row in detaillist %}
+<tr class="{% cycle 'row1' 'row2' %} botstrstatus{{ row.statust }}">
+    <td>{{ row.ind }}</td>
+    <td class="phase"><div class="tainfo dropright">{% include 'bots/ta_info.html' with ta=row admlink=True cssclass="pad1" downllink=True %}</div>
+      {% include 'bots/link/inorout.html' with ta=row %}<br />
+      {% if row.confirmasked %}{% include 'bots/link/confirm.html' with ta=row %}
+      <b>{% if row.confirmidta > 0 %}{% if row.confirmed %}{% trans 'Confirmed' %}{% else %}{% trans 'Unconfirmed' %}{% endif %}{% endif %}</b>
+      {% include 'bots/link/confirmation.html' with ta=row %}{% endif %}
+    </td>
+    <td{% if row.statust == 1 %} class="botsstatus{{ row.statust }}"{% endif %}>{{ row.statust_icon }}{% if row.statust != 3 %} {{ row.get_statust_display }}{% endif %}</td>
+    <td>{% if row.status == 220 %}{% include 'bots/link/filer.html' with idta=row.idta filename=row.divtext|default:row.filename popup=True downllink=True %}{% else %}{% include 'bots/link/filer.html' with idta=row.idta filename=row.filename popup=True downllink=True %}{% endif %}</td>
+    <td>{{ row.nrmessages }}</td>
+    <td>{{ row.editype }}</td>
+    <td>{% include 'bots/link/messagetype.html' with editype=row.editype messagetype=row.messagetype as_link=True %}</td>
+    <td>{% if row.tochannel %}{% include 'bots/link/channel.html' with idchannel=row.tochannel fromto="to" channel_type=row.tochannel|get_channel_type:channels_types %}
+    {% else %}{% include 'bots/link/channel.html' with idchannel=row.fromchannel fromto="from" channel_type=row.fromchannel|get_channel_type:channels_types %}{% endif %}</td>
+    <td{% if row.frommail %} title="{% trans 'From' %}: {{ row.frommail }}"{% endif %}>{% include 'bots/link/partner.html' with idpartner=row.frompartner fromto="from" %}</td>
+    <td{% if row.tomail %} title="{% trans 'To' %}: {{ row.tomail }}"{% endif %}>{% include 'bots/link/partner.html' with idpartner=row.topartner fromto="to" %}</td>
+    <td>{% include 'bots/link/reference.html' with ta=row %}</td>
+    <td>{% if row.filesize %}{{ row.filesize|filesizeformat }}{% endif %}</td>
+    <td>{{ row.charset }}</td>
+    <td>{{ row.contenttype }}</td>
+    <td>{{ row.alt }}</td>
+    <td>{% if row.status == 320 and perms.bots.change_mutex %}{% include 'bots/link/translate.html' with messagetype=row.messagetype tscript=row.divtext tscript_link=True admin_link=True %}</td>
+    {% else %}{{ row.divtext }}{% endif %}</td>
+    <td>{{ row.testindicator }}</td>
+</tr>
+{% if row.errortext %}<tr class="{% cycle 'row1' 'row2' %} botstrstatus{{ row.statust }} errortext">
+    <td></td>
+    <td></td>
+    <td align="left" class="va-top" colspan="{% if perms.bots.change_mutex %}15{% else %}15{% endif %}">{% include "bots/ta_errortext.html" %}</td>
+</tr>{% endif %}
+{% endfor %}</tbody>{% endwith %}
+</table>
+{% endblock %}

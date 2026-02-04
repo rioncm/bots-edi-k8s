@@ -1,0 +1,2 @@
+{% load i18n static %}{% if submit != False or field.field.widget.input_type != 'radio' and field.field.widget.input_type != 'checkbox' %}
+<button onclick="clearfield('{{ field.id_for_label }}'){% if submit == False %};return false;" type="button{% endif %}" title="{% trans 'Clear filter' %}: {{ field.label }}" class="botsheader bt-del">&nbsp;</button>{% endif %}

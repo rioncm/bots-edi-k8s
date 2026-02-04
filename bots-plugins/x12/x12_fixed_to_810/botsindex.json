@@ -1,0 +1,89 @@
+{
+  "bots_version": "4.0.0",
+  "plugins": {
+    "channel": [
+      {
+        "plugintype": "channel",
+        "apop": false,
+        "archivepath": "",
+        "askmdn": "no",
+        "charset": "us-ascii",
+        "filename": "*.inh",
+        "ftpaccount": "",
+        "ftpactive": false,
+        "ftpbinary": false,
+        "host": "",
+        "idchannel": "810_in_file",
+        "inorout": "in",
+        "lockname": "",
+        "mdnchannel": "",
+        "parameters": "",
+        "path": "botssys/infile/fixed810_2_x12",
+        "port": 0,
+        "remove": false,
+        "secret": "",
+        "sendmdn": "no",
+        "starttls": false,
+        "syslock": false,
+        "type": "file",
+        "username": ""
+      },
+      {
+        "plugintype": "channel",
+        "apop": false,
+        "archivepath": "",
+        "askmdn": "no",
+        "charset": "us-ascii",
+        "filename": "810_out*.x12",
+        "ftpaccount": "",
+        "ftpactive": false,
+        "ftpbinary": false,
+        "host": "",
+        "idchannel": "810_out_file",
+        "inorout": "out",
+        "lockname": "",
+        "mdnchannel": "",
+        "parameters": "",
+        "path": "botssys/outfile/fixed810_2_x12",
+        "port": 0,
+        "remove": false,
+        "secret": "",
+        "sendmdn": "no",
+        "starttls": false,
+        "syslock": false,
+        "type": "file",
+        "username": ""
+      }
+    ],
+    "routes": [
+      {
+        "plugintype": "routes",
+        "active": false,
+        "alt": "",
+        "fromchannel": "810_in_file",
+        "fromeditype": "fixed",
+        "frommessagetype": "fixed_810",
+        "idroute": "fixed810_2_x12",
+        "notindefaultrun": false,
+        "seq": 9999,
+        "tochannel": "810_out_file",
+        "toeditype": "x12",
+        "translateind": true
+      }
+    ],
+    "translate": [
+      {
+        "plugintype": "translate",
+        "active": true,
+        "alt": "",
+        "fromeditype": "fixed",
+        "frommessagetype": "fixed_810",
+        "frompartner": "",
+        "toeditype": "x12",
+        "tomessagetype": "810004010",
+        "topartner": "",
+        "tscript": "fixed810_2_x12"
+      }
+    ]
+  }
+}

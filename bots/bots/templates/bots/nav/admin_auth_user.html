@@ -1,0 +1,10 @@
+{% if perms.auth.view_user or perms.auth.change_user %}{% load i18n %}
+<li><a href="{% url 'admin:auth_user_changelist' %}" class="ico-user">{% trans 'Users' %}</a>
+<ul>
+  <li><a href="{% url 'admin:auth_user_changelist' %}?is_staff__exact=1">{% trans 'Staff' %}</a></li>
+  <li><a href="{% url 'admin:auth_user_changelist' %}?is_superuser__exact=1">{% trans 'Superuser' %}</a></li>
+  <li><a href="{% url 'admin:auth_user_changelist' %}?is_active__exact=1" class="ico-yes">{% trans 'Actives' %}</a></li>
+  <li><a href="{% url 'admin:auth_user_changelist' %}?is_active__exact=0" class="ico-no">{% trans 'Inactives' %}</a></li>
+  {% if perms.auth.add_user %}<li><a href="{% url 'admin:auth_user_add' %}" class="ico-add">{% trans 'Add' %}</a></li>{% endif %}
+</ul>
+</li>{% endif %}

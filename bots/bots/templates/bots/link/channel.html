@@ -1,0 +1,3 @@
+{% if idchannel %}{% if channel_type %}{% if admlink %}{% include 'bots/link/change_channel.html' %}
+{% else %}<span class="ico-{{ fromto }}channel" data-after=" ({{ channel_type }})">{{ idchannel }}</span>{% endif %}
+{% else %}<span class="ico-{{ fromto }}channel after-err">{{ idchannel }}</span>{% endif %}{% endif %}

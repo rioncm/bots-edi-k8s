@@ -1,0 +1,50 @@
+{% extends "bots/base.html" %}
+{% load i18n %}
+
+{% block bodyclass %}{{ block.super }} process{% endblock %}
+
+{% block bots_submit %}
+<button class="button ico-incoming" name="2incoming">{% trans 'Incoming (same selection)' %}</button>
+<button class="button ico-outgoing" name="2outgoing">{% trans 'Outgoing (same selection)' %}</button>
+{{ block.super }}
+{% if not perms.bots.change_mutex %}{% include 'bots/botstable/field/hidden.html' with field=form.idroute %}
+{% include 'bots/botstable/field/hidden.html' with field=form.fromchannel %}
+{% include 'bots/botstable/field/hidden.html' with field=form.tochannel %}{% endif %}
+{% endblock %}
+
+{% block botstable %}
+<thead>
+<tr>
+    <th id="th_filename"><button class="botsheader" name="order" value="filename">{% trans 'Process' %}</button></th>
+    <th id="th_status"><button class="botsheader" name="order" value="status">{% trans 'State' %}</button></th>
+    <th id="th_ts"><button class="botsheader ico-ts" name="order" value="ts">{% trans 'Date/time' %}</button></th>
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/thead/field.html' with field=form.idroute %}
+    {% include 'bots/botstable/thead/field.html' with field=form.fromchannel %}
+    {% include 'bots/botstable/thead/field.html' with field=form.tochannel %}{% endif %}
+    <th id="th_errortext"><button class="botsheader icon-err" name="order" value="errortext">{% trans 'Error' %}</button></th>
+</tr>
+<tr>
+    <th></th>
+    <th></th>
+    {% include 'bots/botstable/thead/datefields.html' %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/thead/filtered.html' with field=form.idroute %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.fromchannel %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.tochannel %}{% endif %}
+    {% include 'bots/botstable/thead/textfield.html' with field=form.errortext %}
+</tr>
+</thead>
+<tbody class="process">{% for row in queryset.object_list %}
+<tr class="{% cycle 'row1' 'row2' %} botstrstatus{{ row.statust }}">
+    <td><div class="dropdown">
+      {% if perms.bots.view_ta %}<a href="{% url 'bots:detail' %}/?inidta={{ row.idta }}" name="bots_detail_{{ row.idta }}" onclick="return popup(this, '95%', '75%', '&popup=1')" title="{% trans 'View details' %}: {{ row.idta }}" class="button icon-err">{{ row.filename }}</a>
+      {% else %}<button class="button">{{ row.filename }}</button>{% endif %}
+    </div></td>
+    <td class="botsstatus{{ row.statust }}">{{ row.get_statust_display }}</td>
+    {% include 'bots/botstable/td/ts.html' %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/td/idroute.html' %}
+    {% include 'bots/botstable/td/fromchannel.html' %}
+    {% include 'bots/botstable/td/tochannel.html' %}{% endif %}
+    <td>{% include 'bots/ta_errortext.html' %}</td>
+</tr>
+{% endfor %}</tbody>
+{% endblock %}

@@ -1,0 +1,2 @@
+{% if form.refresh and not form.refresh.is_hidden %}{% load i18n %}{{ form.refresh }}<button class="{{ cssclass|default:'pad6' }} button ico-reload" title="{% trans 'Refresh' %}"></button>{% endif %}
+&nbsp;<span class="now">{% now "DATE_FORMAT" %}&nbsp;&nbsp;{% now "TIME_FORMAT" %}</span>

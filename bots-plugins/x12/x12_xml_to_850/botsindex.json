@@ -1,0 +1,87 @@
+{
+  "bots_version": "4.0.0",
+  "plugins": {
+    "channel": [
+      {
+        "plugintype": "channel",
+        "apop": false,
+        "archivepath": "",
+        "askmdn": "no",
+        "charset": "ascii",
+        "filename": "*.x12",
+        "ftpaccount": "",
+        "ftpactive": false,
+        "ftpbinary": false,
+        "host": "",
+        "idchannel": "order_out",
+        "inorout": "out",
+        "lockname": "",
+        "mdnchannel": "",
+        "parameters": "",
+        "path": "botssys/outfile/x12_xml2850",
+        "port": 0,
+        "remove": false,
+        "secret": "",
+        "sendmdn": "no",
+        "starttls": false,
+        "syslock": false,
+        "type": "file",
+        "username": ""
+      },
+      {
+        "plugintype": "channel",
+        "apop": false,
+        "archivepath": "",
+        "askmdn": "no",
+        "charset": "utf-8",
+        "filename": "*.xml",
+        "ftpaccount": "",
+        "ftpactive": false,
+        "ftpbinary": false,
+        "host": "",
+        "idchannel": "order_in",
+        "inorout": "in",
+        "lockname": "",
+        "mdnchannel": "",
+        "parameters": "",
+        "path": "botssys/infile/x12_xml2850",
+        "port": 0,
+        "remove": false,
+        "secret": "",
+        "sendmdn": "no",
+        "starttls": false,
+        "syslock": false,
+        "type": "file",
+        "username": ""
+      }
+    ],
+    "routes": [
+      {
+        "plugintype": "routes",
+        "active": false,
+        "fromchannel": "order_in",
+        "fromeditype": "xml",
+        "frommessagetype": "order01",
+        "idroute": "x12_xml2850",
+        "notindefaultrun": false,
+        "seq": 1,
+        "tochannel": "order_out",
+        "translateind": true
+      }
+    ],
+    "translate": [
+      {
+        "plugintype": "translate",
+        "active": true,
+        "alt": "",
+        "fromeditype": "xml",
+        "frommessagetype": "order01",
+        "frompartner": "",
+        "toeditype": "x12",
+        "tomessagetype": "850004010",
+        "topartner": "",
+        "tscript": "x12_xml2850"
+      }
+    ]
+  }
+}

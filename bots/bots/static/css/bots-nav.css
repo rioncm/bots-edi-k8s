@@ -1,0 +1,237 @@
+/** Bots Nav Bar
+ *
+ *  Author: Ludovic Watteaux
+**/
+html[data-theme="light"],
+:root {
+  --nav-bg: #bdbdbd;
+  --nav-fg: var(--body-fg);
+  --nav-hover-bg: var(--button-bg);
+  --nav-hover-fg: var(--primary-fg);
+  --nav-1-hover-fg: var(--button-hover-bg);
+  --nav-1-hover-bg: #fff;
+
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --nav-bg: var(--darkened-bg);
+    --nav-fg: var(--object-tools-fg);
+    --nav-hover-bg: var(--button-hover-bg);
+  }
+}
+html[data-theme="dark"] {
+    --nav-bg: var(--darkened-bg);
+    --nav-fg: var(--object-tools-fg);
+    --nav-hover-bg: var(--button-hover-bg);
+}
+
+#bots-nav {
+    position: sticky;
+    top: 0;
+    font-size: 14px;
+    background: var(--breadcrumbs-bg);
+    z-index: 99;
+}
+#bots-nav ul:first-child {
+    padding-left: 0.5em;
+}
+#bots-nav hr {
+    height: 1px;
+    width: 100%;
+    background-color: #999;
+}
+#bots-nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    position: relative;
+}
+#bots-nav ul li {
+    display:inline-block;
+    list-style-type: none;
+}
+#bots-nav ul ul button,
+#bots-nav a:link,
+#bots-nav a:visited,
+#bots-nav a {
+    display: block;
+    padding: 0 6px 0 4px;
+    color: var(--primary-fg);
+    font-size: 14px;
+    line-height: 24px;
+    text-decoration: none;
+}
+#bots-nav ul ul a:link,
+#bots-nav ul ul a:visited,
+#bots-nav ul ul a {
+    color: var(--nav-fg);
+}
+#bots-nav ul ul li:hover > a,
+#bots-nav ul ul li:hover button,
+#bots-nav ul ul a:hover,
+#bots-nav a:hover {
+    color: var(--nav-hover-fg);
+    background-color: var(--nav-hover-bg);
+}
+#bots-nav li:hover > a {
+    color: var(--nav-1-hover-fg);
+    background-color: var(--nav-1-hover-bg);
+}
+#bots-nav ul ul button {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+#bots-nav ul ul {
+    display: none;
+    position: absolute;
+    top: 25px;
+    border: 1px solid #999;
+    background-color: var(--nav-bg);
+    border-radius: 0 0 10px 10px;
+}
+
+#bots-nav ul li:hover > ul {
+    display: inherit;
+}
+#bots-nav ul ul li {
+    width: 220px;
+    float: none;
+    display: list-item;
+    position: relative;
+}
+#bots-nav ul ul ul {
+    left: 100%;
+    top: -1px;
+}
+#bots-nav ul ul ul li {
+    position: relative;
+}
+/*
+li > a:after { content:  ''; }
+li > a:only-child:after { content: ''; }
+*/
+
+#bots-nav .theme-toggle svg {
+    fill: var(--primary-fg);
+    color: transparent;
+}
+#bots-nav .theme-toggle:hover svg {
+    fill: var(--nav-1-hover-fg);
+    border-color: var(--nav-1-hover-bg);
+    background: var(--nav-1-hover-bg);
+}
+
+/* Bots icons */
+#bots-nav .ico-admin.after-title:before {
+    font-size: 110%;
+}
+#bots-nav ul ul button,
+#bots-nav ul ul a {
+    padding-left: 2em !important;
+}
+#bots-nav ul ul button:before,
+#bots-nav ul ul a:before {
+    position: absolute;
+    margin-top: 0.85em;
+    margin-left: -1.6em;
+}
+#bots-nav ul ul .ico-ccode:before,
+#bots-nav ul ul .ico-ccodetrigger:before {
+    margin-top: 0.7em;
+    margin-left: -1.4em;
+}
+#bots-nav ul ul .ico-ccodetrigger:before {
+    margin-left: -1.3em;
+}
+#bots-nav ul ul .ico-fromchannel:before,
+#bots-nav ul ul .ico-tochannel:before {
+    margin-top: 0.7em;
+    margin-left: -1.4em;
+}
+#bots-nav ul ul .ico-routes:before,
+#bots-nav ul ul .ico-idroute:before {
+    margin-top: 0.7em;
+    margin-left: -1.3em;
+}
+#bots-nav ul ul .ico-channel:before {
+    margin-top: 0.5em;
+    margin-left: -1.2em;
+}
+#bots-nav ul ul .ico-warn:before,
+#bots-nav ul ul .ico-err:before {
+    margin-top: 0.7em;
+    margin-left: -1.45em;
+}
+#bots-nav ul ul .ico-docsin:before,
+#bots-nav ul ul .ico-docsout:before {
+    margin-top: 0.8em;
+    margin-left: -1.8em;
+}
+#bots-nav ul ul .ico-publiccertificate:before,
+#bots-nav ul ul .ico-save:before {
+    margin-left: -1.5em;
+}
+#bots-nav ul ul .ico-run:before {
+    margin-top: 0.7em;
+    margin-left: -1.4em;
+}
+#bots-nav ul ul .ico-partner:before {
+    margin-left: -1.4em;
+}
+#bots-nav ul ul .ico-partnergroep:before {
+    margin-left: -2em;
+}
+#bots-nav ul ul .ico-privatekey:before,
+#bots-nav ul ul .ico-key:before {
+    margin-top: 0.7em;
+    margin-left: -1.25em;
+}
+#bots-nav ul ul .ico-add:before {
+    margin-top: 0.65em;
+    margin-left: -1.1em;
+}
+#bots-nav ul ul .ico-expired:before,
+#bots-nav ul ul .ico-pending:before {
+    margin-top: 0.8em;
+}
+#bots-nav ul ul .ico-messagesIN:before,
+#bots-nav ul ul .ico-messagesOUT:before {
+    margin-top: 0.6em;
+    margin-left: -1.5em;
+}
+#bots-nav ul ul .ico-publiccertificate:before {
+    margin-top: 0.72em;
+}
+#bots-nav ul ul .ico-read:before {
+    margin-left: -1.7em;
+}
+#bots-nav ul ul .ico-sendmail:before {
+    margin-left: -1.8em;
+}
+#bots-nav ul ul .ico-shortcut:before {
+    margin-left: -1.7em;
+}
+#bots-nav ul ul .ico-reports:before {
+    margin-left: -1.8em;
+}
+
+
+/* Bitmap icons type generic margins */
+#bots-nav ul ul .icon-err:before,
+#bots-nav ul ul .ico-translate:before {
+    margin-top: 0.1em;
+}
+#bots-nav ul ul .ico-incoming:before,
+#bots-nav ul ul .ico-outgoing:before {
+    margin-top: 0.5em;
+    margin-left: -1.15em;
+}
+
+@-moz-document url-prefix() {
+  #bots-nav ul ul .ico-partnergroep:before {
+    margin-left: -1.8em;
+  }
+}

@@ -1,0 +1,9 @@
+{% with field=form.outmessagetype editype=row.outeditype messagetype=row.outmessagetype %}
+<td data-field="{{ field.name }}">{% if messagetype and messagetype.0 != '(' %}
+<div class="dropdown">{% include 'bots/link/messagetype.html' with as_link=True %}
+<ul>
+{# include "bots/botstable/dropdown/translate.html" #}
+{# include "bots/botstable/dropdown/messagetype.html" #}
+</ul>
+</div>{% else %}{{ messagetype }}{% endif %}
+</td>{% endwith %}

@@ -1,0 +1,8 @@
+# Staging Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: edi-staging
+  labels:
+    environment: staging
+    project: bots-edi

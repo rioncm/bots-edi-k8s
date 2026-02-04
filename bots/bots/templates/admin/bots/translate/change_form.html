@@ -1,0 +1,22 @@
+{% extends "admin/bots/change_form.html" %}
+
+{% block obj_title %}{{ block.super }}{% if original %} {{ original.fromeditype }}{% endif %}{% endblock %}
+
+{% block footer %}{{ block.super }}{% if perms.bots.change_translate %}
+{% include "admin/bots/js.html" %}
+<script>
+{# Create span #}
+create_span(frommessagetype);
+create_span(tomessagetype);
+create_span(tscript);
+
+{# Create select #}
+create_select(frommessagetype);
+create_select(tomessagetype);
+create_select(tscript);
+
+{# Update selected values (first load) #}
+onchange_editype(fromeditype, onload=true);
+onchange_editype(toeditype, onload=true);
+</script>{% endif %}
+{% endblock %}

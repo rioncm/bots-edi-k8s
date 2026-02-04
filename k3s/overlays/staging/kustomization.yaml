@@ -1,0 +1,113 @@
+# Staging environment overlay
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: edi-staging
+
+# Reference the base configuration
+resources:
+  - namespace.yaml
+  - ../../base
+  - ../../deployments
+  - ../../jobs
+  - ingress.yaml
+
+# Namespace suffix for staging resources
+nameSuffix: -staging
+
+# Common labels for all resources
+commonLabels:
+  environment: staging
+
+# ConfigMap generator for environment-specific settings
+configMapGenerator:
+  - name: bots-env-config
+    literals:
+      - BOTSENV=staging
+      - LOG_LEVEL=INFO
+      - TZ=America/Los_Angeles
+      - DB_HOST=kona.db.pminc.me
+      - DB_PORT=3306
+      - DB_NAME=botsedi_staging
+
+# Patches for staging environment
+patches:
+  # Staging resources - slightly higher than dev, lower than prod
+  - target:
+      kind: Deployment
+      name: bots-webserver
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 2
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/memory
+        value: "256Mi"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/cpu
+        value: "100m"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: "768Mi"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: "750m"
+
+  - target:
+      kind: Deployment
+      name: bots-jobqueue
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/memory
+        value: "256Mi"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/cpu
+        value: "100m"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: "384Mi"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: "375m"
+
+  # Medium-sized PVCs for staging
+  - target:
+      kind: PersistentVolumeClaim
+      name: bots-edi-data-pvc
+    patch: |-
+      - op: replace
+        path: /spec/resources/requests/storage
+        value: "10Gi"
+
+  - target:
+      kind: PersistentVolumeClaim
+      name: bots-edi-logs-pvc
+    patch: |-
+      - op: replace
+        path: /spec/resources/requests/storage
+        value: "2Gi"
+
+  - target:
+      kind: PersistentVolumeClaim
+      name: bots-edi-config-pvc
+    patch: |-
+      - op: replace
+        path: /spec/resources/requests/storage
+        value: "1Gi"
+
+  # Run engine every 5 minutes in staging
+  - target:
+      kind: CronJob
+      name: bots-engine
+    patch: |-
+      - op: replace
+        path: /spec/schedule
+        value: "*/5 * * * *"
+
+# Image tag override for staging (use :staging tag)
+images:
+  - name: harbor.pminc.me/priv/bots-edi
+    newTag: staging

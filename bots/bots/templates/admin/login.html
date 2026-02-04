@@ -1,0 +1,7 @@
+{% extends "admin/login.html" %}
+{% load static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "css/login.css" %}">
+{% endblock %}
+
+{% block nav-bots %}{% endblock %}

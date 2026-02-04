@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block extrahead %}{{ block.super }}
+{% include "bots/js/urls.html" %}
+{% include "bots/js/i18n.html" %}
+{% include "bots/js/datetimepicker.html" %}
+<script src="{% static "js/botstable.js" %}"></script>
+{% if user.is_staff and perms.bots %}<script src="{% static "js/bots.staff.js" %}"></script>{% endif %}
+<script>window.onload = sorted;</script>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} bots{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block content %}
+<form action="{{ form.action }}" id="viewform" method="post">{% csrf_token %}
+{% block bots_title %}<h1><a href="#" title="{% trans 'Top' %}">{{ title }}</a> {% include "bots/selection/view.html" %}</h1>{% endblock %}
+{% include "bots/paginator.html" %}
+{% include 'bots/button_back_close.html' %}
+{% block bots_submit %}
+{% if perms.bots.change_mutex and not form.admlink.is_hidden %}{% include 'bots/botstable/field/checkbox.html' with field=form.admlink %}{% endif %}
+{% if form.popup %}{% include 'bots/botstable/field/checkbox.html' with field=form.popup %}{% endif %}
+{% if form.lastrun %}{% include 'bots/botstable/field/checkbox.html' with field=form.lastrun %}{% endif %}
+{% if form.idta.is_hidden %}{% include 'bots/botstable/field/hidden.html' with field=form.idta %}{% endif %}
+{% endblock %}{% for hidden in form.hidden_fields %}{{ hidden }}
+{% endfor %}{{ form.errors }}
+<div>
+<table id="botstable">
+{% block botstable %}
+<thead></thead>
+<tbody>{% for row in queryset.object_list %}
+<tr class="{% cycle 'row1' 'row2' %} botstrstatus{{ row.statust }}"></tr>{% endfor %}
+</tbody>{% endblock %}
+</table>
+</div>
+<br />
+{# include "bots/paginator.html" with footer=True #}
+</form>
+{% endblock %}
+
+{% block footer %}{{ block.super }}
+{% include "bots/js/dropdown.html" %}
+{% include "bots/js/filtered.html" %}
+{% include "bots/js/refresh.html" %}
+{% endblock %}

@@ -1,0 +1,7 @@
+{% load i18n %}
+<td>
+{% if row.confirmidta < 0 %}<span class="ico-confirmed{{ row.confirmed }}">{% trans 'Manual confirm' %}</span>
+{% elif row.confirmed %}<span class="ico-confirmed">{% trans 'Confirmed' %}</span>
+{% elif row.confirmidta %}<span class="ico-unconfirmed">{% trans 'Unconfirmed' %}</span>
+{% elif row.confirmasked %}<span class="ico-pending">{% trans 'Pending ...' %}</span>{% endif %}
+</td>

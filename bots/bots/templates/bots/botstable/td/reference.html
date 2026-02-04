@@ -1,0 +1,6 @@
+{% with field=form.reference %}
+<td data-field="{{ field.name }}">{% if row.reference %}
+<div class="dropdown">{% include 'bots/link/reference.html' with ta=row %}
+<ul></ul>
+</div>{% endif %}
+</td>{% endwith %}

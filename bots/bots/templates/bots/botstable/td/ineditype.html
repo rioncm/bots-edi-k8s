@@ -1,0 +1,6 @@
+{% with field=form.ineditype %}
+<td data-field="{{ field.name }}">{% if row.ineditype %}
+<div class="dropdown">{{ row.ineditype }}
+<ul>{# include "bots/botstable/dropdown/translate.html" #}</ul>
+</div>{% endif %}
+</td>{% endwith %}

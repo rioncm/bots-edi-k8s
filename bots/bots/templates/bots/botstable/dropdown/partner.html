@@ -1,0 +1,3 @@
+{% if perms.bots.view_partner %}{% load i18n %}{% if idpartner in partners or idpartner in inactive_partners %}
+<li><a class="ico-{{ field.name }}" onclick="return view_partner(this)" data-after="{% trans 'View Partner' %}"></a></li>
+{% elif perms.bots.add_partner %}<li><a class="ico-add-partner" onclick="return add_partner(this)" data-after="{% trans 'Add Partner' %}"></a></li>{% endif %}{% endif %}

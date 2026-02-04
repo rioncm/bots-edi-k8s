@@ -1,0 +1,3 @@
+<div class="errortext">
+{% if truncaterr %}{{ row.errortext|truncatechars:2048|linebreaks }}{% else %}{{ row.errortext|linebreaks }}{% endif %}
+</div>

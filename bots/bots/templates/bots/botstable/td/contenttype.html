@@ -1,0 +1,6 @@
+{% with field=form.contenttype %}
+<td data-field="{{ field.name }}">{% if row.contenttype %}
+<div class="dropdown">{{ row.contenttype }}
+<ul>{# include "bots/botstable/dropdown/filters.html" #}</ul>
+</div>{% endif %}
+</td>{% endwith %}

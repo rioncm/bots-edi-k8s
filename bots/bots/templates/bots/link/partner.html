@@ -1,0 +1,5 @@
+{% if idpartner %}{% if admlink and perms.bots.view_partner %}
+{% if idpartner in partners %}{% include 'bots/link/change_partner.html' %}
+{% elif idpartner in inactive_partners %}{% include 'bots/link/change_partner.html' with cssclass=cssclass|add:" botsstatus2" %}
+{% else %}{% include 'bots/link/add_partner.html' %}{% endif %}
+{% else %}<span class="ico-{{ fromto }}partner">{{ idpartner }}</span>{% endif %}{% endif %}

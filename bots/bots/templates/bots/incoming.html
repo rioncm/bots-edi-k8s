@@ -1,0 +1,106 @@
+{% extends "bots/base.html" %}
+{% load i18n botsfilters %}
+
+{% block bodyclass %}{{ block.super }} incoming{% endblock %}
+
+{% block bots_submit %}
+<button class="button ico-outgoing" name="2outgoing">{% trans 'Outgoing (same selection)' %}</button>
+<button class="button icon-err" name="2process">{% trans 'Process Errors (same selection)' %}</button>
+<button class="button ico-confirm" name="2confirm">{% trans 'Confirm (same selection)' %}</button>
+{{ block.super }}
+{% if perms.bots.change_mutex %}<button class="button ico-yes" name="rereceiveall">{% trans 'Rereceive All' %}</button>
+{% include 'bots/botstable/field/text.html' with field=form.errortext %}
+{% else %}
+{% include 'bots/botstable/field/text.html' with field=form.errortext %}
+{% include 'bots/botstable/field/hidden.html' with field=form.idroute %}
+{% include 'bots/botstable/field/hidden.html' with field=form.fromchannel %}
+{% include 'bots/botstable/field/hidden.html' with field=form.tochannel %}
+{% include 'bots/botstable/field/hidden.html' with field=form.retransmit %}
+{% endif %}{% include 'bots/botstable/field/hidden.html' with field=form.reportidta %}
+{% endblock %}
+
+{% block botstable %}
+<thead>
+<tr>
+    {% include 'bots/botstable/thead/selall.html' %}
+    {% include 'bots/botstable/thead/field.html' with field=form.idta %}
+    {% include 'bots/botstable/thead/field.html' with field=form.statust %}
+    {% if perms.bots.change_mutex %}<th id="th_retransmit"><button class="botsheader center" name="order" value="retransmit" title="{% trans 'Sort by' %} {{ form.retransmit.label }}">Re*</button></th>{% endif %}
+    <th id="th_ts"><button class="botsheader ico-ts" name="order" value="ts" title="{% trans 'Sort by' %} {% trans 'Date/time' %}">{% trans 'Date/time' %}</button></th>
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/thead/field.html' with field=form.idroute %}
+    {% include 'bots/botstable/thead/field.html' with field=form.fromchannel %}{% endif %}
+    <th id="th_infilename"><button class="botsheader ico-infile" name="order" value="infilename">{% trans 'InFile' %}</button></th>
+    {% include 'bots/botstable/thead/field.html' with field=form.ineditype %}
+    {% include 'bots/botstable/thead/field.html' with field=form.inmessagetype %}
+    {% include 'bots/botstable/thead/field.html' with field=form.frompartner %}
+    <th id="th_nrmessages"><button class="botsheader" name="order" value="nrmessages">{% trans '#mes' %}</button></th>
+    <th id="th_filesize"><button class="botsheader" name="order" value="filesize">{% trans 'Size' %}</button></th>
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/thead/field.html' with field=form.tochannel %}{% endif %}
+    <th id="th_outfilename"><button class="botsheader ico-outfile" name="order" value="outfilename">{% trans 'OutFile' %}</button></th>
+    {% include 'bots/botstable/thead/field.html' with field=form.outeditype %}
+    {% include 'bots/botstable/thead/field.html' with field=form.outmessagetype %}
+    {% include 'bots/botstable/thead/field.html' with field=form.topartner %}
+    {% if perms.bots.change_mutex %}<th id="th_divtext"><button class="botsheader ico-tscript" name="order" value="divtext">{% trans 'Mapping Script' %}</button></th>{% endif %}
+</tr>
+<tr>
+    {% if not form.actions.is_hidden %}<th></th>{% endif %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.idta %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.statust get_field_display=True thclass="center" %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/thead/checkbox.html' with field=form.retransmit %}{% endif %}
+    {% include 'bots/botstable/thead/datefields.html' %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/thead/filtered.html' with field=form.idroute %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.fromchannel %}{% endif %}
+    {% include 'bots/botstable/thead/textfield.html' with field=form.infilename %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.ineditype %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.inmessagetype %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.frompartner %}
+    <th></th>
+    <th></th>
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/thead/filtered.html' with field=form.tochannel %}{% endif %}
+    {% include 'bots/botstable/thead/textfield.html' with field=form.outfilename %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.outeditype %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.outmessagetype %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.topartner %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/thead/textfield.html' with field=form.divtext %}{% endif %}
+</tr>
+</thead>
+<tbody>{% for row in queryset.object_list %}
+<tr class="{% cycle 'row1' 'row2' %} botstrstatus{{ row.statust }}">
+    {% include 'bots/botstable/td/sel.html' %}
+    <td><div class="dropdown">
+      {% if perms.bots.view_ta %}<a href="{% url 'bots:detail' %}/?inidta={{ row.idta }}" onclick="return popup(this, '95%', '75%', '&popup=1')" title="Bots {% trans 'details' %}: {{ row.idta }}" class="button ico-in">{{ row.idta }}</a>{% else %}<button class="button ico-in">{{ row.idta }}</button>{% endif %}
+      <ul>{% if perms.bots.view_report %}
+        {% if user.is_staff %}<li><a class="ico-log" href="{% url 'bots:logfiler' %}/?engine={{ row.reportidta }}" target="_blank">{% trans 'View log' %}</a></li>{% endif %}
+	<li><a class="ico-reports" href="{% url 'bots:reports' %}/?idta={{ row.reportidta }}&popup=1" target="_blank">{% trans 'View report' %}</a></li>{% endif %}
+        {% if form.reportidta.value != row.reportidta %}<li><button name="reportidta" value="{{ row.reportidta }}" class="icon-filter">{% trans 'Filter' %} {% trans 'report' %}: {{ row.reportidta }}</button></li>{% endif %}
+        <li><button name="reportidta" value="-{{ row.reportidta }}" class="ico-no">{% trans 'Exclude' %} {% trans 'report' %}: {{ row.reportidta }}</button></li>
+        {% if form.reportidta.value %}<li><button name="reportidta" value="" class="icon-delete">{% trans 'Clear filter' %} {% trans 'report' %}: {{ form.reportidta.value }}</button></li>{% endif %}
+        {% if perms.bots.change_mutex %}<li><button name="rereceive" value="{{ row.idta }}" class="ico-rereceive">{% trans 'Rereceive' %}</button></li>{% endif %}
+        {% if perms.bots.delete_filereport %}<li><button name="delete" value="{{ row.idta }}" class="ico-trash" onclick="return confirm(this.innerText + ': ' + this.value)">{% trans 'Delete' %} {% trans 'incoming' %}</button></li>{% endif %}
+      </ul>
+    </div>
+    </td>
+    {% include 'bots/botstable/td/statust.html' %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/td/retransmit.html' with td_title=form.retransmit.label %}{% endif %}
+    {% include 'bots/botstable/td/ts.html' %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/td/idroute.html' %}
+    {% include 'bots/botstable/td/fromchannel.html' %}{% endif %}
+    {% include 'bots/botstable/td/infilename.html' %}
+    {% include 'bots/botstable/td/ineditype.html' %}
+    {% include 'bots/botstable/td/inmessagetype.html' %}
+    {% include 'bots/botstable/td/frompartner.html' %}
+    <td class="center">{{ row.nrmessages }}</td>
+    <td>{% if row.filesize %}{{ row.filesize|filesizeformat }}{% endif %}</td>
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/td/tochannel.html' %}{% endif %}
+    {% include 'bots/botstable/td/outfilename.html' %}
+    {% include 'bots/botstable/td/outeditype.html' %}
+    {% include 'bots/botstable/td/outmessagetype.html' %}
+    {% include 'bots/botstable/td/topartner.html' %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/td/divtext.html' %}{% endif %}
+</tr>
+{% if row.errortext %}<tr class="{% cycle 'row1' 'row2' %} botstrstatus{{ row.statust }} errortext">
+    <td></td>{% if not form.actions.is_hidden %}<td></td>{% endif %}
+    <td align="left" class="va-top" colspan="{% if perms.bots.change_mutex %}17{% else %}12{% endif %}">{% include "bots/ta_errortext.html" with truncaterr=True %}</td>
+</tr>{% endif %}
+{% endfor %}</tbody>
+{% endblock %}

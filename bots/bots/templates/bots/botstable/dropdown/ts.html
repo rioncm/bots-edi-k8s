@@ -1,0 +1,6 @@
+<li><button class="sorted" onclick="document.getElementById('id_datefrom').value='{{ dt }}'">{% trans 'Date from' %}</button>
+{% if form.datefrom.value %}<ul>{% include 'bots/botstable/dropdown/clear.html' with field=form.datefrom %}</ul>{% endif %}
+</li>
+<li><button class="sortedasc" onclick="document.getElementById('id_dateuntil').value='{{ dt }}'">{% trans 'Date until' %}</button>
+{% if form.dateuntil.value %}<ul>{% include 'bots/botstable/dropdown/clear.html' with field=form.dateuntil %}</ul>{% endif %}
+</li>

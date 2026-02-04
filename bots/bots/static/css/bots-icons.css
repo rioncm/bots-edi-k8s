@@ -1,0 +1,901 @@
+/** Bots Icons 
+ *  Copyright (C) 2021-2023 © Ludovic WATTEAUX
+**/
+html[data-theme="light"],
+:root {
+  /* Bitmap & svg Icons */
+  --icon-bots: url("../img/bots.ico");
+  --icon-alert: url("../admin/img/icon-alert.svg");
+  --icon-yes: url("../admin/img/icon-yes.svg");
+  --icon-no: url("../admin/img/icon-no.svg");
+  --icon-addlink: url("../admin/img/icon-addlink.svg");
+  --icon-changelink: url("../admin/img/icon-changelink.svg");
+  --icon-deletelink: url("../admin/img/icon-deletelink.svg");
+  --icon-viewlink: url("../admin/img/icon-viewlink.svg");
+  --inline-delete: url("../admin/img/inline-delete.svg");
+  --icon-pass: url("../img/icon-pass.gif");
+  --icon-pass-parse: url("../img/icon-pass_parse.gif");
+  --icon-funnel: url("../img/funnel.svg");
+  --icon-py: url("../img/python.svg");
+  --icon-star: url("../img/star.png");
+  /* UTF-8 Icons */
+  --padding-ico: 0 .3em 0 .1em;
+  --letter-spacing-ico: -8px;
+  --weight-ico: bold;
+  --ico-add: '+';
+  --ico-yes: '\2714'; /* ✔ */
+  --ico-no: '\1F6C7'; /* 🛇' */
+  --ico-house: '\2302'; /* ⌂ */
+  --ico-noentry: '\26D4'; /* ⛔*/
+  --ico-incoming: '\2B8B'; /* ⮋ */
+  --ico-outgoing: '\2B89'; /* ⮉ */
+  --ico-in: '\21A7'; /* ↧ */
+  --ico-out: '\21A5'; /* ↥ */
+  --ico-doc: '\1F5CE'; /* 🗎 */
+  --ico-docs: var(--ico-doc);
+  --ico-file: '\1F5CF'; /* 🗏 */
+  --ico-partner: '\1F574'; /* 🕴 */
+  --ico-pending: '\23F3'; /* ⏳ */
+  --ico-date: '\1F5D3'; /* 🗓 */
+  --ico-time: '\1F557'; /* 🕗 */
+  --ico-eye: '\1F441'; /* 👁 */
+  --ico-zip: '\1F5DC'; /* 🗜 */
+  --ico-sorted: '\25BC'; /* ▼ */
+  --ico-sortedasc: '\25B2'; /* ▲ */
+  --ico-key: '\26BF'; /* ⚿ */
+  --ico-stopwatch: '\23F1'; /* ⏱ */
+  --ico-label: '\1F3F7'; /* 🏷 */
+  --ico-inorout: '\2B81';  /* ⮁ */
+  --ico-config: '\1F6E0'; /* 🛠 */
+  --ico-routes: '\26D5'; /* ⛕ */
+  --ico-gear: '\2699'; /* ⚙ */
+  --ico-admin: var(--ico-gear);
+  --ico-link: '\1F517'; /* 🔗 */
+  --ico-paperclip: '\1F4CE'; /* 📎 */
+  --ico-paperlink: '\1F587'; /* 🖇 */
+  --ico-login: '\2386'; /* ⎆ */
+  --ico-logout: '\23FB'; /* ⏻ */
+  --ico-warn: '\26A0'; /* ⚠ */
+  --ico-confirmed: '\1F44D'; /* 👍 */
+  --ico-unconfirmed: '\1F44E'; /* 👎 */
+  --ico-reload: '\1F5D8'; /* 🗘 */
+  --ico-star: '\1F7CA'; /* 🟊 */
+  --ico-up: '\2B06'; /* ⬆ */
+  --ico-down: '\2B07'; /* ⬇ */
+  --ico-trash: '\1F5D1'; /* 🗑 */
+  --ico-floppy: '\1F4BE'; /* 💾 */
+  --ico-save: var(--ico-floppy);
+  --ico-rereceive: '\2B6F'; /* ⭯ */
+  --ico-resend: '\2B6E'; /* ⭮ */
+  --ico-flag: '\2691'; /* ⚑ */
+  --ico-poweron: '\23FC'; /* ⏼ */
+  --ico-run: var(--ico-poweron);
+  --ico-log: '\1F4DC'; /* 📜 */
+  --ico-pager: '\1F4DF'; /* 📟 */
+  --ico-search: '\1F50D'; /* 🔍 */
+  --ico-openbook: '\1F56E'; /* 🕮  */
+  --ico-write: '\1F589'; /* 🖉 */
+  --ico-bell: '\1F56D'; /* 🕭 */
+  --ico-ccode: '\1F588'; /* 🖈 */
+  --ico-ccodetrigger: var(--ico-label);
+  --ico-cross: '\2716'; /* ✖ */
+  --ico-crossmark: '\274C'; /* ❌ */
+  --ico-info: '\1F6C8'; /* 🛈 */
+  --ico-wheelofdharma: '\2638'; /* ☸ */
+  --ico-user: '\1F464'; /* 👤 */
+  --ico-group: '\1F465'; /* 👥 */
+  --ico-globe: '\1F310'; /* 🌐 */
+  --ico-mpclock: '\1F570'; /* 🕰 */
+  --ico-electricplug: '\1F50C'; /* 🔌 */
+  --ico-package: '\1F4E6'; /* 📦 */
+  --ico-db: '\26C1'; /* ⛁ */
+  --ico-inbox: '\1F4E5'; /* 📥 */
+  --ico-outbox: '\1F4E4'; /* 📤 */
+}
+
+@media (prefers-color-scheme: dark) {
+  .icon-filter:before {
+      filter: invert(100%) sepia(0%) saturate(100%) hue-rotate(106deg) brightness(100%) contrast(100%);
+  }
+}
+html[data-theme="dark"] .icon-filter:before {
+    filter: invert(100%) sepia(0%) saturate(100%) hue-rotate(106deg) brightness(100%) contrast(100%);
+}
+html[data-theme="light"] .icon-filter:before {
+    filter: none;
+}
+
+/* Mozilla Firefox */
+@-moz-document url-prefix() {
+  :root {
+    --letter-spacing-ico: 0px;
+  }
+}
+
+/* Bitmap & svg Icons */
+.after-err:after,
+.bots.process form h1:before,
+.icon-translt0:before,
+.icon-translt1:before,
+.icon-translt2:before,
+.icon-translt3:before,
+.icon-statust0:before,
+.icon-statust1:before,
+.icon-statust2:before,
+.icon-statust3:before,
+.icon-statust4:before,
+.icon-statust5:before,
+.icon-filter:before,
+.icon-py:before,
+.icon-star:before,
+.icon-alert:before,
+.icon-no:before,
+.icon-err:before,
+.icon-add:before,
+.icon-viewlink:before,
+.icon-yes:before {
+    content: '';
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+    background-position: center;
+    padding: 10px;
+}
+
+.icon-statust0:before,
+.icon-viewlink:before {
+    background-image: var(--icon-viewlink);
+}
+.after-err:after,
+.bots.process form h1:before,
+.icon-translt0:before,
+.icon-statust1:before,
+.icon-err:before,
+.icon-no:before {
+    background-image: var(--icon-no);
+}
+.icon-statust2:before,
+.icon-alert:before {
+    background-image: var(--icon-alert);
+}
+.icon-translt1:before,
+.icon-statust3:before,
+.icon-yes:before {
+    background-image: var(--icon-yes);
+}
+.icon-translt2:before,
+.icon-statust4:before,
+.icon-pass:before {
+    background-image: var(--icon-pass);
+}
+.icon-translt3:before,
+.icon-statust5:before,
+.icon-pass-parse:before {
+    background-image: var(--icon-pass-parse);
+}
+.icon-filter:before {
+    background-image: var(--icon-funnel);
+    background-size: 15px 15px;
+}
+.icon-py:before {
+    background-image: var(--icon-py);
+}
+.icon-star:before {
+    background-image: var(--icon-star);
+}
+.icon-add:before {
+    background-image: var(--icon-addlink);
+}
+.bots.process form h1:before,
+h1.icon-err:before {
+    background-size: 22px 22px;
+    margin-right: 0.2em;
+}
+
+button.filteredfield:hover:after,
+.ico-del-ha:hover:after,
+.bt-del,
+.icon-delete:before,
+.inline-delete:after {
+    content: '';
+    background-image: var(--inline-delete);
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    background-position: center;
+    padding: 5px 8px 5px 8px;
+    vertical-align: middle;
+}
+.icon-delete:before {
+    background-position: left;
+}
+
+.ico-del-ha:hover:after,
+button.filteredfield:hover:after {
+    position: absolute;
+    margin-left: 5px;
+    margin-top: -2px;
+    padding: 9px;
+}
+
+/* After icons */
+.after-err:after {
+    margin-left: 0.5em;
+}
+
+/* utf-8 Icons */
+/*
+button.filteredfield:hover:after {
+    content: var(--ico-cross);
+    position: absolute;
+    line-height: 0;
+    font-size: 160%;
+    font-weight: bold;
+    padding-left: 0.35em;
+    padding-top: 8px;
+    color: var(--filteredfield-hover-bg) !important;
+}
+*/
+.sorted:before {
+    content: var(--ico-sorted);
+}
+.sortedasc:before {
+    content: var(--ico-sortedasc);
+}
+
+.ico-botsstatust0:before,
+.ico-yes:before {
+    content: var(--ico-yes);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-add:before {
+    content: var(--ico-add);
+    font-size: 130%;
+}
+.ico-admin:before {
+    content: var(--ico-admin);
+}
+.model-translate .field-tscript label:before,
+.field-fromeditype > a:before,
+div.app-bots caption a:before,
+tr.model-translate th a:before,
+.label-tscript:before,
+.ico-divtext:before,
+.ico-tscript:before, 
+.ico-translate:before,
+.ico-engine:before,
+.ico-bots:before,
+.icon-bots:before {
+    content: '';
+    background-image: var(--icon-bots);
+    background-repeat: no-repeat;
+    background-size: 18px 18px;
+    background-position: left;
+    line-height: 0;
+    padding: 10px;
+    padding-right: .7em;
+}
+.model-ccode .column-ccodeid .text a:before,
+.model-ccode .results .field-ccodeid a:before,
+tr.model-ccode th a:before,
+.ico-ccode:before {
+    content: var(--ico-ccode);
+    font-size: 130%;
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.model-ccode .field-ccodeid label:before,
+.model-ccodetrigger .column-ccodeid .text a:before,
+.model-ccodetrigger .field-ccodeid a:before,
+tr.model-ccodetrigger th a:before,
+.ico-ccodetrigger:before {
+    content: var(--ico-ccodetrigger);
+    font-size: 130%;
+    line-height: 0;
+    padding-right: .2em;
+}
+.ico-inchannel:before,
+.field-fromchannel .field-fromchannel label:before,
+.column-fromchannel .text a:before,
+.column-fromchannel_ .text a:before,
+.label-fromchannel:before,
+.ico-fromchannel:before {
+    content: var(--ico-down);
+    font-size: 120%;
+    line-height: 0;
+    padding-right: .2em;
+}
+.ico-outchannel:before,
+.field-tochannel label:before,
+.column-tochannel .text a:before,
+.column-tochannel_ .text a:before,
+.label-tochannel:before,
+.ico-tochannel:before {
+    content: var(--ico-up);
+    font-size: 120%;
+    line-height: 0;
+    padding-right: .2em;
+}
+.model-confirmrule .field-idchannel label:before,
+.column-idchannel .text a:before,
+tr.model-channel th a:before,
+.ico-channel:before {
+    content: var(--ico-inorout);
+    font-size: 150%;
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.label-inorout:before,
+.field-inorout .field-inorout label:before,
+.column-inorout_ .text a:before,
+.column-inorout .text a:before {
+    content: var(--ico-inorout);
+    font-size: 100%;
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-cleanup:before {
+    content: '\267B'; /* ♻ */
+}
+.ico-close:before {
+    content: var(--ico-cross);
+}
+.ico-config:before {
+    content: var(--ico-config);
+}
+tr.model-confirmrule th a:before,
+.ico-confirmedTrue:before,
+.ico-confirmed:before,
+.ico-confirmed1:before,
+.ico-confirmrule:before,
+.ico-confirm:before {
+    content: var(--ico-confirmed);
+    line-height: 0;
+    padding-right: .4em;
+}
+.ico-confirmedFalse:before,
+.ico-confirmed0:before,
+.ico-unconfirmed:before {
+    content: var(--ico-unconfirmed);
+    line-height: 0;
+    padding-right: .4em;
+}
+.field-domein > a:before,
+.field-domein label:before,
+tr.model-uniek th a:before,
+.ico-uniek:before {
+    content: var(--ico-pager);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-del:before {
+    content: var(--ico-cross);
+}
+.ico-doc:before {
+    content: var(--ico-doc);
+}
+.ico-docs:before {
+    content: var(--ico-docs);
+}
+.ico-doc320:before,
+.ico-docin:before {
+    content: var(--ico-doc) var(--ico-in);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-docs320:before,
+.ico-docsin:before {
+    content: var(--ico-docs) var(--ico-in);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-doc330:before,
+.ico-docout:before {
+    content: var(--ico-doc) var(--ico-out);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-docs330:before,
+.ico-docsout:before {
+    content: var(--ico-docs) var(--ico-out);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-botsstatust1:before,
+.ico-errortext:before,
+.ico-err:before,
+.ico-warn:before {
+    content: var(--ico-warn);
+    line-height: 0;
+    padding: var(--padding-ico);
+    font-size: 120%;
+}
+.ico-infilename:before,
+.ico-infile:before {
+    content: var(--ico-file) var(--ico-in);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-outfilename:before,
+.ico-outfile:before {
+    content: var(--ico-file) var(--ico-out);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-filename:before,
+.ico-file:before {
+    content: var(--ico-file);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-flag:before {
+    content: var(--ico-flag);
+}
+.ico-privatekey:before,
+.ico-key:before {
+    content: var(--ico-key);
+    font-size: 140%;
+    vertical-align: middle;
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-logout:before {
+    content: var(--ico-logout);
+}
+.ico-log:before,
+.ico-logs:before {
+    content: var(--ico-log);
+}
+.ico-no:before {
+    content: var(--ico-no);
+}
+.bots.incoming form h1:before,
+.ico-incoming:before {
+    content: var(--ico-incoming);
+    line-height: 0;
+    padding: var(--padding-ico);
+    padding-right: .2em;
+    font-size: 150%;
+}
+.bots.outgoing form h1:before,
+.ico-outgoing:before {
+    content: var(--ico-outgoing);
+    line-height: 0;
+    padding: var(--padding-ico);
+    padding-right: .2em;
+    font-size: 150%;
+}
+.ico-in:before {
+    content: var(--ico-in);
+}
+.ico-out:before {
+    content: var(--ico-out);
+}
+.ico-link:before {
+    content: var(--ico-link);
+}
+.ico-shortcut:before {
+    content: var(--ico-paperclip);
+}
+
+.ico-add-partner:before {
+    content: var(--ico-partner) var(--ico-add);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+
+.field-frompartner label:before,
+.column-frompartner .text a:before,
+.column-frompartner_ .text a:before,
+.label-frompartner:before,
+.ico-frompartner:before {
+    content: var(--ico-partner) var(--ico-in);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.field-topartner label:before,
+.column-topartner .text a:before,
+.column-topartner_ .text a:before,
+.label-topartner:before,
+.ico-topartner:before {
+    content: var(--ico-partner) var(--ico-out);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.field-idpartner > a:before,
+.field-idpartner .field-idpartner label:before,
+.model-partner .column-idpartner .text a:before,
+tr.model-partner th a:before,
+.ico-partner:before {
+    content: var(--ico-partner);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.model-partnergroep .column-idpartner .text a:before,
+.model-partnergroep .field-idpartner > a:before,
+.model-partnergroep.change-form .field-idpartner label:before,
+tr.model-partnergroep th a:before,
+.ico-partnergroep:before {
+    content: var(--ico-partner) var(--ico-partner);
+    line-height: 0;
+    padding: var(--padding-ico);
+    letter-spacing: var(--letter-spacing-ico);
+    margin-right: 0.4em;
+}
+.ico-pending:before {
+    content: var(--ico-pending);
+    line-height: 0;
+    padding: var(--padding-ico);
+    vertical-align: middle;
+    font-size: 110%;
+}
+.ico-plugout:before {
+    content: var(--ico-package);
+}
+.ico-plugin:before {
+    content: var(--ico-electricplug);
+}
+.ico-read:before {
+    content: var(--ico-openbook);
+}
+.bots.reports form h1:before,
+.ico-reports:before {
+    content: var(--ico-time);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-reload:before {
+    content: var(--ico-reload);
+}
+.ico-rereceive:before {
+    content: var(--ico-rereceive);
+}
+.ico-resend:before {
+    content: var(--ico-resend);
+}
+.model-confirmrule .field-idroute label:before,
+.field-idroute > a:before,
+.field-idroute .field-idroute label:before,
+.column-idroute .text a:before,
+tr.model-routes th a:before,
+.label-idroute:before,
+.ico-idroute:before,
+.ico-route:before,
+.ico-routes:before {
+    content: var(--ico-routes);
+    font-size: 120%;
+    line-height: 0;
+    padding: var(--padding-ico);
+    vertical-align: middle;
+}
+.ico-run:before {
+    content: var(--ico-run);
+    font-size: 120%;
+}
+.ico-save:before {
+    content: var(--ico-save);
+}
+.ico-search:before {
+    content: var(--ico-search);
+}
+.ico-sendmail:before {
+    content: '\1F585'; /* 🖅 */
+}
+.ico-star:before {
+    content: var(--ico-star);
+    vertical-align: middle;
+    font-size: 180%;
+    color: var(--close-button-bg);
+}
+.ico-trash:before {
+    content: var(--ico-trash);
+}
+.ico-datefrom:before {
+    content: var(--ico-date) var(--ico-time) var(--ico-sorted);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-dateuntil:before {
+    content: var(--ico-date) var(--ico-time) var(--ico-sortedasc);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-ts:before {
+    content: var(--ico-date) var(--ico-time);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-date:before {
+    content: var(--ico-date);
+}
+.ico-time:before {
+    content: var(--ico-time);
+}
+.ico-dirmonitor:before,
+.label-dirmonitor:before,
+.model-routes .column-dirmonitor_ .text a:before,
+.field-dirmonitor label:before,
+.ico-view:before {
+    content: var(--ico-eye);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.button.ico-view:before {
+    padding-right: 0.6em;
+}
+.ico-write:before {
+    content: var(--ico-write);
+}
+.field-zip_incoming label:before,
+.column-zip_incoming .text a:before {
+    content: var(--ico-zip) var(--ico-in);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.column-zip_outgoing .text a:before,
+.field-zip_outgoing label:before {
+    content: var(--ico-zip) var(--ico-out);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.ico-zip:before {
+    content: var(--ico-zip);
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+.model-user #content h1:before,
+tr.model-user th a:before,
+.ico-user:before {
+    content: var(--ico-user);
+}
+.model-group #content h1:before,
+tr.model-group th a:before,
+.ico-group:before {
+    content: var(--ico-group);
+}
+.ico-jobqueue:before,
+.ico-mpclock:before {
+    content: var(--ico-mpclock);
+}
+.ico-webserver:before,
+.ico-globe:before {
+    content: var(--ico-globe);
+}
+
+.sorted:before,
+.sortedasc:before,
+.ico-add:before,
+.ico-admin:before,
+.ico-channel:before,
+.ico-cleanup:before,
+.ico-close:before,
+.ico-config:before,
+.ico-date:before,
+.ico-del:before,
+.ico-doc:before,
+.ico-docs:before,
+.ico-flag:before,
+.ico-group:before,
+.ico-globe:before,
+.ico-home:before,
+.ico-in:before,
+.ico-jobqueue:before,
+.ico-link:before,
+.ico-log:before,
+.ico-logs:before,
+.ico-logout:before,
+.ico-no:before,
+.ico-out:before,
+.ico-plugin:before,
+.ico-plugout:before,
+.ico-read:before,
+.ico-reload:before,
+.ico-run:before,
+.ico-rereceive:before,
+.ico-resend:before,
+.ico-save:before,
+.ico-search:before,
+.ico-shortcut:before,
+.ico-star:before,
+.ico-sendmail:before,
+.ico-time:before,
+.ico-trash:before,
+.ico-user:before,
+.ico-webserver:before,
+.ico-write:before {
+    line-height: 0;
+    padding: var(--padding-ico);
+}
+
+.ico-home:before {
+    content: '';
+    font-size: 160%;
+}
+
+.ico-140:before {
+    font-size: 140%;
+}
+.ico-150:before {
+    font-size: 150%;
+}
+
+
+/* Bots admin */
+/* Bots admin - app_index */
+div.app-bots tr th a {
+    padding-left: 2em;
+}
+div.app-bots tr th a:before {
+    position: absolute;
+    line-height: inherit;
+    margin-left: -2.0em;
+}
+div.app-bots tr.model-ccode th a:before,
+div.app-bots tr.model-ccodetrigger th a:before {
+    margin-left: -1.7em;
+}
+div.app-bots tr.model-channel th a:before {
+    margin-left: -1.4em;
+}
+div.app-bots tr.model-partnergroep th a:before {
+    margin-left: -2.4em;
+}
+div.app-bots tr.model-routes th a:before {
+    margin-left: -1.6em;
+}
+div.app-bots tr.model-translate th a:before {
+    margin-top: -2px;
+}
+
+
+/* Bots admin - change_list, change_form */
+.icon-bots:before,
+div.app-bots caption a:before,
+h1.ico-translate:before {
+    background-size: 26px 26px;
+    padding-top: 12px;
+    padding-left: 0;
+    padding-right: 32px;
+    line-height: inherit;
+}
+
+.change-list .icon-py:before,
+.model-translate .field-tscript label:before,
+.field-fromeditype > a:before {
+    padding-right: 1em;
+}
+.label-fromchannel:before,
+.label-tochannel:before {
+    padding-right: .1em;
+}
+.change-form .icon-py:before {
+    margin-left: 0.2em;
+}
+
+
+/* Admin - app-auth */
+body.app-auth #content h1:before {
+    padding: var(--padding-ico);
+}
+div.app-auth tr th a {
+    padding-left: 2em;
+}
+div.app-auth tr th a:before {
+    position: absolute;
+    line-height: inherit;
+    margin-left: -2.0em;
+}
+
+
+/* Dropdown */
+.dropdown ul .ico-rereceive:before,
+.dropdown ul .ico-resend:before,
+.dropdown ul .ico-trash:before {
+    margin-top: -1px;
+}
+.dropdown ul .ico-no:before {
+    margin-top: -2px;
+}
+.dropdown ul .ico-tochannel:before,
+.dropdown ul .ico-fromchannel:before {
+    margin-top: -2px;
+    margin-left: -1.5em;
+}
+.dropdown ul .ico-divtext:before,
+.dropdown ul .ico-translate:before,
+.dropdown ul .icon-err:before,
+.dropdown ul .icon-filter:before,
+.dropdown ul .icon-py:before {
+    margin-top: -3px;
+}
+.dropdown ul .ico-idroute:before {
+    margin-top: -4px;
+    margin-left: -1.5em;
+}
+.dropdown ul .ico-infilename:before,
+.dropdown ul .ico-outfilename:before {
+    margin-left: -2em;
+}
+.dropdown ul .ico-incoming:before,
+.dropdown ul .ico-outgoing:before {
+    margin-top: -8px;
+    margin-left: -1.3em;
+}
+.dropdown ul .ico-add-partner:before {
+    margin-left: -2.2em;
+}
+.dropdown ul .ico-frompartner:before,
+.dropdown ul .ico-topartner:before {
+    margin-left: -2.4em;
+}
+.dropdown ul .icon-delete:before {
+    margin-top: -2px;
+    margin-left: -2em;
+    padding: 10px;
+}
+.dropdown ul .ico-warn:before {
+    margin-top: -1px;
+    margin-left: -1.6em;
+}
+
+
+/* .bots.selectform */
+.bots.selectform label {
+    padding-left: 3.5em;
+}
+.bots.selectform label:before {
+    position: absolute;
+    line-height: inherit;
+    margin-left: -2.5em;
+}
+.bots.selectform label.ico-idroute:before,
+.bots.selectform label.ico-fromchannel:before,
+.bots.selectform label.ico-tochannel:before {
+    margin-left: -2.0em;
+}
+.bots.selectform label.ico-errortext:before {
+    margin-left: -2.2em;
+}
+.bots.selectform label.ico-infilename:before,
+.bots.selectform label.ico-outfilename:before {
+    margin-left: -3.0em;
+}
+.bots.selectform label.ico-frompartner:before,
+.bots.selectform label.ico-topartner:before,
+.bots.selectform label.ico-datefrom:before,
+.bots.selectform label.ico-dateuntil:before {
+    margin-left: -3.5em;
+}
+.bots.selectform label.ico-divtext:before {
+    margin-left: -3.0em;
+    margin-top: -2px;
+}
+
+
+/* .tainfo table */
+#botstable .tainfo td:first-child, #botstable .tainfo th:first-child,
+.tainfo td:first-child, .tainfo th:first-child {
+    padding-left: 3.0em;
+}
+.tainfo td:before, .tainfo th:before {
+    position: absolute;
+    line-height: inherit;
+    margin-left: -2.0em;
+}
+.tainfo td.ico-file:before {
+    margin-left: -1.8em;
+}
+.tainfo td.ico-idroute:before,
+.tainfo td.ico-fromchannel:before,
+.tainfo td.ico-tochannel:before {
+    margin-left: -1.5em;
+}
+.tainfo th.ico-ts:before {
+    margin-left: -2.7em;
+}
+.tainfo th.ico-frompartner:before,
+.tainfo th.ico-topartner:before {
+    margin-left: -3.0em;
+}
+.tainfo td.ico-divtext:before {
+    margin-top: -2px;
+}

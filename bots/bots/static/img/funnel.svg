@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="24.6mm"
+   height="24.6mm"
+   viewBox="0 0 24.600001 24.6"
+   version="1.1"
+   id="svg273"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="funnel.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview275"
+     pagecolor="#ffffff"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.5215769"
+     inkscape:cx="205.37904"
+     inkscape:cy="-9.2009811"
+     inkscape:window-width="1920"
+     inkscape:window-height="1019"
+     inkscape:window-x="0"
+     inkscape:window-y="37"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     width="23.43419mm" />
+  <defs
+     id="defs270" />
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-97.832085,-127.50631)">
+    <path
+       d="m 112.19685,127.57013 c -6.36508,-0.38179 -12.4722,0.98875 -13.64351,3.05779 -0.256117,0.45588 -0.256117,0.92181 0,1.37768 l 8.28596,10.33754 c 0.35084,0.43868 0.54345,0.98557 0.54345,1.54781 v 7.189 c 0,0.56594 1.20544,1.02499 2.69478,1.02499 1.48776,0 2.69505,-0.45905 2.69505,-1.02499 v -7.18926 c 0,-0.56224 0.19103,-1.10887 0.54345,-1.54781 l 8.28437,-10.33754 c 1.16946,-2.06878 -3.04032,-4.055 -9.40355,-4.43521 z m -2.11905,6.11029 c -6.15977,0 -9.94199,-1.4224 -9.94199,-2.44211 0,-1.01917 3.78222,-2.44051 9.94199,-2.44051 6.15844,0 9.94013,1.42134 9.94013,2.44051 0,1.01971 -3.78169,2.44211 -9.94013,2.44211 z"
+       id="path89"
+       style="stroke-width:0.264583" />
+  </g>
+</svg>

@@ -1,0 +1,40 @@
+{% load i18n static botsfilters %}
+<table>
+<tr><th>{{ ta.get_status_display }}</th><th class="botsstatus{{ ta.statust }}">{{ ta.get_statust_display }}</th></tr>
+<tr title="{{ ta.ts|date:"DATE_FORMAT" }}&nbsp;{{ ta.ts|date:'H:i:s' }}"><th class="ico-ts">{% trans 'Date/time' %}</th><td>{{ ta.ts|date:DATETIME_INPUT_FORMAT }}</td></tr>
+<tr><td>{% trans 'Index' %}</td><td>{% if ta.status == 200 %}{% include 'bots/link/incoming.html' with idta=ta.idta %}{% elif ta.status == 520 %}{% include 'bots/link/outgoing.html' with idta=ta.idta %}{% else %}{{ ta.idta }}{% endif %}</td></tr>
+<tr><th class="ico-file">{% trans 'File' %}</th><td title="{{ ta.filename }}">{% with idta=ta.idta popup=True filename=ta.filename|shortpath %}
+{% if ta.status == 220 and ta.divtext %}{% with filename=ta.divtext %}
+  {% if detaillist %}{% include 'bots/link/filer.html' %}{% else %}{{ filename }} {% include 'bots/link/downlfile.html' %}{% endif %}{% endwith %} <b>({% trans 'Email attachment' %})</b>
+{% else %}{% if detaillist %}{% include 'bots/link/filer.html' %}{% else %}{{ filename }} {% include 'bots/link/downlfile.html' %}{% endif %}{% endif %}{% endwith %}
+</td></tr>
+{% if ta.frommail %}<tr><td><b>{% trans 'From' %}</b></td><td>{{ ta.frommail }}</td></tr>{% endif %}
+{% if ta.tomail %}<tr><td><b>{% trans 'To' %}</b></td><td>{{ ta.tomail }}</td></tr>{% endif %}
+{% if ta.rsrv1 %}<tr><td><b>{% trans 'Subject' %}</b></td><td>{{ ta.rsrv1 }}</td></tr>{% endif %}
+<tr><th>{% trans 'Reference' %}</th><td>{% include 'bots/link/reference.html' %}</td></tr>
+<tr><td>{% trans 'Editype' %}</td><td>{{ ta.editype }}</td></tr>
+<tr><td>{% trans 'Messagetype' %}</td><td>{% include 'bots/link/messagetype.html' with editype=ta.editype messagetype=ta.messagetype as_link=True %}</td></tr>
+<tr><td class="ico-fromchannel">{% trans 'FromChannel' %}</td><td>{% include 'bots/link/channel.html' with idchannel=ta.fromchannel fromto="from" channel_type=ta.fromchannel|get_channel_type:channels_types %}</td></tr>
+<tr><td class="ico-idroute">{% trans 'Route' %}</td><td>{% include 'bots/link/change_route.html' with idroute=ta.idroute %}</td></tr>
+{% if ta.divtext and ta.status != 220 %}<tr><td{% if ta.status == 320 or ta.status == 330 %} class="ico-divtext"><b>{% trans 'Mapping Script' %}</b>{% else %}>divtext{% endif %}</td>
+  <td>{% if ta.status == 320 %}{% include 'bots/link/translate.html' with messagetype=ta.messagetype tscript=ta.divtext tscript_link=True admin_link=True BR=' ' %}{% else %}{{ ta.divtext }}{% endif %}</td></tr>{% endif %}
+<tr><td class="ico-tochannel">{% trans 'ToChannel' %}</td><td>{% include 'bots/link/channel.html' with idchannel=ta.tochannel fromto="to" channel_type=ta.tochannel|get_channel_type:channels_types %}</td></tr>
+<tr><th class="ico-frompartner">{% trans 'Frompartner' %}</th><td>{% include 'bots/link/partner.html' with idpartner=ta.frompartner fromto="from" %}</td></tr>
+<tr><th class="ico-topartner">{% trans 'Topartner' %}</th><td>{% include 'bots/link/partner.html' with idpartner=ta.topartner fromto="to" %}</td></tr>
+{% if ta.confirmasked %}<tr><td>{% trans 'Confirmation' %}</td><td>{% include 'bots/link/confirm.html' %}
+  <b>{% if row.confirmidta > 0 %}{% if row.confirmed %}{% trans 'Confirmed' %}{% else %}{% trans 'Unconfirmed' %}{% endif %}{% endif %}</b>
+  {% include 'bots/link/confirmation.html' %}
+</td></tr>{% endif %}
+<tr><td>{% trans 'Nrmessages' %}</td><td>{{ ta.nrmessages }}</td></tr>
+<tr><td>{% trans 'Filesize' %}</td><td>{{ ta.filesize|filesizeformat }}</td></tr>
+<tr><td>{% trans 'Charset' %}</td><td>{{ ta.charset }}</td></tr>
+<tr><td>{% trans 'Test' %}</td><td>{{ ta.testindicator }}</td></tr>
+<tr><td>{% trans 'Contenttype' %}</td><td>{{ ta.contenttype }}</td></tr>
+<tr><td>{% trans 'Botskey' %}</td><td>{{ ta.botskey }}</td></tr>
+<tr><td>{% trans 'Alt' %}</td><td>{{ ta.alt }}</td></tr>
+<tr><td>{% trans 'Merge' %}</td><td>{{ ta.merge }}</td></tr>
+<tr><td>{% trans 'Envelope' %}</td><td>{{ ta.envelope }}</td></tr>
+{% if ta.rsrv5 %}<tr><td>{% trans 'Envelope data' %}</td><td>{{ ta.rsrv5 }}</td></tr>{% endif %}
+{% if ta.errortext %}<tr class="botstrstatus{{ ta.statust }} errortext"><td class="va-top botsstatus{{ ta.statust }}">{{ ta.get_statust_display }}</td>
+<td>{{ ta.errortext|linebreaks }}</td></tr>{% endif %}
+</table>

@@ -1,0 +1,83 @@
+{% load i18n static %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{% with ta=idtas|first %}
+<title>{{ ta.idta }} - {{ title }}</title>
+<meta charset="{{ charset }}" />{% endwith %}
+<meta Http-Equiv="Pragma" Content="no-cache" />
+<link rel="icon" type="image/png" href="{% static "img/bots.ico" %}">
+<link rel="stylesheet" href="{% static "admin/css/base.css" %}">
+{% if django_version|default:'4' >= '4.1' %}<link rel="stylesheet" href="{% static "admin/css/dark_mode.css" %}">{% endif %}
+{% if django_version|default:'4' >= '4.2' %}<script src="{% static "admin/js/theme.js" %}" defer></script>{% endif %}
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+{% if django_version|default:'4' >= '2' %}<link rel="stylesheet" href="{% static "admin/css/responsive.css" %}">{% endif %}
+<link rel="stylesheet" href="{% static "css/bots.css" %}">
+<link rel="stylesheet" href="{% static "css/bots-icons.css" %}">
+<link rel="stylesheet" href="{% static "css/bots-filer.css" %}">
+{% include "bots/js/urls.html" %}
+<script src="{% static "js/bots.js" %}"></script>
+<script src="{% static "js/botstable.js" %}"></script>
+<script src="{% static "js/bots.filer.js" %}"></script>
+{% if user.is_staff and perms.bots %}<script src="{% static "js/bots.staff.js" %}"></script>{% endif %}
+</head>
+<body class="bots filer">
+{% if error_content %}{{ error_content }}
+{% elif form and form.errors %}{{ form.errors }}
+{% else %}<div id="container">{% for ta in idtas %}
+<form action="{{ ta.form.target }}" id="viewform" method="post">{% csrf_token %}
+{% for hidden in ta.form.hidden_fields %}{{ hidden }}
+{% endfor %}{{ ta.form.errors }}
+<div id="navbar{{ forloop.counter }}" class="navbar">
+<table border="1" cellpadding="3" cellspacing="0" class="nowrap">
+<tr>
+  <td class="pad0">{% include 'bots/button_back_close.html' with cssclass="pad8" %}</td>
+  <td  width="30px" align="center">{% if ta.has_previous %}<button class="button pad8 padnav" name="action" value="previous" title="{% trans 'Previous' %}">&lt;</button>{% endif %}</td>
+  <td width="125px" align="center" class="botsstatus{{ ta.statust }} phase">
+    {% include 'bots/link/inorout.html' with cssclass=" pad8" %}
+    <div class="tainfo" align="center">{% include 'bots/ta_info.html' with admlink=True cssclass="pad1" is_popup=True %}</div>
+  </td>
+  <td width="30px" align="center">{% if ta.has_next %}<button class="button pad8 padnav" name="action" value="next" title="{% trans 'Next' %}">&gt;</button>{% endif %}</td>
+  <td title="Content-Type: {{ ta.contenttype }}">{{ ta.contenttype }}&nbsp;{{ ta.form.indent }}</td>
+  {% if ta.has_file %}<td align="center"><button class="button ico-save pad8" name="action" value="downl">{% trans 'Download' %}</button></td>{% endif %}
+  <td>{% with disabled=ta.form.numbered.field.widget.attrs.disabled %}
+    <input type="checkbox" name="numbered" id="cbx_numbered" onchange="fill_ta_content({{ forloop.counter }}, this.checked)"{% if ta.form.numbered.value %} checked{% endif %}{% if disabled %} disabled{% endif %}>
+    <label for="cbx_numbered" class="button pad8" title="{% trans 'Numbered' %}"{% if disabled %} disabled{% endif %}>Num</label>{% endwith %}
+  </td>
+  {% if perms.bots.view_ta %}<td>{% include 'bots/link/detail.html' %}</td>{% endif %}
+  <td title="{% trans 'Text size' %}">{% include 'bots/fontsizer.html' with form=ta.form %}</td>
+  {% if ta.reference %}<td title="{% trans 'reference' %}: {{ ta.reference }}">{% include 'bots/link/reference.html' %}</td>{% endif %}
+</tr>
+</table>
+</div>
+<div class="content">
+{% if messages %}
+  <ul class="messagelist">{% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+  {% endfor %}</ul>
+{% endif %}
+{% if not ta.has_file %}
+  <pre>{{ ta.content }}</pre>
+{% elif ta.contenttype == 'text/html' and ta.form.indent.value == 'html' %}
+  <iframe style="height:100vh; width:100%;" srcdoc="{{ ta.content }}"></iframe>
+{% elif ta.contenttype == 'application/pdf' %}
+  <object type="{{ ta.contenttype }}" style="height:100vh; width:100%" data="data:{{ ta.contenttype }};base64,{{ ta.content|safe }}">
+    <iframe style="height:100vh; width:100%;" src="data:{{ ta.contenttype }};base64,{{ ta.content|safe }}">
+      This browser does not support PDFs. Please download the PDF to view it:
+      <a href="{% url 'bots:filer' %}/?action=downl&amp;idta={{ ta.idta }}">{% trans 'Download' %} PDF</a>
+    </iframe>
+  </object>
+{% else %}
+  <pre id="ta_content{{ forloop.counter }}"></pre>
+  <script>
+  ta_contents[{{ forloop.counter }}] = '{{ ta.content|safe|escapejs }}';
+  fill_ta_content({{ forloop.counter }}, {{ ta.form.numbered.value|lower }});
+  </script>
+{% endif %}
+<hr />
+</div>
+</form>{% endfor %}
+{% if django_version|default:'4' >= '4.2' %}{% include "admin/color_theme_toggle.html" %}{% endif %}
+</div>{% endif %}
+{% include "bots/js/fontsizes.html" %}
+{% include "admin/svgs.html" %}
+</body>
+</html>

@@ -1,0 +1,1 @@
+../../../../../usersys/grammars/edifact/PRICATD96AUNEAN005.py

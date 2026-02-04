@@ -1,0 +1,6 @@
+{% with field=form.confirmtype %}
+<td data-field="{{ field.name }}">{% if row.confirmtype %}
+<div class="dropdown">{{ row.confirmtype }}
+<ul></ul>
+</div>{% else %}{{ row.confirmtext }}{% endif %}
+</td>{% endwith %}

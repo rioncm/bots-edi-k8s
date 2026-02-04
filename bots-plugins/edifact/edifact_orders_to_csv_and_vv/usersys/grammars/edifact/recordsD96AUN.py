@@ -1,0 +1,1 @@
+../../../../../usersys/grammars/edifact/recordsD96AUN.py

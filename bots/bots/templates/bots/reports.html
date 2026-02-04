@@ -1,0 +1,59 @@
+{% extends "bots/base.html" %}
+{% load i18n %}
+
+{% block bodyclass %}{{ block.super }} reports{% endblock %}
+
+{% block botstable %}
+<thead>
+<tr>
+    <th id="th_selall">{% if not form.actions.is_hidden %}<input type="checkbox" name="selall" onchange="checkall(this, 'sel')">{% endif %}</th>
+    {% include 'bots/botstable/thead/field.html' with field=form.status %}
+    <th id="th_ts"><button class="botsheader ico-ts" name="order" value="ts">{% trans 'Date/time' %}</button></th>
+    {% include 'bots/botstable/thead/field.html' with field=form.type %}
+    <th id="th_lastreceived"><button class="botsheader" name="order" value="lastreceived">{% trans '#in' %}</button></th>
+    <th id="th_send"><button class="botsheader" name="order" value="send">{% trans '#out' %}</button></th>
+    <th id="th_filesize"><button class="botsheader" name="order" value="filesize">{% trans 'Size' %}</button></th>
+    <th id="th_processerrors"><button class="botsheader ico-err" name="order" value="processerrors">{% trans 'Error' %}</button></th>
+    <th id="th_rsrv1"><button class="botsheader ico-run" name="order" value="rsrv1">{% trans 'Commandline' %}</button></th>
+    {% include 'bots/botstable/thead/field.html' with field=form.acceptance %}
+</tr>
+<tr>
+    <th></th>
+    {% include 'bots/botstable/thead/filtered.html' with field=form.status get_field_display=True %}
+    {% include 'bots/botstable/thead/datefields.html' %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.type get_field_display=True %}
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    {% include 'bots/botstable/thead/textfield.html' with field=form.rsrv1 %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.acceptance get_field_display=True %}
+</tr>
+</thead>
+<tbody class="reports">{% for row in queryset.object_list %}
+<tr class="{% cycle 'row1' 'row2' %}{% if row.status %} botstrstatus1{% endif %}">
+    <td><div class="dropdown">{% if not form.actions.is_hidden %}<input type="checkbox" id="{{ row.idta }}" name="sel" value="{{ row.idta }}" onclick="checktr(this)"><label for="{{ row.idta }}" class="icon-star" title="Select {{ row.idta }}"></label>{% else %}<span class="icon-star"></span>{% endif %}
+      <ul>
+        {% if user.is_staff %}<li><a class="ico-log" href="{% url 'bots:logfiler' %}/?engine={{ row.idta }}" target="_blank">{% trans 'View log' %}</a></li>{% endif %}{% if row.lastreceived %}
+        <li><a href="{% url 'bots:incoming' %}/?reportidta={{ row.idta }}&popup=1" target="_blank" class="ico-incoming">{% trans 'View incoming' %}</a></li>
+        <li><a href="{% url 'bots:outgoing' %}/?reportidta={{ row.idta }}&popup=1" target="_blank" class="ico-outgoing">{% trans 'View out-communication' %}</a></li>{% endif %}
+        {% if perms.bots.delete_report %}<li><button name="delete" value="{{ row.idta }}" class="ico-trash" onclick="return confirm(this.innerText + ': ' + this.value)">{% trans 'Delete' %} {% trans 'report' %}</button></li>{% endif %}
+      </ul>
+    </div></td>
+    <td data-field="status" data-value="{% if not row.status %}0"><div class="dropdown icon-yes{% else %}1"><div class="dropdown {% if row.lasterror or row.lastok or row.lastopen %}icon-no{% else %}icon-alert{% endif %}{% endif %}"><ul></ul></div></td>
+    {% include 'bots/botstable/td/ts.html' %}
+    {% include 'bots/botstable/td/td.html' with field=form.type value=row.type %}
+    <td>{% if row.lastreceived %}<a href="{% url 'bots:incoming' %}/?reportidta={{ row.idta }}" class="button" title="{% trans 'View incoming' %}">{{ row.lastreceived }}</a>{% else %}{{ row.lastreceived }}{% endif %}</td>
+    <td>{% if row.send %}<a href="{% url 'bots:outgoing' %}/?reportidta={{ row.idta }}" class="button" title="{% trans 'View outgoing' %}">{{ row.send }}</a>{% else %}{{ row.send }}{% endif %}</td>
+    <td>{% if row.filesize %}{{ row.filesize|filesizeformat }}{% endif %}</td>
+    <td><ul class="reporterrs">{% if row.lasterror %}<li><a href="{% url 'bots:incoming' %}/?reportidta={{ row.idta }}&statust=1" class="button ico-err" title="{% trans 'View file errors' %}">{{ row.lasterror }} {% trans 'files with errors' %}</a></li>{% endif %}
+      {% if row.lastok %}<li><a href="{% url 'bots:incoming' %}/?reportidta={{ row.idta }}&statust=2" class="button ico-err" title="{% trans 'View incoming' %}">{{ row.lastok }} {% trans 'files got stuck' %}</a></li>{% endif %}
+      {% if row.lastopen %}<li><a href="{% url 'bots:incoming' %}/?reportidta={{ row.idta }}&statust=0" class="button ico-err" title="{% trans 'View incoming' %}">{{ row.lastopen }} {% trans 'system errors' %}</a></li>{% endif %}
+      {% if row.processerrors %}<li><a href="{% url 'bots:process' %}/?reportidta={{ row.idta }}" class="button ico-err" title="{% trans 'View process errors' %}">{{ row.processerrors }} {% trans 'errors in processes' %}</a></li>{% endif %}
+      {% if row.status and row.lastreceived and not row.send %}<li><a href="{% url 'bots:outgoing' %}/?reportidta={{ row.idta }}&statust=1&popup=1" target="_blank" class="button ico-err">{% trans 'View out-communication errors' %}</a></li>{% endif %}
+    </ul></td>
+    {% include 'bots/botstable/td/rsrv1.html' %}
+    <td>{% if row.acceptance %}<b class="ico-yes"></b>{% endif %}</td>
+</tr>
+{% endfor %}</tbody>
+{% endblock %}

@@ -1,0 +1,170 @@
+/* Bots EDI Translator responsive CSS
+ * Author: Ludovic Watteaux
+ */
+
+@media (max-width: 1024px) {
+    #header {
+        flex-direction: unset;
+        justify-content: space-between;
+        padding: 10px 10px;
+        padding-bottom: 1px;
+    }
+    div#logo {
+        height: 3em;
+    }
+    div#environment {
+        left: 37.5em;
+    }
+    #bots-nav a:after {
+        content: '';
+    }
+/*
+    #bots-nav li:hover > a.after-title:after {
+        content: attr(title);
+    }
+*/
+    .ico-home:before {
+        content: var(--ico-house);
+    }
+    input, textarea, select, .form-row p, form .button {
+        font-size: 0.6rem;
+    }
+    div.breadcrumbs {
+        padding-top: 0.4em;
+        padding-bottom: 0.2em;
+        padding-left: 10px;
+    }
+    /* No display */
+    .now,
+    #user-tools {
+        display: none;
+    }
+    .bots label.action-top,
+    .action-top {
+        top: 4em;
+    }
+}
+
+@media (max-width: 730px) {
+    /* Sticky > relative */
+    .action-top {
+        position: relative;
+        top: unset  !important;
+	z-index: 6;
+    }
+}
+
+@media (max-height: 680px) {
+    /* Sticky > relative */
+    body.change-list #changelist nav.toplinks,
+    body.change-list #changelist .paginator,
+    table#botstable thead tr:nth-child(2) th {
+        position: relative;
+        top: unset  !important;
+    }
+    body.change-list #changelist nav.toplinks + form .actions,
+    body.change-list #changelist form .actions {
+        top: 8.5em;
+    }
+    /* Admin change form */
+    fieldset.module.aligned > h2,
+    :not(.inline-related) .collapse summary {
+        top: 11.5em;
+    }
+    .popup fieldset.module.aligned > h2,
+    .popup :not(.inline-related) .collapse summary {
+        top: 8em;
+    }
+
+    /* Admin add form */
+    .change-form h1 + #content-main fieldset.module.aligned > h2,
+    .change-form h1 + #content-main .collapse summary {
+        top: 9.8em;
+    }
+    .popup.change-form h1 + #content-main fieldset.module.aligned > h2,
+    .popup.change-form h1 + #content-main .collapse summary {
+        top: 6.2em;
+    }
+}
+
+
+@media (max-width: 767px), (max-height: 600px) {
+    .object-tools {
+        text-align: right;
+    }
+}
+@media (max-height: 600px) {
+    /* Sticky > relative */
+    .change-form .submit-row,
+    fieldset.module.aligned > h2,
+    :not(.inline-related) .collapse summary,
+    table#botstable thead tr:first-child th,
+    table#botstable thead tr:nth-child(2) th {
+        position: relative;
+        top: unset  !important;
+    }
+}
+
+
+@media (max-width: 580px) {
+    #selcount,
+    #id_actions,
+    #id_actions + button,
+    #id_refresh,
+    #id_refresh + button {
+        display: none;
+    }
+    /* Sticky > relative */
+    .action-top,
+    .bots .action-top,
+    .bots label.action-top {
+        position: relative;
+        top: unset  !important;
+        z-index: 6;
+    }
+
+}
+
+@media (max-width: 500px) {
+    /* Sticky > relative */
+    .change-form .submit-row,
+    fieldset.module.aligned > h2,
+    :not(.inline-related) .collapse summary,
+    table#botstable thead tr:first-child th,
+    table#botstable thead tr:nth-child(2) th,
+    .bots div#content > form > input + h1,
+    div#content > h1,
+    div#content > h1 + h2,
+    .change-form div#content > h1 + h2,
+    .sticky-title,
+    .paginatop {
+        position: relative;
+        top: unset  !important;
+        z-index: 8;
+    }
+}
+
+
+@media (max-height: 500px) {
+    /* Sticky > relative */
+    div.breadcrumbs,
+    nav[aria-label],
+    body.change-list #changelist nav.toplinks + form .actions,
+    body.change-list #changelist form .actions,
+    body.change-list #changelist #toolbar,
+    .bots div#content > form > input + h1,
+    div#content > h1,
+    div#content > h1 + h2,
+    .change-form div#content > h1 + h2,
+    .sticky-title,
+    .sticky1,
+    .collapse summary,
+    .object-tools,
+    .action-top,
+    .paginatop,
+    .bots .action-top,
+    .bots label.action-top {
+        position: relative;
+        top: unset  !important;
+    }
+}

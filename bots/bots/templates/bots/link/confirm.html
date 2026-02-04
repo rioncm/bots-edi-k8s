@@ -1,0 +1,2 @@
+{% if ta.confirmasked %}{% load i18n %}{% if perms.bots.view_ta %}
+<a href="{% url 'bots:confirm' %}/?idta={{ ta.idta }}" onclick="return popup(this, '95%', '60%', '&popup=1')" title="Bots {% trans 'confirmation' %}: {{ ta.idta }}" class="{% if as_link %}botslink{% else %}button ico-{% if ta.confirmidta == 0 %}pending{% else %}confirmed{{ ta.confirmed }}{% endif %} pad0{% endif %}">{% trans 'Confirmation' %}</button></a>{% else %}{% trans 'Confirmation' %}{% endif %} {{ ta.confirmtype }}<br />{% endif %}

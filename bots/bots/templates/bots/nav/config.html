@@ -1,0 +1,124 @@
+{% if user.is_staff and perms.bots %}{% load i18n %}
+<li><a href="{% url 'admin:app_list' 'bots' %}" class="ico-config after-title" title="{% trans 'Configuration' %}"></a>
+  <ul>
+    {# ROUTES #}{% if perms.bots.view_routes or perms.bots.change_routes %}{% url 'admin:bots_routes_changelist' as url_bots_routes %}
+    <li><a href="{{ url_bots_routes }}" class="ico-routes">{% trans 'Routes' %}</a>
+      <ul>
+        <li><a class="ico-fromchannel">{% trans 'Incoming channel' %}</a>
+          <ul>{% for channeltype, channeltype_title in channeltypes %}
+            <li title="{{ channeltype_title }}"><a href="{{ url_bots_routes }}?fromchannel__type__exact={{ channeltype }}">{{ channeltype_title }}</a></li>{% endfor %}
+          </ul>
+        </li>
+        <li><a class="ico-tochannel">{% trans 'Outgoing channel' %}</a>
+          <ul>{% for channeltype, channeltype_title in channeltypes %}
+            <li title="{{ channeltype_title }}"><a href="{{ url_bots_routes }}?tochannel__type__exact={{ channeltype }}">{{ channeltype_title }}</a></li>{% endfor %}
+          </ul>
+        </li>
+        <li><a class=="ico-editype">{% trans 'From editype' %}</a>
+          <ul>{% for editype, editype_title in editypes %}
+            <li title="{{ editype_title }}"><a href="{{ url_bots_routes }}?fromeditype__exact={{ editype }}">{{ editype_title|truncatechars:22 }}</a></li>{% endfor %}
+          </ul>
+        </li>
+        <li><a href="{{ url_bots_routes }}?notindefaultrun__exact=0">{% trans 'Default run' %}</a>
+          <ul>
+            <li><a href="{{ url_bots_routes }}?notindefaultrun__exact=0&active__exact=1" class="ico-yes">{% trans 'Actives' %}</a></li>
+            <li><a href="{{ url_bots_routes }}?notindefaultrun__exact=0&active__exact=0"class="ico-no">{% trans 'Inactives' %}</a></li>
+            <li><hr/></li>
+            <li><a href="{{ url_bots_routes }}?notindefaultrun__exact=1">{% trans 'Not in default run' %}</a></li>
+            <li><a href="{{ url_bots_routes }}?notindefaultrun__exact=1&active__exact=1" class="ico-yes">{% trans 'Actives' %}</a></li>
+            <li><a href="{{ url_bots_routes }}?notindefaultrun__exact=1&active__exact=0"class="ico-no">{% trans 'Inactives' %}</a></li>
+          </ul>
+        </li>
+        <li><a href="{{ url_bots_routes }}?dirmonitor__exact=1" class="ico-dirmonitor">{% trans 'Dirmonitor' %}</a>
+          <ul>
+            <li><a href="{{ url_bots_routes }}?dirmonitor__exact=1&active__exact=1" class="ico-yes">{% trans 'Actives' %}</a></li>
+            <li><a href="{{ url_bots_routes }}?dirmonitor__exact=1&active__exact=0"class="ico-no">{% trans 'Inactives' %}</a></li>
+          </ul>
+        </li>
+        <li><a href="{{ url_bots_routes }}?active__exact=1" class="ico-yes">{% trans 'Actives' %}</a></li>
+        <li><a href="{{ url_bots_routes }}?active__exact=0"class="ico-no">{% trans 'Inactives' %}</a></li>
+        {% if perms.bots.add_routes %}<li><a href="{% url 'admin:bots_routes_add' %}" class="ico-add">{% trans 'Add' %}</a></li>{% endif %}
+      </ul>
+    </li>{% endif %}
+
+    {# CHANNELS #}{% if perms.bots.view_channel or perms.bots.change_channel %}{% url 'admin:bots_channel_changelist' as url_bots_channel %}
+    <li><a href="{{ url_bots_channel }}" class="ico-channel">{% trans 'Channels' %}</a>
+      <ul>
+        <li><a href="{{ url_bots_channel }}?inorout__exact=in" class="ico-fromchannel">{% trans 'in'|title %}</a>
+          <ul>{% if perms.bots.add_channel %}<li><a href="{% url 'admin:bots_channel_add' %}?inorout=in" class="ico-add">{% trans 'Add' %} {% trans 'incoming channel' %}</a></li>{% endif %}{% for channeltype, channeltype_title in channeltypes %}
+            <li title="{{ channeltype_title }}"><a href="{{ url_bots_channel }}?inorout__exact=in&type__exact={{ channeltype }}" >{{ channeltype_title }}</a></li>{% endfor %}
+          </ul>
+        </li>
+        <li><a href="{{ url_bots_channel }}?inorout__exact=out" class="ico-tochannel">{% trans 'out'|title %}</a>
+          <ul>{% if perms.bots.add_channel %}<li><a href="{% url 'admin:bots_channel_add' %}?inorout=out" class="ico-add">{% trans 'Add' %} {% trans 'outgoing channel' %}</a></li>{% endif %}{% for channeltype, channeltype_title in channeltypes %}
+            <li title="{{ channeltype_title }}"><a href="{{ url_bots_channel }}?inorout__exact=out&type__exact={{ channeltype }}">{{ channeltype_title }}</a></li>{% endfor %}
+          </ul>
+        </li>
+        <li><a>{% trans 'Type' %}</a>
+          <ul>{% for channeltype, channeltype_title in channeltypes %}
+            <li title="{{ channeltype_title }}"><a href="{{ url_bots_channel }}?type__exact={{ channeltype }}">{{ channeltype_title }}</a></li>{% endfor %}
+          </ul>
+        </li>
+        {% if perms.bots.add_channel %}<li><a href="{% url 'admin:bots_channel_add' %}" class="ico-add">{% trans 'Add' %}</a></li>{% endif %}
+      </ul>
+    </li>{% endif %}
+
+    {# TRANSLATE #}{% if perms.bots.view_translate or perms.bots.change_translate %}{% url 'admin:bots_translate_changelist' as url_bots_translate %}
+    <li><a href="{{ url_bots_translate }}" class="ico-translate">{% trans 'Translations' %}</a>
+      <ul>
+        <li><a href="{{ url_bots_translate }}?o=2" class="ico-in">{% trans 'Incoming' %}</a>
+          <ul>{% for editype, editype_title in editypes %}
+            <li title="{{ editype_title }}"><a href="{{ url_bots_translate }}?fromeditype__exact={{ editype }}">{{ editype_title|truncatechars:22 }}</a></li>{% endfor %}
+          </ul>
+        </li>
+        <li><a href="{{ url_bots_translate }}?o=8" class="ico-out">{% trans 'Outgoing' %}</a>
+          <ul>{% for editype, editype_title in editypes %}
+            <li title="{{ editype_title }}"><a href="{{ url_bots_translate }}?toeditype__exact={{ editype }}">{{ editype_title|truncatechars:22 }}</a></li>{% endfor %}
+          </ul>
+        </li>
+        <li><a href="{{ url_bots_translate }}?active__exact=1" class="ico-yes">{% trans 'Actives' %}</a></li>
+        <li><a href="{{ url_bots_translate }}?active__exact=0" class="ico-no">{% trans 'Inactives' %}</a></li>
+        {% if perms.bots.add_translate %}<li><a href="{% url 'admin:bots_translate_add' %}" class="ico-add">{% trans 'Add' %}</a></li>{% endif %}
+      </ul>
+    </li>{% endif %}
+
+    {# PARTNER #}{% if perms.bots.view_partner or perms.bots.change_partner %}
+    <li><hr/></li>
+    <li><a href="{% url 'admin:bots_partner_changelist' %}" class="ico-partner">{% trans 'Partners' %}</a>
+      <ul>
+        <li><a href="{% url 'admin:bots_partner_changelist' %}?active__exact=1" class="ico-yes">{% trans 'Actives' %}</a></li>
+        <li><a href="{% url 'admin:bots_partner_changelist' %}?active__exact=0" class="ico-no">{% trans 'Inactives' %}</a></li>
+        {% if perms.bots.add_partner %}<li><a href="{% url 'admin:bots_partner_add' %}" class="ico-add">{% trans 'Add' %}</a></li>{% endif %}
+      </ul>
+    </li>{% endif %}
+
+    {# PARTNER GROUPS #}{% if perms.bots.view_partnergroep or perms.bots.change_partnergroep %}
+    <li><a href="{% url 'admin:bots_partnergroep_changelist' %}" class="ico-partnergroep">{% trans 'Partnergroups' %}</a>
+      <ul>
+        <li><a href="{% url 'admin:bots_partnergroep_changelist' %}?active__exact=1" class="ico-yes">{% trans 'Actives' %}</a></li>
+        <li><a href="{% url 'admin:bots_partnergroep_changelist' %}?active__exact=0" class="ico-no">{% trans 'Inactives' %}</a></li>
+        {% if perms.bots.add_partnergroep %}<li><a href="{% url 'admin:bots_partnergroep_add' %}" class="ico-add">{% trans 'Add' %}</a></li>{% endif %}
+      </ul>
+    </li>{% endif %}
+
+    {# CONFIRMRULE #}{% if perms.bots.view_confirmrule or perms.bots.change_confirmrule %}
+    <li><hr/></li>
+    <li><a href="{% url 'admin:bots_confirmrule_changelist' %}" class="ico-confirm">{% trans 'Confirmrules' %}</a>
+      <ul>
+        <li><a href="{% url 'admin:bots_confirmrule_changelist' %}?active__exact=1" class="ico-yes">{% trans 'Actives' %}</a></li>
+        <li><a href="{% url 'admin:bots_confirmrule_changelist' %}?active__exact=0" class="ico-no">{% trans 'Inactives' %}</a></li>
+        {% if perms.bots.add_confirmrule %}<li><a href="{% url 'admin:bots_confirmrule_add' %}" class="ico-add">{% trans 'Add' %}</a></li>{% endif %}
+      </ul>{% endif %}
+
+    {# CCODE #}{% if perms.bots.view_ccode or perms.bots.change_ccode %}
+    <li><hr/></li>
+    <li><a href="{% url 'admin:bots_ccode_changelist' %}" class="ico-ccode">{% trans 'User Codes list' %}</a>
+      {% if perms.bots.add_ccode %}<ul><li><a href="{% url 'admin:bots_ccode_add' %}" class="ico-add">{% trans 'Add' %}</a></li></ul>{% endif %}
+    </li>{% endif %}
+
+    {# CCODETRIGGER #}{% if perms.bots.view_ccodetrigger or perms.bots.change_ccodetrigger %}
+    <li><a href="{% url 'admin:bots_ccodetrigger_changelist' %}" class="ico-ccodetrigger">{% trans 'User Code types' %}</a>
+      {% if perms.bots.add_ccodetrigger %}<ul><li><a href="{% url 'admin:bots_ccodetrigger_add' %}" class="ico-add">{% trans 'Add' %}</a></li></ul>{% endif %}
+    </li>{% endif %}
+  </ul>
+</li>{% endif %}

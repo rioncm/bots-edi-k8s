@@ -1,0 +1,2 @@
+{% if row.fromchannel and row.fromchannel.0 != '(' %}{% load botsfilters %}{% include "bots/botstable/td/channel.html" with field=form.fromchannel idchannel=row.fromchannel fromto="from" channel_type=row.fromchannel|get_channel_type:form.fromchannels_types %}
+{% else %}<td>{{ row.fromchannel }}</td>{% endif %}

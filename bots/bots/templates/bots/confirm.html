@@ -1,0 +1,84 @@
+{% extends "bots/base.html" %}
+{% load i18n botsfilters %}
+
+{% block bodyclass %}{{ block.super }} confirm{% endblock %}
+
+{% block bots_title %}
+<h1 class="ico-{% if form.confirmidta.value == 0 %}pending{% else %}confirmed{{ form.confirmed.value }}{% endif %}"><a href="#" title="{% trans 'Top' %}">{{ title }}</a> {% include "bots/selection/view.html" %}</h1>
+{% endblock %}
+
+{% block bots_submit %}
+<button class="button ico-incoming" name="2incoming">{% trans 'Incoming (same selection)' %}</button>
+<button class="button ico-outgoing" name="2outgoing">{% trans 'Outgoing (same selection)' %}</button>
+{% if form.confirmidta.value < 1 %}<button class="button ico-no" onclick="document.getElementById('id_confirmidta').value='';">{% trans 'All confirmations' %}</button>{% endif %}
+{% if form.confirmidta.value != -1 %}<button class="button ico-confirmed" onclick="document.getElementById('id_confirmidta').value=-1;">{% trans 'Manual confirm' %}</button>{% endif %}
+{% if form.confirmidta.value != 0 %}<button class="button ico-pending" onclick="document.getElementById('id_confirmidta').value=0;">{% trans 'Pending (same selection)' %}</button>{% endif %}
+{{ block.super }}
+{% if not perms.bots.change_mutex %}{% include 'bots/botstable/field/hidden.html' with field=form.idroute %}
+{% include 'bots/botstable/field/hidden.html' with field=form.fromchannel %}
+{% include 'bots/botstable/field/hidden.html' with field=form.tochannel %}{% endif %}
+{% endblock %}
+
+{% block botstable %}
+<thead>
+<tr>
+    {% include 'bots/botstable/thead/selall.html' %}
+    {% include 'bots/botstable/thead/field.html' with field=form.idta %}
+    {% include 'bots/botstable/thead/field.html' with field=form.confirmed %}
+    <th id="th_ts"><button class="botsheader ico-ts" name="order" value="ts">{% trans 'Date/time' %}</button></th>
+    <th id="th_filename"><button class="botsheader ico-file" name="order" value="filename" >{% trans 'File' %}</button></th>
+    <th id="th_reference"><button class="botsheader" name="order" value="reference" >{% trans 'Reference' %}</button></th>
+    {% include 'bots/botstable/thead/field.html' with field=form.confirmtype %}
+    {% include 'bots/botstable/thead/field.html' with field=form.confirmidta %}
+    {% include 'bots/botstable/thead/field.html' with field=form.editype %}
+    {% include 'bots/botstable/thead/field.html' with field=form.messagetype %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/thead/field.html' with field=form.idroute %}
+    {% include 'bots/botstable/thead/field.html' with field=form.fromchannel %}
+    {% include 'bots/botstable/thead/field.html' with field=form.tochannel %}{% endif %}
+    {% include 'bots/botstable/thead/field.html' with field=form.frompartner %}
+    {% include 'bots/botstable/thead/field.html' with field=form.topartner %}
+</tr>
+<tr>
+    {% if not form.actions.is_hidden %}<th></th>{% endif %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.idta %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.confirmed get_field_display=True icon="ico-confirmed" cssclass=form.confirmed.value %}
+    {% include 'bots/botstable/thead/datefields.html' %}
+    {% include 'bots/botstable/thead/textfield.html' with field=form.filename %}
+    {% include 'bots/botstable/thead/textfield.html' with field=form.reference %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.confirmtype get_field_display=True %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.confirmidta %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.editype %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.messagetype %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/thead/filtered.html' with field=form.idroute %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.fromchannel %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.tochannel %}{% endif %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.frompartner %}
+    {% include 'bots/botstable/thead/filtered.html' with field=form.topartner %}
+</tr>
+</thead>
+<tbody>{% for row in queryset.object_list %}
+<tr class="{% cycle 'row1' 'row2' %}">
+    {% include 'bots/botstable/td/sel.html' %}
+    <td><div class="dropdown">
+      {% if perms.bots.view_ta %}<a href="{% url 'bots:detail' %}/?outidta={{ row.idta }}" name="bots_detail_{{ row.idta }}" onclick="return popup(this, '95%', '75%', '&popup=1')" title="{% trans 'View details' %}: {{ row.idta }}" class="button ico-{% if row.confirmidta == 0 %}pending{% else %}confirmed{{ row.confirmed }}{% endif %}">{{ row.idta }}</a>
+      {% else %}<button type="button" class="button ico-confirmed{{ row.confirmed }}">{{ row.idta }}</button>{% endif %}
+      {% if not row.confirmidta and perms.bots.change_ta %}<ul>
+        <li><button value="{{ row.idta }}" class="ico-confirmed" onclick="if (!confirm(this.innerText + ': ' + this.value)){return false;}; this.name = 'confirm';">{% trans 'Confirm manual' %}</button></li>
+      </ul>{% endif %}
+    </div></td>
+    {% include 'bots/botstable/td/confirmed.html' %}
+    {% include 'bots/botstable/td/ts.html' %}
+    {% include 'bots/botstable/td/filename.html' %}
+    {% include 'bots/botstable/td/reference.html' %}
+    {% include 'bots/botstable/td/confirmtype.html' %}
+    <td>{% include 'bots/link/confirmation.html' with ta=row %}</td>
+    {% include 'bots/botstable/td/editype.html' %}
+    {% include 'bots/botstable/td/messagetype.html' %}
+    {% if perms.bots.change_mutex %}{% include 'bots/botstable/td/idroute.html' %}
+    {% include 'bots/botstable/td/fromchannel.html' %}
+    {% include 'bots/botstable/td/tochannel.html' %}{% endif %}
+    {% include 'bots/botstable/td/frompartner.html' %}
+    {% include 'bots/botstable/td/topartner.html' %}
+</tr>
+{% endfor %}</tbody>
+{% endblock %}
