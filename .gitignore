@@ -16,6 +16,12 @@ __pycache__/
 *$py.class
 archive/
 
+#Mac Specific ignores
+.DS_Store
+
+# Thumbnails
+._*
+
 # bots-specific
 bots/botssys*
 bots/config?*
