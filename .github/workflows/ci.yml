@@ -37,7 +37,7 @@ jobs:
       - name: Lint Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: Dockerfile.new
+          dockerfile: Dockerfile
           failure-threshold: warning
 
       - name: Validate YAML files
