@@ -1,0 +1,179 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff pylint
+
+      - name: Run Ruff
+        run: |
+          ruff check bots/bots/ scripts/ --output-format=github
+        continue-on-error: true
+
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile.new
+          failure-threshold: warning
+
+      - name: Validate YAML files
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: k3s/
+          config_file: .yamllint.yml
+          strict: false
+        continue-on-error: true
+
+  build:
+    name: Build Container Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.new
+          platforms: linux/amd64
+          push: false
+          tags: bots-edi:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: bots-edi:test
+          format: 'table'
+          exit-code: '0'
+          severity: 'CRITICAL,HIGH'
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: testpass
+          MYSQL_DATABASE: botsedi_test
+          MYSQL_USER: botsedi
+          MYSQL_PASSWORD: testpass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r bots/requirements/base.txt
+          pip install -r bots/requirements/test.txt
+
+      - name: Create test configuration
+        run: |
+          mkdir -p test_config
+          cp bots_config/bots.ini test_config/
+          cat > test_config/settings.py <<EOF
+          from bots_config.settings import *
+          DATABASES = {
+              'default': {
+                  'ENGINE': 'django.db.backends.mysql',
+                  'NAME': 'botsedi_test',
+                  'USER': 'botsedi',
+                  'PASSWORD': 'testpass',
+                  'HOST': '127.0.0.1',
+                  'PORT': '3306',
+                  'OPTIONS': {
+                      'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                      'charset': 'utf8mb4',
+                  },
+              }
+          }
+          EOF
+
+      - name: Initialize database
+        run: |
+          export DJANGO_SETTINGS_MODULE=settings
+          export BOTS_CONFIG_DIR=$(pwd)/test_config
+          python scripts/init-database.py --config-dir test_config
+
+      - name: Run health checks
+        run: |
+          export DJANGO_SETTINGS_MODULE=settings
+          export BOTS_CONFIG_DIR=$(pwd)/test_config
+          python scripts/healthcheck.py --check live --config-dir test_config
+          python scripts/healthcheck.py --check ready --config-dir test_config
+          python scripts/healthcheck.py --check startup --config-dir test_config
+
+      - name: Run unit tests
+        run: |
+          export DJANGO_SETTINGS_MODULE=settings
+          export BOTS_CONFIG_DIR=$(pwd)/test_config
+          cd bots
+          python -m pytest tests/ -v --tb=short
+        continue-on-error: true
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/python@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --file=bots/requirements/base.txt
+
+      - name: Check for secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD

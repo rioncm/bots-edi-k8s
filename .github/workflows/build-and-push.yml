@@ -1,0 +1,148 @@
+name: Build and Push Container Image
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  REGISTRY_GHCR: ghcr.io
+  REGISTRY_DOCKERHUB: docker.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY_GHCR }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY_DOCKERHUB }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.REGISTRY_GHCR }}/${{ env.IMAGE_NAME }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/bots-edi
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.new
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            VCS_REF=${{ github.sha }}
+            VERSION=${{ github.ref_name }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY_GHCR }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ env.REGISTRY_GHCR }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+          format: spdx-json
+          output-file: sbom.spdx.json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.spdx.json
+
+      - name: Create release notes
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          cat > release-notes.md <<EOF
+          ## Container Images
+          
+          **GitHub Container Registry:**
+          \`\`\`bash
+          docker pull ${{ env.REGISTRY_GHCR }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+          \`\`\`
+          
+          **Docker Hub:**
+          \`\`\`bash
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/bots-edi:${{ github.ref_name }}
+          \`\`\`
+          
+          **Image Digest:** \`${{ steps.build-and-push.outputs.digest }}\`
+          
+          **Platforms:** linux/amd64, linux/arm64
+          
+          ## Kubernetes Deployment
+          
+          \`\`\`bash
+          # Update kustomization.yaml with new image
+          cd k3s/overlays/prod
+          kustomize edit set image bots-edi=${{ env.REGISTRY_GHCR }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+          kubectl apply -k .
+          \`\`\`
+          
+          ## What's Changed
+          
+          See [CHANGELOG.md](CHANGELOG.md) for detailed changes.
+          EOF
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: release-notes.md
+          files: |
+            sbom.spdx.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
