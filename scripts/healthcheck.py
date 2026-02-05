@@ -77,16 +77,22 @@ def check_readiness():
     
     Checks:
     - Database connectivity
-    - Critical paths exist
+    - Critical paths exist (unless HEALTH_CHECK_DB_ONLY is set)
     """
     from django.db import connection
     from bots import botsglobal
     
+    # Check if we should only verify database (for non-web services)
+    db_only = os.environ.get('HEALTH_CHECK_DB_ONLY', 'false').lower() == 'true'
+    
     checks = {
         'database': False,
-        'botssys': False,
-        'usersys': False,
     }
+    
+    if not db_only:
+        checks['botssys'] = False
+        checks['usersys'] = False
+    
     errors = []
     
     # Check database connection
@@ -96,6 +102,20 @@ def check_readiness():
             checks['database'] = True
     except Exception as e:
         errors.append(f"Database check failed: {str(e)[:100]}")
+    
+    # Skip directory checks if db_only mode
+    if db_only:
+        all_passed = checks['database']
+        result = {
+            'status': 'ready' if all_passed else 'not_ready',
+            'check': 'readiness',
+            'checks': checks,
+            'mode': 'database_only',
+        }
+        if errors:
+            result['errors'] = errors
+        exit_code = 0 if all_passed else 1
+        return result, exit_code
     
     # Check botssys directory
     try:

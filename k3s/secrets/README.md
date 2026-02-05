@@ -5,9 +5,30 @@ This directory contains templates and documentation for managing secrets in the 
 ## Overview
 
 Bots-EDI requires the following secrets:
-- **Database credentials**: MySQL username, password, database name
-- **Django SECRET_KEY**: Used for cryptographic signing
+- **Database credentials** (`bots-edidb-secret`): MySQL connection details and Django SECRET_KEY
+- **Superuser credentials** (`bots-superuser-secret`): Default admin account for Django
 - **Optional**: SMTP credentials for email notifications
+
+## Required Secrets
+
+### 1. Database Secret (`bots-edidb-secret`)
+
+Contains database connection details and Django configuration:
+- `DB_NAME`: Database name (e.g., `botsedi_data`)
+- `DB_USER`: Database username (e.g., `botsedi`)
+- `DB_PASSWORD`: Database password (secure, minimum 32 chars)
+- `DB_HOST`: Database hostname (e.g., `mysql.db.example.com`)
+- `DB_PORT`: Database port (default: `3306`)
+- `DJANGO_SECRET_KEY`: Django secret key (generate with Django utils)
+
+### 2. Superuser Secret (`bots-superuser-secret`)
+
+Contains Django admin/superuser credentials:
+- `SUPERUSER_USERNAME`: Admin username (default: `admin`)
+- `SUPERUSER_EMAIL`: Admin email address
+- `SUPERUSER_PASSWORD`: Admin password (secure, minimum 16 chars)
+
+This secret is used by the `create-superuser-job` to create or update the default admin user.
 
 ## Approaches
 
@@ -31,23 +52,33 @@ brew install kubeseal
 #### Usage
 
 ```bash
-# Create a regular secret (do not commit this!)
+# 1. Create database secret (do not commit this!)
 kubectl create secret generic bots-edidb-secret \
   --from-literal=DB_NAME=botsedi_data \
   --from-literal=DB_USER=botsedi \
-  --from-literal=DB_PASSWORD='your-password-here' \
-  --from-literal=DB_HOST=kona.db.pminc.me \
+  --from-literal=DB_PASSWORD='your-secure-db-password' \
+  --from-literal=DB_HOST=mysql.db.example.com \
   --from-literal=DB_PORT=3306 \
-  --from-literal=DJANGO_SECRET_KEY='your-secret-key-here' \
-  --dry-run=client -o yaml > temp-secret.yaml
+  --from-literal=DJANGO_SECRET_KEY='your-django-secret-key' \
+  --dry-run=client -o yaml > temp-db-secret.yaml
 
-# Seal the secret
-kubeseal -f temp-secret.yaml -w sealed-secret.yaml
+# Seal the database secret
+kubeseal -f temp-db-secret.yaml -w sealed-db-secret.yaml
 
-# Delete the unencrypted file
-rm temp-secret.yaml
+# 2. Create superuser secret (do not commit this!)
+kubectl create secret generic bots-superuser-secret \
+  --from-literal=SUPERUSER_USERNAME=admin \
+  --from-literal=SUPERUSER_EMAIL=admin@example.com \
+  --from-literal=SUPERUSER_PASSWORD='your-secure-admin-password' \
+  --dry-run=client -o yaml > temp-superuser-secret.yaml
 
-# Commit the sealed secret
+# Seal the superuser secret
+kubeseal -f temp-superuser-secret.yaml -w sealed-superuser-secret.yaml
+
+# 3. Delete the unencrypted files
+rm temp-db-secret.yaml temp-superuser-secret.yaml
+
+# 4. Commit the sealed secrets
 git add sealed-secret.yaml
 git commit -m "Add sealed database secret"
 

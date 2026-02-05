@@ -12,7 +12,8 @@ set -e
 
 # Configuration
 BOTSENV="${BOTSENV:-default}"
-ENV_DIR="/home/bots/.bots/env/${BOTSENV}"
+BOTS_DATA_DIR="/home/bots/.bots"
+ENV_DIR="${BOTS_DATA_DIR}/env/${BOTSENV}"
 CONFIG_DIR="${ENV_DIR}/config"
 BOTSSYS_DIR="${ENV_DIR}/botssys"
 USERSYS_DIR="/opt/bots/plugins/usersys"
@@ -46,15 +47,33 @@ log_error() {
 initialize_environment() {
     log_info "Initializing Bots environment: ${BOTSENV}"
     
+    # Check and create environment base directory
+    log_info "Ensuring environment directory exists: $ENV_DIR"
+    if ! mkdir -p "$ENV_DIR" 2>/dev/null; then
+        log_error "Failed to create environment directory: $ENV_DIR"
+        log_error "Base directory: ${BOTS_DATA_DIR}"
+        log_error "Directory exists: $([ -d "${BOTS_DATA_DIR}" ] && echo 'yes' || echo 'no')"
+        log_error "Directory permissions: $(ls -ld "${BOTS_DATA_DIR}" 2>&1)"
+        log_error "Current user: $(id)"
+        log_error "Check PVC mount and fsGroup in pod securityContext"
+        exit 1
+    fi
+    
     # Create environment directories
     if [ ! -d "$CONFIG_DIR" ]; then
         log_info "Creating config directory: $CONFIG_DIR"
-        mkdir -p "$CONFIG_DIR"
+        mkdir -p "$CONFIG_DIR" || {
+            log_error "Failed to create config directory: $CONFIG_DIR"
+            exit 1
+        }
     fi
     
     if [ ! -d "$BOTSSYS_DIR" ]; then
         log_info "Creating botssys directory: $BOTSSYS_DIR"
-        mkdir -p "$BOTSSYS_DIR"
+        mkdir -p "$BOTSSYS_DIR" || {
+            log_error "Failed to create botssys directory: $BOTSSYS_DIR"
+            exit 1
+        }
     fi
     
     # Copy configuration files if provided via /config mount

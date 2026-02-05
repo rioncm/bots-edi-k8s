@@ -18,13 +18,14 @@ superuser_required = user_passes_test(lambda u: u.is_superuser)
 run_permission = user_passes_test(lambda u: u.has_perm('bots.change_mutex'))
 
 
-bots_phealth checks (no auth required - for K8s probes)
+# Bots URL patterns
+bots_paths = [
+    # Health checks (no auth required - for K8s probes)
     re_path(r'^health/live/?$', healthcheck.health_live, name='health_live'),
     re_path(r'^health/ready/?$', healthcheck.health_ready, name='health_ready'),
     re_path(r'^health/startup/?$', healthcheck.health_startup, name='health_startup'),
     re_path(r'^health/ping/?$', healthcheck.health_ping, name='health_ping'),
-    # aths = [
-    # login required
+    # Main views - login required
     re_path(r'^home.*', login_required(views.home), name='home'),
     re_path(r'^incoming.*', login_required(views.incoming), name='incoming'),
     re_path(r'^outgoing.*', login_required(views.outgoing), name='outgoing'),

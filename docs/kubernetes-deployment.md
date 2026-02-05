@@ -4,6 +4,76 @@
 
 Bots EDI is a complete software solution for EDI (Electronic Data Interchange) with a powerful translator engine. This guide covers deploying Bots EDI on Kubernetes using the containerized architecture.
 
+## Storage Requirements
+
+**IMPORTANT:** Bots-EDI requires ReadWriteMany (RWX) persistent storage for shared data access across multiple pods.
+
+### ✅ Recommended: Longhorn
+
+**Longhorn is the strongly recommended storage solution** for Bots-EDI deployments:
+
+**Advantages:**
+- ✅ Properly honors `fsGroup` - no permission issues with non-root containers
+- ✅ Native Kubernetes integration with CSI driver
+- ✅ Automatic replication and high availability
+- ✅ Built-in volume snapshots and cloning
+- ✅ Simple installation via Helm chart
+- ✅ Web UI for management and monitoring
+- ✅ Works reliably with Kubernetes security contexts
+
+**Installation:**
+```bash
+# Add Longhorn Helm repository
+helm repo add longhorn https://charts.longhorn.io
+helm repo update
+
+# Install Longhorn
+helm install longhorn longhorn/longhorn \
+  --namespace longhorn-system \
+  --create-namespace \
+  --set defaultSettings.defaultDataPath="/var/lib/longhorn"
+
+# Set as default StorageClass (optional)
+kubectl patch storageclass longhorn \
+  -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
+
+**Verification:**
+```bash
+kubectl -n longhorn-system get pods
+kubectl get storageclass
+```
+
+### ❌ Not Recommended: NFS
+
+**NFS has known issues** with Kubernetes and non-root containers:
+
+**Problems:**
+- ❌ Often ignores `fsGroup`, causing "Permission denied" errors
+- ❌ Requires complex NFS server-side configuration (`all_squash`, `anonuid=10001`)
+- ❌ Needs init containers in every pod to fix permissions
+- ❌ Inconsistent behavior across NFS implementations
+- ❌ Additional latency compared to block storage
+- ❌ No native Kubernetes integration (manual provisioning)
+
+**If you must use NFS**, configure exports with:
+```bash
+# /etc/exports
+/export/path *(rw,sync,no_subtree_check,all_squash,anonuid=10001,anongid=10001)
+```
+
+And add init containers to all pods to fix permissions before main container starts.
+
+### Alternative RWX Storage Options
+
+- **Rook/Ceph**: Enterprise-grade, more complex setup, overkill for most deployments
+- **GlusterFS**: Requires dedicated nodes, higher resource overhead than Longhorn
+- **Cloud Provider Storage**:
+  - AWS: EFS (Elastic File System)
+  - GCP: Filestore
+  - Azure: Azure Files
+  - Generally more expensive than Longhorn, but fully managed
+
 ## Architecture
 
 Bots EDI consists of four primary services:
@@ -77,16 +147,39 @@ python -c "from django.core.management.utils import get_random_secret_key; print
 openssl rand -base64 48
 ```
 
-Create the secret:
+Create the database secret:
 ```bash
 kubectl create secret generic bots-edidb-secret \
   --from-literal=DB_NAME=botsedi_data \
   --from-literal=DB_USER=botsedi \
-  --from-literal=DB_PASSWORD='your-secure-password' \
+  --from-literal=DB_PASSWORD='your-secure-database-password' \
   --from-literal=DB_HOST=your-mysql-host \
   --from-literal=DB_PORT=3306 \
   --from-literal=DJANGO_SECRET_KEY='your-django-secret-key' \
   -n edi
+```
+
+**Optional:** Add CSRF trusted origins for your domain:
+```bash
+# If your ingress uses HTTPS, add CSRF_TRUSTED_ORIGINS to the secret
+kubectl patch secret bots-edidb-secret -n edi --type=merge \
+  -p '{"stringData":{"CSRF_TRUSTED_ORIGINS":"https://edi.k8.pminc.me,https://edi-dev.k8.pminc.me"}}'
+```
+
+Create the superuser secret:
+```bash
+# Generate a secure password for the admin user
+ADMIN_PASSWORD=$(openssl rand -base64 24)
+
+kubectl create secret generic bots-superuser-secret \
+  --from-literal=SUPERUSER_USERNAME=admin \
+  --from-literal=SUPERUSER_EMAIL=admin@yourcompany.com \
+  --from-literal=SUPERUSER_PASSWORD="$ADMIN_PASSWORD" \
+  -n edi
+
+# Save the password securely!
+echo "Admin password: $ADMIN_PASSWORD" | tee admin-credentials.txt
+chmod 600 admin-credentials.txt
 ```
 
 ### 4. Deploy Base Resources
@@ -112,7 +205,24 @@ kubectl wait --for=condition=complete job/bots-db-init -n edi --timeout=5m
 kubectl logs job/bots-db-init -n edi
 ```
 
-### 6. Deploy Services
+### 6. Create Default Superuser
+
+```bash
+# Run superuser creation job (idempotent)
+kubectl apply -f k3s/jobs/create-superuser-job.yaml
+
+# Wait for completion
+kubectl wait --for=condition=complete job/bots-create-superuser -n edi --timeout=2m
+
+# Check logs to see credentials confirmation
+kubectl logs job/bots-create-superuser -n edi
+
+# Retrieve your admin credentials
+echo "Username: admin"
+kubectl get secret bots-superuser-secret -n edi -o jsonpath='{.data.SUPERUSER_PASSWORD}' | base64 -d && echo
+```
+
+### 7. Deploy Services
 
 ```bash
 # Deploy webserver and job queue
@@ -121,11 +231,11 @@ kubectl apply -f k3s/deployments/
 # Deploy engine CronJob
 kubectl apply -f k3s/jobs/engine-cronjob.yaml
 
-# Deploy ingress
-kubectl apply -f k3s/ingress.yaml
+# Deploy ingress (if using Traefik or other ingress controller)
+kubectl apply -f k3s/base/ingress.yaml
 ```
 
-### 7. Verify Deployment
+### 8. Verify Deployment
 
 ```bash
 # Check pod status
@@ -138,7 +248,7 @@ kubectl logs -n edi -l app=bots-edi --tail=50
 kubectl exec -n edi deployment/bots-webserver -- curl -f http://localhost:8080/health/ping
 ```
 
-### 8. Access Web UI
+### 9. Access Web UI
 
 ```bash
 # Get ingress URL
@@ -150,7 +260,11 @@ kubectl port-forward -n edi svc/bots-webserver 8080:8080
 
 Access at: http://localhost:8080 (or your ingress hostname)
 
-**Default credentials**: admin / botsbots
+**Login with your admin credentials**:
+- Username: `admin` (or what you specified in secret)
+- Password: Retrieve with `kubectl get secret bots-superuser-secret -n edi -o jsonpath='{.data.SUPERUSER_PASSWORD}' | base64 -d`
+
+**IMPORTANT**: Change the password after first login via the web UI!
 
 ## Multi-Environment Deployment
 
@@ -205,16 +319,56 @@ kubectl rollout restart deployment/bots-webserver -n edi
 kubectl rollout restart deployment/bots-jobqueue -n edi
 ```
 
+### Environment Variables
+
+The following environment variables are supported (configured via secrets or deployments):
+
+**Database Configuration** (from `bots-edidb-secret`):
+- `DB_NAME`: Database name (default: `botsedi_data`)
+- `DB_USER`: Database username
+- `DB_PASSWORD`: Database password
+- `DB_HOST`: Database hostname
+- `DB_PORT`: Database port (default: `3306`)
+
+**Django Configuration**:
+- `DJANGO_SECRET_KEY`: Django secret key for cryptographic signing (required)
+- `CSRF_TRUSTED_ORIGINS`: Comma-separated list of trusted HTTPS origins for CSRF protection
+  - Example: `https://edi.k8.pminc.me,https://edi-dev.k8.pminc.me`
+  - Required for login forms when using HTTPS ingress
+- `DEBUG`: Enable Django debug mode (`True`/`False`, default: `False`)
+- `ALLOWED_HOSTS`: Comma-separated list of allowed hosts (default: `*`)
+
+**Bots Application**:
+- `BOTSENV`: Environment name (default: `default`)
+- `DB_INIT_SKIP`: Skip database initialization on startup (`true`/`false`)
+- `HEALTH_CHECK_DB_ONLY`: For jobqueue, only check database in readiness probe (`true`/`false`)
+
+**Email Configuration** (optional):
+- `EMAIL_HOST`: SMTP server hostname
+- `EMAIL_PORT`: SMTP port (default: `25`)
+- `EMAIL_USE_TLS`: Use TLS (`True`/`False`)
+- `EMAIL_HOST_USER`: SMTP username
+- `EMAIL_HOST_PASSWORD`: SMTP password
+- `SERVER_EMAIL`: From address for error emails
+- `ADMIN_EMAIL`: Admin email for notifications
+
 ### Secrets
+kubectl delete secret bots-edidb-secret -n edi
+kubectl create secret generic bots-edidb-secret ... -n edi
 
-Secrets contain sensitive credentials:
-- Database connection details
-- Django SECRET_KEY
-- Optional: SMTP credentials
+# Update superuser password
+kubectl delete secret bots-superuser-secret -n edi
+kubectl create secret generic bots-superuser-secret \
+  --from-literal=SUPERUSER_USERNAME=admin \
+  --from-literal=SUPERUSER_EMAIL=admin@yourcompany.com \
+  --from-literal=SUPERUSER_PASSWORD='new-secure-password' \
+  -n edi
 
-To update secrets:
-```bash
-# Delete and recreate
+# Run superuser job to apply new password
+kubectl delete job bots-create-superuser -n edi
+kubectl apply -f k3s/jobs/create-superuser-job.yaml
+
+# Restart deployments to pick up secret changee
 kubectl delete secret bots-edidb-secret -n edi
 kubectl create secret generic bots-edidb-secret ... -n edi
 
@@ -363,12 +517,17 @@ kubectl exec -n edi deployment/bots-webserver -- \
   nc -zv your-db-host 3306
 ```
 
-### PVC Not Binding
+### PVCwebserver liveness (HTTP)
+kubectl exec -n edi deployment/bots-webserver -- \
+  curl -f http://localhost:8080/health/live || echo "FAILED"
 
-```bash
-# Check PVC status
-kubectl describe pvc bots-edi-data-pvc -n edi
+# Test jobqueue liveness (exec probe)
+kubectl exec -n edi deployment/bots-jobqueue -- \
+  python /opt/bots/scripts/healthcheck.py --config-dir /config --check live --quiet || echo "FAILED"
 
+# Check application logs
+kubectl logs -n edi deployment/bots-webserver --tail=100
+kubectl logs -n edi deployment/bots-jobqueue
 # Verify storage class exists
 kubectl get storageclass
 
@@ -447,13 +606,17 @@ kubectl set image cronjob/bots-engine \
 6. **Update deployments** with new image version
 
 7. **Verify functionality** through web UI and engine runs
-
-## Uninstalling
-
-```bash
-# Delete all resources
-kubectl delete -k k3s/overlays/prod/
-
+Secure the superuser secret** - use SealedSecrets or external secret management in production
+3. **Use strong passwords** for database and Django SECRET_KEY (minimum 32 characters)
+4. **Rotate credentials regularly** - database passwords, admin password, SECRET_KEY
+5. **Enable TLS** on ingress with valid certificates
+6. **Restrict network access** using NetworkPolicies
+7. **Regularly update** container images for security patches
+8. **Use sealed secrets** or external secret management (Vault, AWS Secrets Manager) for production
+9. **Enable RBAC** and limit service account permissions
+10. **Scan images** for vulnerabilities before deployment
+11. **Audit user access** regularly through Django admin
+12. **Enable Django security features** in settings.py (CSRF, XSS protection, etc.)
 # Or delete namespace (includes all resources)
 kubectl delete namespace edi
 

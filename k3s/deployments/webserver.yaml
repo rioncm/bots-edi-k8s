@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bots-webserver
-  namespace: edi
   labels:
     app: bots-edi
     component: webserver
@@ -53,7 +52,7 @@ spec:
           value: "true"  # DB init handled by init-job
         - name: DJANGO_SECRET_KEY
           valueFrom:
-            secretRef:
+            secretKeyRef:
               name: bots-edidb-secret
               key: DJANGO_SECRET_KEY
               optional: true

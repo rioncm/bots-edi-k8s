@@ -13,12 +13,12 @@ resources:
   - base/pvc.yaml
   - base/service-webserver.yaml
   
-  # ConfigMaps (comment out if using existing secret.yaml for DB config)
+  # ConfigMaps
   - base/configmap-botsini.yaml
   - base/configmap-settings.yaml
   
-  # Existing secret (DB credentials)
-  - secret.yaml
+  # Secrets (uncomment and create secret.yaml for DB credentials)
+  # - secret.yaml
   
   # Deployments
   - deployments/webserver.yaml

@@ -27,9 +27,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Create build directory
 WORKDIR /build
 
+# Copy bots package source code first (needed for building the wheel)
+COPY bots/ /build/bots/
+
 # Copy requirements files
 COPY bots/requirements/*.txt /build/requirements/
 COPY bots_config/prod-requirements.txt /build/
+
+# Build wheel for the bots package itself
+RUN pip wheel --no-cache-dir --wheel-dir /wheels /build/bots/
 
 # Build wheels for all dependencies (includes transitive dependencies)
 RUN pip wheel --no-cache-dir --wheel-dir /wheels \
@@ -80,11 +86,7 @@ FROM runtime AS production
 USER bots
 WORKDIR /home/bots
 
-# Copy application code from local repository
-COPY --chown=bots:bots bots/bots/ /opt/bots/bots/
-COPY --chown=bots:bots bots/requirements/ /opt/bots/requirements/
-
-# Copy helper scripts and management commands
+# Copy helper scripts and management commands (not part of installed package)
 COPY --chown=bots:bots scripts/init-database.py /opt/bots/scripts/
 COPY --chown=bots:bots scripts/healthcheck.py /opt/bots/scripts/
 COPY --chown=bots:bots scripts/run-*.sh /opt/bots/scripts/
@@ -115,9 +117,6 @@ USER bots
 
 # Expose web UI port
 EXPOSE 8080
-
-# Persistent volumes for data
-VOLUME ["/home/bots/.bots"]
 
 # Health check for webserver (will be overridden by K8s probes)
 HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \

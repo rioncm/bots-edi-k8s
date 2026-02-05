@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bots-jobqueue
-  namespace: edi
   labels:
     app: bots-edi
     component: jobqueue
@@ -39,6 +38,8 @@ spec:
           value: "default"
         - name: DB_INIT_SKIP
           value: "true"
+        - name: HEALTH_CHECK_DB_ONLY
+          value: "true"  # Only check database for readiness (dirs created by entrypoint)
         
         envFrom:
         - secretRef:
@@ -67,6 +68,8 @@ spec:
             command:
             - python
             - /opt/bots/scripts/healthcheck.py
+            - --config-dir
+            - /config
             - --check
             - live
             - --quiet
@@ -80,6 +83,8 @@ spec:
             command:
             - python
             - /opt/bots/scripts/healthcheck.py
+            - --config-dir
+            - /config
             - --check
             - ready
             - --quiet

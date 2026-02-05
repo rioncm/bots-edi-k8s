@@ -136,9 +136,15 @@ def initialize_unmanaged_tables(db_type):
     """Initialize unmanaged tables (ta, mutex, persist, uniek)"""
     logger.info("Initializing unmanaged tables...")
     
-    # Get SQL directory
-    bots_path = os.path.join(os.path.dirname(__file__), '..', 'bots', 'bots')
-    sql_dir = os.path.join(bots_path, 'sql')
+    # Get SQL directory from installed bots package
+    try:
+        import bots
+        bots_path = bots.__path__[0]
+        sql_dir = os.path.join(bots_path, 'sql')
+    except (ImportError, AttributeError):
+        # Fallback to relative path (for development)
+        bots_path = os.path.join(os.path.dirname(__file__), '..', 'bots', 'bots')
+        sql_dir = os.path.join(bots_path, 'sql')
     
     if not os.path.exists(sql_dir):
         logger.error(f"SQL directory not found: {sql_dir}")
