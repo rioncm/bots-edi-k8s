@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bots-edi-ingress
+spec:
+  tls:
+    - secretName: bots-edi-tls
+      hosts:
+        - edi-dev.k8.pminc.me
+  rules:
+    - host: edi-dev.k8.pminc.me
+---    
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bots-filebrowser-ingress
+spec:
+  tls:
+    - secretName: bots-edi-tls
+      hosts:
+        - edifiles-dev.k8.pminc.me
+  rules:
+    - host: edifiles-dev.k8.pminc.me
+     

@@ -1,8 +1,0 @@
-# Development Namespace
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: edi-dev
-  labels:
-    environment: dev
-    project: bots-edi

@@ -211,7 +211,7 @@ livenessProbe:
   exec:
     command:
       - python
-      - /opt/bots/scripts/healthcheck.py
+      - /usr/local/bots/scripts/healthcheck.py
       - --check
       - live
       - --quiet
@@ -222,7 +222,7 @@ readinessProbe:
   exec:
     command:
       - python
-      - /opt/bots/scripts/healthcheck.py
+      - /usr/local/bots/scripts/healthcheck.py
       - --check
       - ready
       - --quiet

@@ -1,0 +1,194 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bots-webserver
+  labels:
+    app: bots-edi
+    component: webserver
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: bots-edi
+      component: webserver
+  template:
+    metadata:
+      labels:
+        app: bots-edi
+        component: webserver
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/health/ping"
+    spec:
+      securityContext:
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        fsGroupChangePolicy: "OnRootMismatch"
+      
+      initContainers:
+      - name: filebrowser-init
+        image: filebrowser/filebrowser:v2-s6
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          set -e
+          env_name="${BOTSENV:-default}"
+          env_root="/home/bots/.bots/env/${env_name}"
+          root="${env_root}/usersys"
+          fb_dir="${root}/.filebrowser"
+          mkdir -p "$root/fb/incoming" "$root/fb/outgoing" "$root/fb/inbound" "$root/fb/outbound"
+          mkdir -p "$fb_dir"
+          if [ ! -f "$fb_dir/filebrowser.db" ]; then
+            /filebrowser config init \
+              --database "$fb_dir/filebrowser.db" \
+              --root "$root" \
+              --address 0.0.0.0 \
+              --port 8081 \
+              --baseURL /
+            /filebrowser users add "$SUPERUSER_USERNAME" "$SUPERUSER_PASSWORD" \
+              --perm.admin \
+              --database "$fb_dir/filebrowser.db"
+          fi
+        envFrom:
+        - configMapRef:
+            name: bots-env-config
+        - secretRef:
+            name: bots-superuser-secret
+            optional: false
+        volumeMounts:
+        - name: data
+          mountPath: /home/bots/.bots
+      
+      containers:
+      - name: webserver
+        image: harbor.pminc.me/priv/bots-edi-k3s:latest
+        imagePullPolicy: Always
+        
+        command: ["/entrypoint.sh"]
+        args: ["webserver"]
+        
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        
+        envFrom:
+        - configMapRef:
+            name: bots-env-config
+        - secretRef:
+            name: bots-edidb-secret
+        
+        env:
+        # Override/add specific env vars here if needed
+        - name: DJANGO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: bots-edidb-secret
+              key: DJANGO_SECRET_KEY
+              optional: true
+        
+        volumeMounts:
+        - name: data
+          mountPath: /home/bots/.bots
+        - name: config-ini
+          mountPath: /config/bots.ini
+          subPath: bots.ini
+        - name: config-settings
+          mountPath: /config/settings.py
+          subPath: settings.py
+        
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 2
+        
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 30  # Allow up to 150 seconds for startup
+      
+      - name: filebrowser
+        image: filebrowser/filebrowser:v2-s6
+        imagePullPolicy: IfNotPresent
+        command: ["/filebrowser"]
+        args:
+        - --database
+        - /home/bots/.bots/env/$(BOTSENV)/usersys/.filebrowser/filebrowser.db
+        - --root
+        - /home/bots/.bots/env/$(BOTSENV)/usersys
+        - --address
+        - 0.0.0.0
+        - --port
+        - "8081"
+        - --baseURL
+        - /
+        ports:
+        - containerPort: 8081
+          name: filebrowser
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: bots-env-config
+        volumeMounts:
+        - name: data
+          mountPath: /home/bots/.bots
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: bots-edi-data-pvc
+      - name: config-ini
+        configMap:
+          name: bots-config-ini
+      - name: config-settings
+        configMap:
+          name: bots-config-settings
+      
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

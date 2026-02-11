@@ -299,7 +299,7 @@ graph TB
 
 #### Non-Web Services (CLI)
 ```bash
-python /opt/bots/scripts/healthcheck.py --check <live|ready|startup>
+python /usr/local/bots/scripts/healthcheck.py --check <live|ready|startup>
 ```
 
 **Exit Codes**:

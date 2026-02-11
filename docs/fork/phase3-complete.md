@@ -391,7 +391,7 @@ docker run --rm \
 
 # Test health checks
 docker run --rm bots-edi:test shell -c \
-  "python /opt/bots/scripts/healthcheck.py --check startup"
+  "python /usr/local/bots/scripts/healthcheck.py --check startup"
 ```
 
 ## Files Created/Modified

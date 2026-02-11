@@ -254,7 +254,7 @@ python scripts/healthcheck.py --check live --config-dir bots_config
 python scripts/healthcheck.py --check ready --config-dir bots_config
 
 # Test in container
-docker run bots-edi:dev python /opt/bots/scripts/healthcheck.py --check live
+docker run bots-edi:dev python /usr/local/bots/scripts/healthcheck.py --check live
 ```
 
 ### Integration Testing
@@ -283,7 +283,7 @@ docker run --rm bots-edi:test engine --help
 
 # Test health checks
 docker run --rm bots-edi:test \
-  python /opt/bots/scripts/healthcheck.py --check startup
+  python /usr/local/bots/scripts/healthcheck.py --check startup
 ```
 
 ### Kubernetes Manifest Validation

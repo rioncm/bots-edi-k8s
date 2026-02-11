@@ -1,0 +1,66 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bots-db-init
+  labels:
+    app: bots-edi
+    component: init
+spec:
+  ttlSecondsAfterFinished: 300  # Clean up 5 minutes after completion
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: bots-edi
+        component: init
+    spec:
+      securityContext:
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        fsGroupChangePolicy: "OnRootMismatch"
+      
+      restartPolicy: OnFailure
+      
+      containers:
+      - name: db-init
+        image: harbor.pminc.me/priv/bots-edi-k3s:latest
+        imagePullPolicy: Always
+        
+        command: ["/entrypoint.sh"]
+        args: ["init-db"]
+        
+        envFrom:
+        - configMapRef:
+            name: bots-env-config
+        - secretRef:
+            name: bots-edidb-secret
+        
+        volumeMounts:
+        - name: data
+          mountPath: /home/bots/.bots
+        - name: config-ini
+          mountPath: /config/bots.ini
+          subPath: bots.ini
+        - name: config-settings
+          mountPath: /config/settings.py
+          subPath: settings.py
+        
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: bots-edi-data-pvc
+      - name: config-ini
+        configMap:
+          name: bots-config-ini
+      - name: config-settings
+        configMap:
+          name: bots-config-settings

@@ -16,6 +16,7 @@ __pycache__/
 *$py.class
 archive/
 k3s/argo-events/
+docs/internal/
 
 #Mac Specific ignores
 .DS_Store

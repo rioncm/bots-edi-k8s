@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bots-jobqueue
+  labels:
+    app: bots-edi
+    component: jobqueue
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate  # Only one jobqueue server should run
+  selector:
+    matchLabels:
+      app: bots-edi
+      component: jobqueue
+  template:
+    metadata:
+      labels:
+        app: bots-edi
+        component: jobqueue
+    spec:
+      securityContext:
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        fsGroupChangePolicy: "OnRootMismatch"
+      
+      containers:
+      - name: jobqueue
+        image: harbor.pminc.me/priv/bots-edi-k3s:latest
+        imagePullPolicy: Always
+        
+        command: ["/entrypoint.sh"]
+        args: ["jobqueueserver"]
+        
+        envFrom:
+        - configMapRef:
+            name: bots-env-config
+        - secretRef:
+            name: bots-edidb-secret
+        
+        volumeMounts:
+        - name: data
+          mountPath: /home/bots/.bots
+        - name: config-ini
+          mountPath: /config/bots.ini
+          subPath: bots.ini
+        - name: config-settings
+          mountPath: /config/settings.py
+          subPath: settings.py
+        
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        
+        livenessProbe:
+          exec:
+            command:
+            - python
+            - /usr/local/bots/scripts/healthcheck.py
+            - --config-dir
+            - /config
+            - --check
+            - live
+            - --quiet
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        readinessProbe:
+          exec:
+            command:
+            - python
+            - /usr/local/bots/scripts/healthcheck.py
+            - --config-dir
+            - /config
+            - --check
+            - ready
+            - --quiet
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 2
+      
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: bots-edi-data-pvc
+      - name: config-ini
+        configMap:
+          name: bots-config-ini
+      - name: config-settings
+        configMap:
+          name: bots-config-settings
+      
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60  # Allow time for jobs to finish

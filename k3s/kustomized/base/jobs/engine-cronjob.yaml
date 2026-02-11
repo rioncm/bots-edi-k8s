@@ -1,0 +1,81 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: bots-engine
+  labels:
+    app: bots-edi
+    component: engine
+spec:
+  # Run every 5 minutes
+  schedule: "*/5 * * * *"
+  
+  # Keep history of last 3 successful and 1 failed jobs
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  
+  # Don't start new job if previous one is still running
+  concurrencyPolicy: Forbid
+  
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 600  # Clean up 10 minutes after completion
+      backoffLimit: 2
+      
+      template:
+        metadata:
+          labels:
+            app: bots-edi
+            component: engine
+        spec:
+          securityContext:
+            runAsUser: 10001
+            runAsGroup: 10001
+            fsGroup: 10001
+            fsGroupChangePolicy: "OnRootMismatch"
+          
+          restartPolicy: OnFailure
+          
+          containers:
+          - name: engine
+            image: harbor.pminc.me/priv/bots-edi-k3s:latest
+            imagePullPolicy: Always
+            
+            command: ["/entrypoint.sh"]
+            args:
+            - engine
+            - --new  # Process new files only
+            
+            envFrom:
+            - configMapRef:
+                name: bots-env-config
+            - secretRef:
+                name: bots-edidb-secret
+            
+            volumeMounts:
+            - name: data
+              mountPath: /home/bots/.bots
+            - name: config-ini
+              mountPath: /config/bots.ini
+              subPath: bots.ini
+            - name: config-settings
+              mountPath: /config/settings.py
+              subPath: settings.py
+            
+            resources:
+              requests:
+                cpu: 200m
+                memory: 512Mi
+              limits:
+                cpu: 2000m
+                memory: 2Gi
+          
+          volumes:
+          - name: data
+            persistentVolumeClaim:
+              claimName: bots-edi-data-pvc
+          - name: config-ini
+            configMap:
+              name: bots-config-ini
+          - name: config-settings
+            configMap:
+              name: bots-config-settings

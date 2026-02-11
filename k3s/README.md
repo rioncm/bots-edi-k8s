@@ -203,7 +203,7 @@ curl http://localhost:8080/health/ready
 
 # Direct pod exec
 kubectl exec -n edi deployment/bots-webserver -- \
-  python /opt/bots/scripts/healthcheck.py --check ready
+  python /usr/local/bots/scripts/healthcheck.py --check ready
 ```
 
 ## Operations
@@ -311,7 +311,7 @@ kubectl get storageclass
 ```bash
 # Run health check manually
 kubectl exec -it -n edi deployment/bots-webserver -- \
-  python /opt/bots/scripts/healthcheck.py --check startup --verbose
+  python /usr/local/bots/scripts/healthcheck.py --check startup --verbose
 
 # Check startup logs
 kubectl logs -n edi <pod-name> --previous

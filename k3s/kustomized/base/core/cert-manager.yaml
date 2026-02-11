@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bots-edi-tls
+spec:
+  secretName: bots-edi-tls           # <- this is what your Ingress references
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  commonName: edi.k8.pminc.me        # optional; cert-manager can infer if omitted
+  dnsNames:
+    - edi.k8.pminc.me
+    - edi-dev.k8.pminc.me

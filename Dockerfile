@@ -87,16 +87,16 @@ USER bots
 WORKDIR /home/bots
 
 # Copy helper scripts and management commands (not part of installed package)
-COPY --chown=bots:bots scripts/init-database.py /opt/bots/scripts/
-COPY --chown=bots:bots scripts/healthcheck.py /opt/bots/scripts/
-COPY --chown=bots:bots scripts/run-*.sh /opt/bots/scripts/
+COPY --chown=bots:bots scripts/init-database.py /usr/local/bots/scripts/
+COPY --chown=bots:bots scripts/healthcheck.py /usr/local/bots/scripts/
+COPY --chown=bots:bots scripts/run-*.sh /usr/local/bots/scripts/
 
 # Copy grammars and plugins (optional, user might mount these)
-COPY --chown=bots:bots bots-grammars/ /opt/bots/grammars/
-COPY --chown=bots:bots bots-plugins/ /opt/bots/plugins/
+COPY --chown=bots:bots bots-grammars/ /usr/local/bots/grammars/
+COPY --chown=bots:bots bots-plugins/ /usr/local/bots/plugins/
 
 # Add scripts to PATH
-ENV PATH="/opt/bots/scripts:${PATH}"
+ENV PATH="/usr/local/bots/scripts:${PATH}"
 
 # Switch to root to install entrypoint
 USER root

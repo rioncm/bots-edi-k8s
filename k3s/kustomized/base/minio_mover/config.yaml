@@ -1,0 +1,34 @@
+ config:
+      defaults:
+        default_bucket: bots-edi
+        base_file_path: /mnt/bots/env/dev/files # updated to work with the different mount path in the cronjob
+        mode: move
+        retries: 0
+        wait_seconds: 10
+        exit_on_first_failure: true
+        max_items: 250
+
+      livingspaces_846_in:
+        description: airflow csv output for translation
+        src:
+          type: s3
+          path: dev/out/csv/846
+          match:
+            glob: "*.csv"
+        dest:
+          type: file
+          path: inbound/csv/846
+
+      livingspaces_846_out:
+        description: mapped edi files ready for processing
+        src:
+          type: file
+          path: outbound/x12/846
+          match:
+            glob: "*.edi"
+        dest:
+          type: s3
+          path: dev/out/x12/846
+          rename_rule:
+            regex: "(.*)\\.edi$"
+            replace: "\\1.{timestamp-z}.ready"

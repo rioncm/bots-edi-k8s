@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bots-minio-helper-job
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: minio-helper
+          image: bots-minio-helper:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: bots-minio-helper-secret
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: bots-pvc
+              mountPath: /mnt/pvc
+      volumes:
+        - name: config
+          configMap:
+            name: bots-minio-helper-config
+        - name: bots-pvc
+          persistentVolumeClaim:
+            claimName: bots-rwx-pvc

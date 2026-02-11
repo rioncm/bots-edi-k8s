@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bots-env-config
+  labels:
+    app: bots-edi
+data:
+  # Bots environment name
+  BOTSENV: "dev"
+  
+  # Database initialization control
+  DB_INIT_SKIP: "false"
+  
+  # Health check configuration
+  HEALTH_CHECK_DB_ONLY: "true"  # For jobqueue only
+  
+  # Django settings
+  DEBUG: "False"
+  ALLOWED_HOSTS: "*"
+  
+  # CSRF trusted origins (comma-separated)
+  # Override in overlay for environment-specific domains
+  CSRF_TRUSTED_ORIGINS: "https://edi.k8.pminc.me,https://edi-dev.k8.pminc.me,https://edi-staging.k8.pminc.me"

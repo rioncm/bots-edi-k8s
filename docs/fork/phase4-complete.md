@@ -307,7 +307,7 @@ kubectl exec -n edi deployment/bots-webserver -- curl -f http://localhost:8080/h
 kubectl exec -n edi deployment/bots-webserver -- curl -f http://localhost:8080/health/startup
 
 # Jobqueue health
-kubectl exec -n edi deployment/bots-jobqueue -- python /opt/bots/scripts/healthcheck.py --check ready
+kubectl exec -n edi deployment/bots-jobqueue -- python /usr/local/bots/scripts/healthcheck.py --check ready
 ```
 
 ### Logs
@@ -338,7 +338,7 @@ kubectl get pod -n edi -l component=webserver -o jsonpath='{.items[0].status.con
 
 # Manual init
 kubectl exec -it -n edi deployment/bots-webserver -- /entrypoint.sh shell
-python /opt/bots/scripts/init-database.py --config-dir /config
+python /usr/local/bots/scripts/init-database.py --config-dir /config
 ```
 
 **Engine jobs failing:**

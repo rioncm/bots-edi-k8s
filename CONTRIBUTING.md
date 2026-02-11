@@ -351,7 +351,7 @@ docker build -f Dockerfile.new -t bots-edi:test .
 docker run --rm bots-edi:test webserver --help
 
 # Test health checks
-docker run --rm bots-edi:test python /opt/bots/scripts/healthcheck.py --check startup
+docker run --rm bots-edi:test python /usr/local/bots/scripts/healthcheck.py --check startup
 ```
 
 ## Submitting Issues

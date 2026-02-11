@@ -486,7 +486,7 @@ kubectl exec -n edi deployment/bots-webserver -- curl http://localhost:8080/heal
 For non-web services (jobqueue):
 ```bash
 kubectl exec -n edi deployment/bots-jobqueue -- \
-  python /opt/bots/scripts/healthcheck.py --check live
+  python /usr/local/bots/scripts/healthcheck.py --check live
 ```
 
 ## Troubleshooting
@@ -523,7 +523,7 @@ kubectl exec -n edi deployment/bots-webserver -- \
 
 # Test jobqueue liveness (exec probe)
 kubectl exec -n edi deployment/bots-jobqueue -- \
-  python /opt/bots/scripts/healthcheck.py --config-dir /config --check live --quiet || echo "FAILED"
+  python /usr/local/bots/scripts/healthcheck.py --config-dir /config --check live --quiet || echo "FAILED"
 
 # Check application logs
 kubectl logs -n edi deployment/bots-webserver --tail=100

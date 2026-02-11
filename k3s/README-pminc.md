@@ -140,7 +140,7 @@ kubectl describe pod -n edi -l component=webserver
 kubectl logs -n edi -l component=webserver --tail=100
 
 # Manual health check
-kubectl exec -it -n edi deployment/bots-webserver -- python /opt/bots/scripts/healthcheck.py --check startup
+kubectl exec -it -n edi deployment/bots-webserver -- python /usr/local/bots/scripts/healthcheck.py --check startup
 ```
 
 ### Engine CronJob Not Running

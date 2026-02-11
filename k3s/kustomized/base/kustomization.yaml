@@ -1,0 +1,45 @@
+# Kustomization file for Bots-EDI deployment
+# Organizes all Kubernetes manifests for easy deployment
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: edi
+
+
+
+resources:
+- core/namespace.yaml
+- core/pvc.yaml
+- core/service-webserver.yaml
+- core/bots-ingress.yaml
+- core/files-ingress.yaml
+- core/configmap-env.yaml
+- deployments/webserver.yaml
+- deployments/jobqueue.yaml
+- deployments/mapping-sync.yaml
+- jobs/db-init-job.yaml
+- jobs/engine-cronjob.yaml
+- jobs/create-superuser-job.yaml
+- minio_mover/configmap.yaml
+- minio_mover/cronjob.yaml
+  
+
+# Image references (can be overridden in overlays)
+images:
+- name: harbor.pminc.me/priv/bots-edi-k3s:latest
+  newTag: 4.0.11
+- name: harbor.pminc.me/priv/s3-mover:latest
+  newTag: 0.0.4
+
+# ConfigMap generator (alternative to separate ConfigMap files)
+configMapGenerator:
+- files:
+  - minio_mover/config.yaml
+  name: bots-minio-helper-config
+# Common labels for all resources (optional)
+labels:
+- includeSelectors: true
+  pairs:
+    app: bots-edi
+    managed-by: kustomize

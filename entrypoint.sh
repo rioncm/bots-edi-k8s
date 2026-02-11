@@ -16,8 +16,10 @@ BOTS_DATA_DIR="/home/bots/.bots"
 ENV_DIR="${BOTS_DATA_DIR}/env/${BOTSENV}"
 CONFIG_DIR="${ENV_DIR}/config"
 BOTSSYS_DIR="${ENV_DIR}/botssys"
-USERSYS_DIR="/opt/bots/plugins/usersys"
-GRAMMARS_DIR="/opt/bots/grammars"
+USERSYS_DIR="${ENV_DIR}/usersys"
+GRAMMARS_DIR="${BOTSSYS_DIR}/grammars"
+SEED_USERSYS_DIR="/usr/local/bots/plugins/usersys"
+SEED_GRAMMARS_DIR="/usr/local/bots/grammars"
 
 # Colors for logging
 RED='\033[0;31m'
@@ -87,17 +89,41 @@ initialize_environment() {
         cp /config/bots.ini "$CONFIG_DIR/bots.ini"
     fi
     
-    # Create symlink for usersys if not exists
-    if [ ! -L "${ENV_DIR}/usersys" ] && [ -d "$USERSYS_DIR" ]; then
-        log_info "Creating usersys symlink"
-        ln -sf "$USERSYS_DIR" "${ENV_DIR}/usersys"
+    # Ensure usersys is a real directory on the PVC (not a symlink to /opt)
+    if [ -L "${ENV_DIR}/usersys" ]; then
+        log_warn "Removing usersys symlink to enforce PVC-backed directory"
+        rm -f "${ENV_DIR}/usersys"
+    fi
+    if [ ! -d "$USERSYS_DIR" ]; then
+        log_info "Creating usersys directory: $USERSYS_DIR"
+        mkdir -p "$USERSYS_DIR" || {
+            log_error "Failed to create usersys directory: $USERSYS_DIR"
+            exit 1
+        }
+    fi
+    if [ -d "$SEED_USERSYS_DIR" ]; then
+        if ! find "$USERSYS_DIR" -mindepth 1 -maxdepth 1 \
+            ! -name '.filebrowser' ! -name 'fb' -print -quit | grep -q .; then
+            log_info "Seeding usersys from image defaults"
+            cp -R "$SEED_USERSYS_DIR/." "$USERSYS_DIR/"
+        fi
     fi
     
-    # Create symlink for grammars if not exists  
-    if [ ! -L "${BOTSSYS_DIR}/grammars" ] && [ -d "$GRAMMARS_DIR" ]; then
-        log_info "Creating grammars symlink"
-        mkdir -p "$BOTSSYS_DIR"
-        ln -sf "$GRAMMARS_DIR" "${BOTSSYS_DIR}/grammars"
+    # Ensure grammars live on the PVC (not a symlink to /opt)
+    if [ -L "${BOTSSYS_DIR}/grammars" ]; then
+        log_warn "Removing grammars symlink to enforce PVC-backed directory"
+        rm -f "${BOTSSYS_DIR}/grammars"
+    fi
+    if [ ! -d "$GRAMMARS_DIR" ]; then
+        log_info "Creating grammars directory: $GRAMMARS_DIR"
+        mkdir -p "$GRAMMARS_DIR" || {
+            log_error "Failed to create grammars directory: $GRAMMARS_DIR"
+            exit 1
+        }
+    fi
+    if [ -d "$SEED_GRAMMARS_DIR" ] && [ -z "$(ls -A "$GRAMMARS_DIR" 2>/dev/null)" ]; then
+        log_info "Seeding grammars from image defaults"
+        cp -R "$SEED_GRAMMARS_DIR/." "$GRAMMARS_DIR/"
     fi
     
     log_success "Environment initialized: $ENV_DIR"
@@ -114,9 +140,9 @@ initialize_database() {
     fi
     
     # Run database initialization script
-    if [ -f /opt/bots/scripts/init-database.py ]; then
+    if [ -f /usr/local/bots/scripts/init-database.py ]; then
         log_info "Running database initialization..."
-        python /opt/bots/scripts/init-database.py --config-dir "$CONFIG_DIR" || {
+        python /usr/local/bots/scripts/init-database.py --config-dir "$CONFIG_DIR" || {
             log_warn "Database initialization failed (may already be initialized)"
         }
     else

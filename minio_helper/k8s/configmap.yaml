@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bots-minio-helper-config
+data:
+  config.yaml: |
+    config:
+      defaults:
+        default_bucket: edi
+        base_file_path: /mnt/pvc
+        mode: move
+        retries: 0
+        wait_seconds: 10
+        exit_on_first_failure: true
+        max_items: 250
+
+      inbound_850:
+        description: Pull inbound 850 files from MinIO into Bots
+        src:
+          type: s3
+          path: in/x12/850
+          match:
+            glob: "*.edi"
+        dest:
+          type: file
+          path: inbound/x12/850
+
+      outbound_850:
+        description: Push outbound 850 files from Bots to MinIO
+        src:
+          type: file
+          path: outbound/x12/850
+          match:
+            glob: "*.edi"
+        dest:
+          type: s3
+          path: out/x12/850

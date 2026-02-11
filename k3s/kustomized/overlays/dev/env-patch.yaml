@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bots-env-config
+  labels:
+    app: bots-edi
+data:
+  # Bots environment name
+  BOTSENV: "dev"
+  

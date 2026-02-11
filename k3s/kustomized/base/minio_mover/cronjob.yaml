@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: bots-minio-helper-cron
+spec:
+  schedule: "*/15 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: minio-helper
+              image: harbor.pminc.me/priv/s3-mover:latest
+              imagePullPolicy: IfNotPresent
+              envFrom:
+                - secretRef:
+                    name: bots-minio-helper-secret
+                - configMapRef:
+                    name: bots-minio-helper-env
+              volumeMounts:
+                - name: config
+                  mountPath: /config
+                - name: bots-pvc
+                  mountPath: /mnt/bots # deployments mount at /home/bots/.bots, so we use a different path here to avoid conflicts
+          volumes:
+            - name: config
+              configMap:
+                name: bots-minio-helper-config
+            - name: bots-pvc
+              persistentVolumeClaim:
+                claimName: bots-edi-data-pvc

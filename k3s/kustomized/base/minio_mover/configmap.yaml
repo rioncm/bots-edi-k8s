@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bots-minio-helper-env
+data:
+  MINIO_HELPER_LOG_LEVEL: "INFO"
+  MINIO_HELPER_TIMEZONE: "America/Los_Angeles"
