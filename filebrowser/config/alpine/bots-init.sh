@@ -33,9 +33,9 @@ create_config() {
 EOF
 }
 env_name="${BOTSENV:-default}"
-env_root="/home/bots/.bots/env/${env_name}"
-root="${env_root}/usersys"
+root="/home/bots/.bots/env/${env_name}"
 fb_dir="${root}/.filebrowser"
+data_dir="${root}/botsys/data"
 
 require_cmd filebrowser
 require_env SUPERUSER_USERNAME
@@ -47,7 +47,7 @@ log "Root: ${root}"
 log "Database: ${fb_dir}/filebrowser.db"
 
 log "Ensuring directory structure exists"
-mkdir -p "$root/fb/incoming" "$root/fb/outgoing" "$root/fb/inbound" "$root/fb/outbound" || fail "Failed to create fb directories"
+mkdir -p "$data_dir/incoming" "$data_dir/outgoing" "$data_dir/drop" "$data_dir/pickup" || fail "Failed to create fb directories"
 mkdir -p "$fb_dir" || fail "Failed to create filebrowser metadata directory"
 
 if [ ! -f "$fb_dir/filebrowser.db" ]; then
