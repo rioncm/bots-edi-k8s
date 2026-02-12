@@ -15,5 +15,7 @@ configMapGenerator:
   - config/settings.py
   name: bots-config-settings
 patches:
-- path: ingress-patch.yaml
+- path: ingress1-patch.yaml
+- path: ingress2-patch.yaml
 - path: env-patch.yaml
+- path: cert-patch.yaml

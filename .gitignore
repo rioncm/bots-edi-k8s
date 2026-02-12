@@ -19,10 +19,16 @@ k3s/argo-events/
 docs/internal/
 
 #Mac Specific ignores
-.DS_Store
+*.DS_Store*
 
 # Thumbnails
 ._*
+
+#filebrowser-specific
+#Binary
+filebrowser/filebrowser
+# Binary downloaded from releases, not built from source
+filebrowser/*.tar.gz
 
 # bots-specific
 bots/botssys*
@@ -296,3 +302,6 @@ ENV/
 
 # PyCharm
 .idea
+.DS_Store
+.gitignore
+.DS_Store

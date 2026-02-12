@@ -32,41 +32,7 @@ spec:
         fsGroup: 10001
         fsGroupChangePolicy: "OnRootMismatch"
       
-      initContainers:
-      - name: filebrowser-init
-        image: filebrowser/filebrowser:v2-s6
-        imagePullPolicy: IfNotPresent
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          set -e
-          env_name="${BOTSENV:-default}"
-          env_root="/home/bots/.bots/env/${env_name}"
-          root="${env_root}/usersys"
-          fb_dir="${root}/.filebrowser"
-          mkdir -p "$root/fb/incoming" "$root/fb/outgoing" "$root/fb/inbound" "$root/fb/outbound"
-          mkdir -p "$fb_dir"
-          if [ ! -f "$fb_dir/filebrowser.db" ]; then
-            /filebrowser config init \
-              --database "$fb_dir/filebrowser.db" \
-              --root "$root" \
-              --address 0.0.0.0 \
-              --port 8081 \
-              --baseURL /
-            /filebrowser users add "$SUPERUSER_USERNAME" "$SUPERUSER_PASSWORD" \
-              --perm.admin \
-              --database "$fb_dir/filebrowser.db"
-          fi
-        envFrom:
-        - configMapRef:
-            name: bots-env-config
-        - secretRef:
-            name: bots-superuser-secret
-            optional: false
-        volumeMounts:
-        - name: data
-          mountPath: /home/bots/.bots
-      
+           
       containers:
       - name: webserver
         image: harbor.pminc.me/priv/bots-edi-k3s:latest
@@ -147,20 +113,8 @@ spec:
           failureThreshold: 30  # Allow up to 150 seconds for startup
       
       - name: filebrowser
-        image: filebrowser/filebrowser:v2-s6
+        image: harbor.pminc.me/priv/filebroswer-bots:latest
         imagePullPolicy: IfNotPresent
-        command: ["/filebrowser"]
-        args:
-        - --database
-        - /home/bots/.bots/env/$(BOTSENV)/usersys/.filebrowser/filebrowser.db
-        - --root
-        - /home/bots/.bots/env/$(BOTSENV)/usersys
-        - --address
-        - 0.0.0.0
-        - --port
-        - "8081"
-        - --baseURL
-        - /
         ports:
         - containerPort: 8081
           name: filebrowser
@@ -168,6 +122,9 @@ spec:
         envFrom:
         - configMapRef:
             name: bots-env-config
+        - secretRef:
+            name: bots-superuser-secret
+            optional: false
         volumeMounts:
         - name: data
           mountPath: /home/bots/.bots

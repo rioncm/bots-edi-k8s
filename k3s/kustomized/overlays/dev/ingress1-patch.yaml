@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bots-edi-ingress
+spec:
+  tls:
+    - secretName: bots-edi-tls
+      hosts:
+        - edi-dev.k8.pminc.me
+  rules:
+    - host: edi-dev.k8.pminc.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bots-webserver
+                port:
+                  name: http

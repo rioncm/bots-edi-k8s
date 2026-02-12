@@ -1,0 +1,9 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bots-edi-tls
+spec:
+  commonName: edi-dev.k8.pminc.me        # optional; cert-manager can infer if omitted
+  dnsNames:
+    - edi-dev.k8.pminc.me
+    - edifiles-dev.k8.pminc.me

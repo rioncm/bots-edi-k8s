@@ -6,10 +6,11 @@ kind: Kustomization
 
 namespace: edi
 
-
+# Note: cert manager needs to be listed before the ingress manifests
 
 resources:
 - core/namespace.yaml
+- core/cert-manager.yaml
 - core/pvc.yaml
 - core/service-webserver.yaml
 - core/bots-ingress.yaml
@@ -28,15 +29,18 @@ resources:
 # Image references (can be overridden in overlays)
 images:
 - name: harbor.pminc.me/priv/bots-edi-k3s:latest
-  newTag: 4.0.11
+  newTag: 4.0.12
 - name: harbor.pminc.me/priv/s3-mover:latest
   newTag: 0.0.4
+- name: harbor.pminc.me/priv/filebroswer-bots:latest
+  newTag: s6.2.3
 
 # ConfigMap generator (alternative to separate ConfigMap files)
 configMapGenerator:
 - files:
   - minio_mover/config.yaml
   name: bots-minio-helper-config
+
 # Common labels for all resources (optional)
 labels:
 - includeSelectors: true

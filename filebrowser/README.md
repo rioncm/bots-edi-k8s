@@ -1,6 +1,11 @@
 # Filebrowser Sidecar Integration
 An admin interface for managing files on Bots in a cloud native environment.
 
+## Methods
+- Download the latest binary for your arch from bots repo
+- extract filebrowser directory 
+- run docker build and push to your preferred repo for use
+
 ## Purpose
 - Added to allow superadmin manual management of files in the usersys directory
 
