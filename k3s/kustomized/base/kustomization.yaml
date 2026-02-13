@@ -31,7 +31,7 @@ images:
 - name: harbor.pminc.me/priv/bots-edi-k3s:latest
   newTag: 4.0.12
 - name: harbor.pminc.me/priv/s3-mover:latest
-  newTag: 0.0.4
+  newTag: 0.0.5
 - name: harbor.pminc.me/priv/filebroswer-bots:latest
   newTag: s6.2.3
 

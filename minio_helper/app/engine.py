@@ -11,6 +11,8 @@ from functools import lru_cache
 from typing import Dict, List, Optional, Union
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
+from botocore.exceptions import ClientError
+
 from .config import Config, Defaults, Endpoint, MatchSpec, RenameSpec, Rule
 from .fs_transport import FileItem, delete_file, list_files
 from .s3_transport import S3Client
@@ -95,7 +97,7 @@ def run_rule(rule: Rule, defaults: Defaults, env: Dict[str, str], stop_event: th
         if rule.src.type == "s3" or rule.dest.type == "s3":
             s3_client = _build_s3_client(env)
 
-        candidates = list_candidates(rule, defaults, env, max_items, s3_client)
+        candidates = list_candidates(rule, defaults, env, max_items, s3_client, logger)
         if not candidates:
             logger.info("Rule '%s' has no matching items", rule.name)
             return True
@@ -134,10 +136,26 @@ def list_candidates(
     env: Dict[str, str],
     max_items: int,
     s3_client: Optional[S3Client],
+    logger: logging.Logger,
 ) -> List[SourceItem]:
     if rule.src.type == "file":
         src_dir = resolve_file_path(rule.src.path, defaults.base_file_path)
-        items = list_files(src_dir)
+        if not os.path.isdir(src_dir):
+            logger.warning(
+                "Rule '%s' source directory is missing; skipping: %s",
+                rule.name,
+                src_dir,
+            )
+            return []
+        try:
+            items = list_files(src_dir)
+        except FileNotFoundError:
+            logger.warning(
+                "Rule '%s' source directory is missing during scan; skipping: %s",
+                rule.name,
+                src_dir,
+            )
+            return []
         filtered = _filter_file_items(items, rule.src.match)
         filtered.sort(key=lambda item: (item.mtime, item.name))
         limited = filtered[:max_items]
@@ -147,7 +165,18 @@ def list_candidates(
         s3_client = _build_s3_client(env)
     bucket = _resolve_bucket(rule.src, defaults, env)
     prefix = normalize_s3_prefix(rule.src.path)
-    keys = s3_client.list_keys(bucket, prefix)
+    try:
+        keys = s3_client.list_keys(bucket, prefix)
+    except ClientError as exc:
+        error_code = (exc.response or {}).get("Error", {}).get("Code", "")
+        if error_code == "SignatureDoesNotMatch":
+            raise ValueError(
+                "S3 signature check failed while listing source keys. "
+                "Verify MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, "
+                "and MINIO_REGION (for MinIO this is often 'us-east-1'), "
+                "and ensure pod time is synchronized."
+            ) from exc
+        raise
     rel_keys = []
     for key in keys:
         if key.endswith("/"):
@@ -330,17 +359,17 @@ def _resolve_bucket(endpoint: Endpoint, defaults: Defaults, env: Dict[str, str])
         return endpoint.bucket
     if defaults.default_bucket:
         return defaults.default_bucket
-    env_bucket = env.get("MINIO_BUCKET")
+    env_bucket = _env_stripped(env, "MINIO_BUCKET")
     if env_bucket:
         return env_bucket
     raise ValueError("Bucket must be defined for s3 endpoints.")
 
 
 def _build_s3_client(env: Dict[str, str]) -> S3Client:
-    endpoint = env.get("MINIO_ENDPOINT")
-    access_key = env.get("MINIO_ACCESS_KEY")
-    secret_key = env.get("MINIO_SECRET_KEY")
-    region = env.get("MINIO_REGION")
+    endpoint = _env_stripped(env, "MINIO_ENDPOINT")
+    access_key = _env_stripped(env, "MINIO_ACCESS_KEY")
+    secret_key = _env_stripped(env, "MINIO_SECRET_KEY")
+    region = _env_stripped(env, "MINIO_REGION")
 
     if not endpoint:
         raise ValueError("MINIO_ENDPOINT is required.")
@@ -360,7 +389,7 @@ def _build_s3_client(env: Dict[str, str]) -> S3Client:
         else:
             verify = verify_env
 
-    addressing_style = env.get("MINIO_ADDRESSING_STYLE", "path")
+    addressing_style = _env_stripped(env, "MINIO_ADDRESSING_STYLE") or "path"
     connect_timeout = int(env.get("MINIO_CONNECT_TIMEOUT", "10"))
     read_timeout = int(env.get("MINIO_READ_TIMEOUT", "60"))
 
@@ -374,3 +403,11 @@ def _build_s3_client(env: Dict[str, str]) -> S3Client:
         connect_timeout=connect_timeout,
         read_timeout=read_timeout,
     )
+
+
+def _env_stripped(env: Dict[str, str], key: str) -> Optional[str]:
+    value = env.get(key)
+    if value is None:
+        return None
+    value = value.strip()
+    return value or None

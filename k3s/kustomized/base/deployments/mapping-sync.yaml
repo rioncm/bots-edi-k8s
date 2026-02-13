@@ -20,7 +20,10 @@ spec:
         component: mappings-sync
     spec:
       securityContext:
+        runAsUser: 10001
+        runAsGroup: 10001
         fsGroup: 10001
+        fsGroupChangePolicy: "OnRootMismatch"
       
       containers:
       # Git-sync sidecar - continuously syncs repository
@@ -80,17 +83,19 @@ spec:
         args:
         - -c
         - |
-          set -e
+          set -e   
+          
+          # Target directory within PVC
+          # subdirectory to prevent deletion of other files in /mappings
+          TARGET_DIR="/mappings/env/${BOTSENV}/usersys/mappings/git"
+          SIGNAL_FILE="/signal/update"
           
           echo "[INFO] Mappings sync worker starting..."
-          echo "[INFO] Watching: /signal/update"
+          echo "[INFO] Watching: ${SIGNAL_FILE}"
           echo "[INFO] Source: /git/current/"
           echo "[INFO] Target: /mappings/"
           echo "[INFO] Environment: ${BOTSENV}"
-          
-          # Target directory within PVC
-          TARGET_DIR="/mappings/env/${BOTSENV}/usersys/mappings"
-          
+
           # Function to perform sync
           sync_mappings() {
             echo "[SYNC] Update detected at $(date)"
@@ -110,7 +115,7 @@ spec:
             
             if [ "${FILE_COUNT}" -eq 0 ]; then
               echo "[WARN] No .py files found in repository"
-              return 0
+              # return 0
             fi
             
             # Perform atomic copy using rsync-style approach

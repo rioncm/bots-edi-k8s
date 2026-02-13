@@ -429,6 +429,9 @@ bots_edi/
 
 ### Adding New EDI Formats
 
+For a full beginner-to-master path with grammar and mapping examples, use
+[`docs/grammar-and-mapping/README.md`](grammar-and-mapping/README.md).
+
 1. **Create grammar file**
    ```bash
    mkdir bots-grammars/myformat

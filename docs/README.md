@@ -10,6 +10,8 @@ Welcome to the Bots EDI documentation! This directory contains comprehensive gui
 
 ### For Developers
 - **[Development Guide](development.md)** - Set up local development environment
+- **[Grammar and Mapping Mastery](grammar-and-mapping/README.md)** - Hands-on path from first script to advanced mapping patterns
+- **[Developer Reference](developer-reference/README.md)** - Code-level API and extension contracts
 - **[Contributing Guidelines](../CONTRIBUTING.md)** - How to contribute to the project
 
 ### For System Administrators
@@ -25,6 +27,21 @@ docs/
 ├── development.md                     # Development setup (500 lines)
 ├── architecture.md                    # System architecture (450 lines)
 ├── operations-runbook.md              # Operations procedures (550 lines)
+├── grammar-and-mapping/               # User-oriented grammar/mapping learning path
+│   ├── README.md
+│   ├── 01-quickstart-first-grammar-and-map.md
+│   ├── 02-grammar-authoring-guide.md
+│   ├── 03-mapping-authoring-guide.md
+│   ├── 04-cookbook-safe-shortcuts.md
+│   └── 05-debugging-testing-and-hardening.md
+├── developer-reference/               # Code-level API and extension docs
+│   ├── README.md
+│   ├── message-tree-and-mapping-api.md
+│   ├── parsing-writing-and-grammar.md
+│   ├── runtime-routing-and-enveloping.md
+│   ├── communication-channel-reference.md
+│   ├── minio-helper-reference.md
+│   └── platform-utilities-and-scripts.md
 └── decision-records/                  # Architecture Decision Records
     ├── 001-multi-service-architecture.md
     ├── 002-kustomize-overlays.md
@@ -49,6 +66,23 @@ docs/
 4. Start development server
 
 **Time estimate**: 1 hour for complete setup
+
+### I want to... Build Grammars and Mapping Scripts
+
+1. Start with [Grammar and Mapping Mastery](grammar-and-mapping/README.md)
+2. Complete the [Quickstart](grammar-and-mapping/01-quickstart-first-grammar-and-map.md)
+3. Use the [Cookbook](grammar-and-mapping/04-cookbook-safe-shortcuts.md) while implementing partner deltas
+4. Use [Debugging and Hardening](grammar-and-mapping/05-debugging-testing-and-hardening.md) before promotion
+
+**Time estimate**: 2-4 hours for first production-ready translation
+
+### I want to... Work with Internal APIs
+
+1. Read [Developer Reference](developer-reference/README.md)
+2. Start with [Message Tree and Mapping API](developer-reference/message-tree-and-mapping-api.md)
+3. Use runtime and channel references while extending routes/integrations
+
+**Time estimate**: 45 minutes for initial orientation
 
 ### I want to... Understand the Architecture
 
@@ -135,15 +169,15 @@ kubectl exec -n edi deployment/bots-webserver -- \
 ### Related Files
 - [k3s/DEPLOYMENT.md](../k3s/DEPLOYMENT.md) - Multi-environment deployment procedures
 - [k3s/secrets/README.md](../k3s/secrets/README.md) - Secret management guide
-- [fork/container_project.md](../fork/container_project.md) - Containerization project notes
+- [fork/container_project.md](fork/container_project.md) - Containerization project notes
 
 ### Phase Implementation Details
-- [fork/phase1-complete.md](../fork/phase1-complete.md) - Database initialization
-- [fork/phase2-complete.md](../fork/phase2-complete.md) - Health checks
-- [fork/phase3-complete.md](../fork/phase3-complete.md) - Docker implementation
-- [fork/phase4-complete.md](../fork/phase4-complete.md) - Kubernetes manifests
-- [fork/phase5-complete.md](../fork/phase5-complete.md) - Configuration management
-- [fork/phase7-complete.md](../fork/phase7-complete.md) - Documentation
+- [fork/phase1-complete.md](fork/phase1-complete.md) - Database initialization
+- [fork/phase2-complete.md](fork/phase2-complete.md) - Health checks
+- [fork/phase3-complete.md](fork/phase3-complete.md) - Docker implementation
+- [fork/phase4-complete.md](fork/phase4-complete.md) - Kubernetes manifests
+- [fork/phase5-complete.md](fork/phase5-complete.md) - Configuration management
+- [fork/phase7-complete.md](fork/phase7-complete.md) - Documentation
 
 ## Documentation Standards
 
@@ -196,6 +230,21 @@ Full license: http://www.gnu.org/copyleft/gpl.html
 
 ## Changelog
 
+- **2026-02-13**: Added grammar and mapping mastery guide set
+  - Added `docs/grammar-and-mapping/README.md`
+  - Added quickstart guide for first grammar + mapping
+  - Added grammar authoring guide
+  - Added mapping authoring guide
+  - Added cookbook with safe shortcuts
+  - Added debugging/testing/hardening guide
+- **2026-02-13**: Added developer reference set
+  - Added `docs/developer-reference/README.md`
+  - Added mapping/message/node API reference
+  - Added parser/writer/grammar reference
+  - Added runtime/router/envelope reference
+  - Added communication channel reference
+  - Added MinIO helper reference
+  - Added platform utilities and scripts reference
 - **2026-02-04**: Phase 7 documentation completed
   - Added kubernetes-deployment.md
   - Added development.md
@@ -207,6 +256,6 @@ Full license: http://www.gnu.org/copyleft/gpl.html
 
 ---
 
-**Last Updated**: February 4, 2026  
-**Documentation Version**: 1.0.0  
+**Last Updated**: February 13, 2026  
+**Documentation Version**: 1.2.0  
 **Bots EDI Version**: 4.0.0 (containerized)
